@@ -3,10 +3,10 @@ Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni
 
 # Installation
 ## Installing dependencies
-To install all dependencies, run `php composer.phar install` in your shell from this directory.
+To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Database Tables
-SQLite3 is used as Database. The Database is saved in "oauth-infrz.db".
+SQLite3 is used as Database. The Database is saved in `oauth-infrz.db`.
 
 ## client
 * id: int
