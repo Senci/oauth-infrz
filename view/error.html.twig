@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ error.error }}{% endblock %}
+
+{% block content %}
+    <div class="well well-large">
+        <h1>Error!</h1>
+        <h2>There has been an error!</h2>
+        <div class="alert alert-error">
+            <p>Error Code: {{ error.error }}</p>
+            <p>Error Description: {{ error.error_description }}</p>
+            <p>HTTP-Status: {{ error.http_status }}</p>
+        </div>
+    </div>
+{% endblock %}

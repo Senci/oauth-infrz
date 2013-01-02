@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ error.error }}{% endblock %}
+
+{% block content %}
+    <div class="well well-large" xmlns="http://www.w3.org/1999/html">
+        <h1>Login!</h1>
+        <p>Please login to continue.</p>
+        <form class="form-horizontal">
+            <p><input type="text" placeholder="Username"/> </p>
+            <p><input type="password" placeholder="Password"/> <br/> </p>
+            <button type="submit" class="btn btn-success">Login</button>
+        </form>
+    </div>
+{% endblock %}
