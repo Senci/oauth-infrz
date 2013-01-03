@@ -1,7 +1,10 @@
 <?php
 
-require_once('ResponseBuilder.php');
+require_once('DatabaseWrapper.php');
 require_once('ErrorCodes.php');
+require_once('ResponseBuilder.php');
+
+// composer autoload
 require_once('vendor/autoload.php');
 
 // set encoding to utf-8

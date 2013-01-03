@@ -10,6 +10,11 @@ class ErrorCodes
             'error_description' => 'There has been an error but the error_code was not found.',
             'http_status' => 500
         ),
+        'invalid_param' => array(
+            'error' => 'invalid_param',
+            'error_description' => 'One or more required parameters are invalid.',
+            'http_status' => 400
+        ),
         'missing_param' => array(
             'error' => 'missing_param',
             'error_description' => 'One or more required parameters are missing.',
