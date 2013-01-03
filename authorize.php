@@ -8,10 +8,6 @@ use Infrz\OAuth\ResponseBuilder;
 use Infrz\OAuth\ErrorCodes;
 use Infrz\OAuth\DatabaseWrapper;
 
-if (isset($_GET['response_type'])) {
-    $response_type = $_GET['response_type'];
-}
-
 // set all needed GET-Variables to ${get-variable-name} if set
 $response_type = isset($_GET['response_type']) ? $_GET['response_type'] : null;
 $client_id     = isset($_GET['client_id'])     ? $_GET['client_id'] : null;
@@ -44,7 +40,7 @@ if ($client->redirect_uri != urldecode($redirect_uri)) {
 }
 
 if (isAuthorized()) {
-    $response_builder->buildAuthorize($client->name, $scope);
+    $response_builder->buildAuthorize($client, $scope);
 } else {
     $response_builder->buildLogin('https://google.de');
 }

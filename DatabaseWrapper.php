@@ -57,6 +57,48 @@ class DatabaseWrapper
     }
 
     /**
+     * Deletes a client and all its data from database by the client_id
+     *
+     * @param string $client_id
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deleteClient($client_id)
+    {
+        $client = $this->getClientById($client_id);
+
+        // delete all token belonging to the client
+        $select_token = 'SELECT token FROM auth_token WHERE client_id = :client_id';
+        $token_query = $this->pdo->prepare($select_token);
+        $token_query->bindValue(':client_id', $client->id);
+        $token_query->execute();
+
+        foreach ($token_query as $token) {
+            if (!$this->deleteAuthToken($token['token'])) {
+                throw new \PDOException('There has been an error deleting all tokens from client.');
+            }
+        }
+
+        // delete all codes belonging to the client
+        $select_code = 'SELECT code FROM auth_code WHERE client_id = :client_id';
+        $code_query = $this->pdo->prepare($select_code);
+        $code_query->bindValue(':client_id', $client->id);
+        $code_query->execute();
+
+        foreach ($code_query as $code) {
+            if ($this->deleteAuthCode($code['code'])) {
+                throw new \PDOException('There has been an error deleting all codes from client.');
+            }
+        }
+
+        // delete client itself
+        $delete_code = 'DELETE FROM client WHERE client_id = :client_id';
+        $query = $this->pdo->prepare($delete_code);
+        $query->bindValue(':client_id', $client_id);
+
+        return $query->execute();
+    }
+
+    /**
      * Returns a client by its client_id
      *
      * @param string $client_id
@@ -93,6 +135,21 @@ class DatabaseWrapper
         $query->execute();
 
         return $this->getUserByAlias($alias);
+    }
+
+    /**
+     * Deletes an user from database by the alias
+     *
+     * @param string $alias
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deleteUser($alias)
+    {
+        $delete_code = 'DELETE FROM auth_token WHERE alias = :alias';
+        $query = $this->pdo->prepare($delete_code);
+        $query->bindValue(':alias', $alias);
+
+        return $query->execute();
     }
 
     /**
@@ -133,6 +190,21 @@ class DatabaseWrapper
     }
 
     /**
+     * Deletes an auth_token from database by the auth_token-value
+     *
+     * @param string $auth_token
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deleteAuthToken($auth_token)
+    {
+        $delete_code = 'DELETE FROM auth_token WHERE token = :auth_token';
+        $query = $this->pdo->prepare($delete_code);
+        $query->bindValue(':auth_token', $auth_token);
+
+        return $query->execute();
+    }
+
+    /**
      * Returns an auth_token by the auth_token value
      *
      * @param $token
@@ -155,18 +227,33 @@ class DatabaseWrapper
      * @param \StdClass $client
      * @return \StdClass the auth_code as StdClass
      */
-    public function insertAuthCode(\StdClass $user, \StdClass $client)
+    public function insertAuthCode(\StdClass $client, \StdClass $user)
     {
         $auth_code = $this->getUniqueHash($user->alias, 'auth_code', 'code');
-        $insert_token = 'INSERT INTO auth_code (user_id, client_id, code)
+        $insert_code = 'INSERT INTO auth_code (user_id, client_id, code)
                          VALUES (:user_id, :client_id, :code);';
-        $query = $this->pdo->prepare($insert_token);
+        $query = $this->pdo->prepare($insert_code);
         $query->bindValue('user_id', $user->id);
         $query->bindValue('client_id', $client->id);
         $query->bindValue('code', $auth_code);
         $query->execute();
 
         return $this->getAuthCodeByCode($auth_code);
+    }
+
+    /**
+     * Deletes an auth_code from database by the auth_code-value
+     *
+     * @param string $auth_code
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deleteAuthCode($auth_code)
+    {
+        $delete_code = 'DELETE FROM auth_code WHERE code = :auth_code';
+        $query = $this->pdo->prepare($delete_code);
+        $query->bindValue(':auth_code', $auth_code);
+
+        return $query->execute();
     }
 
     /**

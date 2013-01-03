@@ -19,6 +19,21 @@ class ErrorCodes
             'error' => 'missing_param',
             'error_description' => 'One or more required parameters are missing.',
             'http_status' => 400
+        ),
+        'missing_credentials' => array(
+            'error' => 'missing_credentials',
+            'error_description' => 'Username or Password is missing.',
+            'http_status' => 400
+        ),
+        'invalid_credentials' => array(
+            'error' => 'invalid_credentials',
+            'error_description' => 'Username or Password is missing.',
+            'http_status' => 400
+        ),
+        'invalid_password' => array(
+            'error' => 'invalid_password',
+            'error_description' => 'Password is invalid, it must contain at least 8 characters.',
+            'http_status' => 400
         )
     );
 
