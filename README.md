@@ -7,12 +7,12 @@ To install all dependencies, run `php composer.phar install` in your shell from 
 
 # Valid Calls
 ## Web-Page
-* GET "/": Main page with informational text
-* GET "/login": Login page to be used with ActiveDirectory-Credentials
-* GET "/client": Client overview (only accessible if the user has permissions to manage clients)
-** GET "/client/register": Form to register a new client
-** POST "/client/register?name={n}&description={d}&redirect_uri={ru}": actual call to register a new client
-** GET "/client/client?id={client_id}": page to the client with {client_id}
+* __'''GET "/":__ Main page with informational text
+* __GET "/login":__ Login page to be used with ActiveDirectory-Credentials
+* __GET "/client"__: Client overview (only accessible if the user has permissions to manage clients)
+** __GET "/client/register"__: Form to register a new client
+** __POST "/client/register?name={n}&description={d}&redirect_uri={ru}"__: actual call to register a new client
+** __GET "/client/client?id={client_id}"__: page to the client with {client_id}
 
 ## REST
 to be defined
