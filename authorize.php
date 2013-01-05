@@ -2,21 +2,21 @@
 
 namespace Infrz\OAuth;
 
-require_once('bootstrap.php');
-
-use Infrz\OAuth\ResponseBuilder;
-use Infrz\OAuth\ErrorCodes;
-use Infrz\OAuth\DatabaseWrapper;
+use Infrz\OAuth\View\ResponseBuilder;
+use Infrz\OAuth\Model\ErrorCodes;
+use Infrz\OAuth\Model\DatabaseWrapper;
 
 // set all needed GET-Variables to ${get-variable-name} if set
-$response_type = isset($_GET['response_type']) ? $_GET['response_type'] : null;
-$client_id     = isset($_GET['client_id'])     ? $_GET['client_id'] : null;
-$redirect_uri  = isset($_GET['redirect_uri'])  ? $_GET['redirect_uri'] : null;
-$scope         = isset($_GET['scope'])         ? $_GET['scope'] : null;
-$state         = isset($_GET['state'])         ? $_GET['state'] : null;
+$response_type = isset($_GET['response_type']) ? $_GET['response_type'] : false;
+$client_id     = isset($_GET['client_id'])     ? $_GET['client_id'] : false;
+$redirect_uri  = isset($_GET['redirect_uri'])  ? $_GET['redirect_uri'] : false;
+$scope         = isset($_GET['scope'])         ? $_GET['scope'] : false;
+$state         = isset($_GET['state'])         ? $_GET['state'] : false;
 
 $response_builder = new ResponseBuilder();
 $database_wrapper = new DatabaseWrapper();
+
+//$response_builder->buildError('not_found');
 
 if (!$response_type or !$client_id or !$redirect_uri) {
     $response_builder->buildError('missing_param');

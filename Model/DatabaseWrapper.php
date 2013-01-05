@@ -1,16 +1,33 @@
 <?php
 
-namespace Infrz\OAuth;
+namespace Infrz\OAuth\Model;
+
+use Infrz\OAuth\Model\Client;
+use Infrz\OAuth\Model\User;
+use Infrz\OAuth\Model\AuthToken;
+use Infrz\OAuth\Model\AuthCode;
 
 class DatabaseWrapper
 {
-    protected $pdo;
+    protected $db;
 
     public function __construct()
     {
-        $this->pdo = new \PDO('sqlite:oauth-infrz.sqlite3');
+        $this->db = new \PDO('sqlite:oauth-infrz.sqlite3');
         $this->setUpDatabase();
         //$this->loadFixtures();
+
+//        echo "<pre>";
+//
+//        $stmt = $this->db->prepare('SELECT * FROM user;');
+//        $user = new User();
+//        var_dump($stmt->setFetchMode(\PDO::FETCH_INTO, $user));
+//        $stmt->execute();
+//        $stmt->fetch();
+//        var_dump($user);
+//
+//        echo "</pre>";
+//        exit();
     }
 
     /**
@@ -18,11 +35,11 @@ class DatabaseWrapper
      */
     public function loadFixtures()
     {
-        // client fixtures
-        $client = $this->insertClient('Trustworthy inc.', 'A corporation you can trust!', 'https://trustworthy.com/');
-
         // user fixtures
         $user = $this->insertUser('2king', 'Joe', 'King', 'joe@king.com');
+
+        // client fixtures
+        $client = $this->insertClient('Trustworthy inc.', $user, 'A corporation you can trust!', 'https://tw.com/');
 
         // auth_token fixtures
         $this->insertAuthToken($client, $user);
@@ -35,23 +52,25 @@ class DatabaseWrapper
      * Creates a client in the database
      *
      * @param string $name The Name of the Client
+     * @param User $user The Name of the Client
      * @param string $description A brief description
      * @param string $redirect_uri
-     * @return \StdClass The Client
+     * @return Client The Client
      */
-    public function insertClient($name, $description, $redirect_uri)
+    public function insertClient($name, User $user, $description, $redirect_uri)
     {
         $client_id = $this->getUniqueHash($name, 'client', 'client_id');
         $client_secret = $this->getUniqueHash($redirect_uri, 'client', 'client_secret');
-        $insert_client = 'INSERT INTO client (name, description, client_id, client_secret, redirect_uri)
-                          VALUES (:name, :description, :client_id, :client_secret, :redirect_uri)';
-        $query = $this->pdo->prepare($insert_client);
-        $query->bindValue(':name', $name);
-        $query->bindValue(':description', $description);
-        $query->bindValue(':client_id', $client_id);
-        $query->bindValue(':client_secret', $client_secret);
-        $query->bindValue(':redirect_uri', $redirect_uri);
-        $query->execute();
+        $insert_query = 'INSERT INTO client (name, user_id, description, client_id, client_secret, redirect_uri)
+                          VALUES (:name, :user, :description, :client_id, :client_secret, :redirect_uri)';
+        $stmt = $this->db->prepare($insert_query);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':user', $user->id);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':client_id', $client_id);
+        $stmt->bindParam(':client_secret', $client_secret);
+        $stmt->bindParam(':redirect_uri', $redirect_uri);
+        $stmt->execute();
 
         return $this->getClientById($client_id);
     }
@@ -67,51 +86,53 @@ class DatabaseWrapper
         $client = $this->getClientById($client_id);
 
         // delete all token belonging to the client
-        $select_token = 'SELECT token FROM auth_token WHERE client_id = :client_id';
-        $token_query = $this->pdo->prepare($select_token);
-        $token_query->bindValue(':client_id', $client->id);
-        $token_query->execute();
+        $selectToken_query = 'SELECT token FROM auth_token WHERE client_id = :client_id';
+        $token_stmt = $this->db->prepare($selectToken_query);
+        $token_stmt->bindParam(':client_id', $client->id);
+        $token_stmt->execute();
 
-        foreach ($token_query as $token) {
+        foreach ($token_stmt as $token) {
             if (!$this->deleteAuthToken($token['token'])) {
                 throw new \PDOException('There has been an error deleting all tokens from client.');
             }
         }
 
         // delete all codes belonging to the client
-        $select_code = 'SELECT code FROM auth_code WHERE client_id = :client_id';
-        $code_query = $this->pdo->prepare($select_code);
-        $code_query->bindValue(':client_id', $client->id);
-        $code_query->execute();
+        $selectCodeQuery = 'SELECT code FROM auth_code WHERE client_id = :client_id';
+        $code_stmt = $this->db->prepare($selectCodeQuery);
+        $code_stmt->bindParam(':client_id', $client->id);
+        $code_stmt->execute();
 
-        foreach ($code_query as $code) {
-            if ($this->deleteAuthCode($code['code'])) {
+        foreach ($code_stmt as $code) {
+            if (!$this->deleteAuthCode($code['code'])) {
                 throw new \PDOException('There has been an error deleting all codes from client.');
             }
         }
 
         // delete client itself
-        $delete_code = 'DELETE FROM client WHERE client_id = :client_id';
-        $query = $this->pdo->prepare($delete_code);
-        $query->bindValue(':client_id', $client_id);
+        $delete_query = 'DELETE FROM client WHERE client_id = :client_id';
+        $stmt = $this->db->prepare($delete_query);
+        $stmt->bindParam(':client_id', $client_id);
 
-        return $query->execute();
+        return $stmt->execute();
     }
 
     /**
      * Returns a client by its client_id
      *
      * @param string $client_id
-     * @return \StdClass client as StdClass
+     * @return Client client as StdClass
      */
     public function getClientById($client_id)
     {
-        $query = $this->pdo->prepare('SELECT * FROM client WHERE client_id = :client_id;');
-        $query->bindParam(':client_id', $client_id);
-        $query->execute();
-        $result = $query->fetchObject();
+        $client = new Client();
+        $stmt = $this->db->prepare('SELECT * FROM client WHERE client_id = :client_id;');
+        $stmt->bindParam(':client_id', $client_id);
+        $stmt->setFetchMode(\PDO::FETCH_INTO, $client);
+        $stmt->execute();
+        $stmt->fetch();
 
-        return $result;
+        return $client;
     }
 
     /**
@@ -121,18 +142,18 @@ class DatabaseWrapper
      * @param string $first_name
      * @param string $last_name
      * @param string $email
-     * @return \StdClass The user as StdClass
+     * @return User The User
      */
     public function insertUser($alias, $first_name, $last_name, $email)
     {
-        $insert_user = 'INSERT INTO user (alias, first_name, last_name, email)
+        $insert_query = 'INSERT INTO user (alias, first_name, last_name, email)
                         VALUES (:alias, :first_name, :last_name, :email);';
-        $query = $this->pdo->prepare($insert_user);
-        $query->bindValue(':alias', $alias);
-        $query->bindValue(':first_name', $first_name);
-        $query->bindValue(':last_name', $last_name);
-        $query->bindValue(':email', $email);
-        $query->execute();
+        $stmt = $this->db->prepare($insert_query);
+        $stmt->bindParam(':alias', $alias);
+        $stmt->bindParam(':first_name', $first_name);
+        $stmt->bindParam(':last_name', $last_name);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
         return $this->getUserByAlias($alias);
     }
@@ -145,11 +166,11 @@ class DatabaseWrapper
      */
     public function deleteUser($alias)
     {
-        $delete_code = 'DELETE FROM auth_token WHERE alias = :alias';
-        $query = $this->pdo->prepare($delete_code);
-        $query->bindValue(':alias', $alias);
+        $delete_query = 'DELETE FROM auth_token WHERE alias = :alias';
+        $stmt = $this->db->prepare($delete_query);
+        $stmt->bindParam(':alias', $alias);
 
-        return $query->execute();
+        return $stmt->execute();
     }
 
     /**
@@ -160,31 +181,33 @@ class DatabaseWrapper
      */
     public function getUserByAlias($alias)
     {
-        $query = $this->pdo->prepare('SELECT * FROM user WHERE alias = :alias;');
-        $query->bindParam(':alias', $alias);
-        $query->execute();
-        $result = $query->fetchObject();
+        $user = new User();
+        $stmt = $this->db->prepare('SELECT * FROM user WHERE alias = :alias;');
+        $stmt->setFetchMode(\PDO::FETCH_INTO, $user);
+        $stmt->bindParam(':alias', $alias);
+        $stmt->execute();
+        $stmt->fetch();
 
-        return $result;
+        return $user;
     }
 
     /**
      * Creates an auth_token for the client and user in the database
      *
-     * @param \StdClass $client the client object as retrieved from db
-     * @param \StdClass $user the user object as retrieved from db
-     * @return \StdClass the auth_token as StdClass
+     * @param Client $client the client object as retrieved from db
+     * @param User $user the user object as retrieved from db
+     * @return AuthToken the auth_token as StdClass
      */
-    public function insertAuthToken(\StdClass $client, \StdClass $user)
+    public function insertAuthToken(CLient $client, User $user)
     {
         $auth_token = $this->getUniqueHash($client->name, 'auth_token', 'token');
         $insert_token = 'INSERT INTO auth_token (user_id, client_id, token)
                          VALUES (:user_id, :client_id, :token);';
-        $query = $this->pdo->prepare($insert_token);
-        $query->bindValue('user_id', $user->id);
-        $query->bindValue('client_id', $client->id);
-        $query->bindValue('token', $auth_token);
-        $query->execute();
+        $stmt = $this->db->prepare($insert_token);
+        $stmt->bindParam('user_id', $user->id);
+        $stmt->bindParam('client_id', $client->id);
+        $stmt->bindParam('token', $auth_token);
+        $stmt->execute();
 
         return $this->getAuthTokenByToken($auth_token);
     }
@@ -197,46 +220,48 @@ class DatabaseWrapper
      */
     public function deleteAuthToken($auth_token)
     {
-        $delete_code = 'DELETE FROM auth_token WHERE token = :auth_token';
-        $query = $this->pdo->prepare($delete_code);
-        $query->bindValue(':auth_token', $auth_token);
+        $query = 'DELETE FROM auth_token WHERE token = :auth_token';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':auth_token', $auth_token);
 
-        return $query->execute();
+        return $stmt->execute();
     }
 
     /**
      * Returns an auth_token by the auth_token value
      *
      * @param $token
-     * @return \StdClass the auth_token as StdClass
+     * @return AuthToken the auth_token as StdClass
      */
     public function getAuthTokenByToken($token)
     {
-        $query = $this->pdo->prepare('SELECT * FROM auth_token WHERE token = :token;');
-        $query->bindParam(':token', $token);
-        $query->execute();
-        $result = $query->fetchObject();
+        $auth_token = new AuthToken();
+        $stmt = $this->db->prepare('SELECT * FROM auth_token WHERE token = :token;');
+        $stmt->setFetchMode(\PDO::FETCH_INTO, $auth_token);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $stmt->fetch();
 
-        return $result;
+        return $auth_token;
     }
 
     /**
      * Creates an auth_code for the client and user in the database
      *
-     * @param \StdClass $user
-     * @param \StdClass $client
-     * @return \StdClass the auth_code as StdClass
+     * @param User $user
+     * @param Client $client
+     * @return AuthCode the auth_code
      */
     public function insertAuthCode(\StdClass $client, \StdClass $user)
     {
         $auth_code = $this->getUniqueHash($user->alias, 'auth_code', 'code');
-        $insert_code = 'INSERT INTO auth_code (user_id, client_id, code)
+        $query = 'INSERT INTO auth_code (user_id, client_id, code)
                          VALUES (:user_id, :client_id, :code);';
-        $query = $this->pdo->prepare($insert_code);
-        $query->bindValue('user_id', $user->id);
-        $query->bindValue('client_id', $client->id);
-        $query->bindValue('code', $auth_code);
-        $query->execute();
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam('user_id', $user->id);
+        $stmt->bindParam('client_id', $client->id);
+        $stmt->bindParam('code', $auth_code);
+        $stmt->execute();
 
         return $this->getAuthCodeByCode($auth_code);
     }
@@ -249,25 +274,27 @@ class DatabaseWrapper
      */
     public function deleteAuthCode($auth_code)
     {
-        $delete_code = 'DELETE FROM auth_code WHERE code = :auth_code';
-        $query = $this->pdo->prepare($delete_code);
-        $query->bindValue(':auth_code', $auth_code);
+        $query = 'DELETE FROM auth_code WHERE code = :auth_code';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':auth_code', $auth_code);
 
-        return $query->execute();
+        return $stmt->execute();
     }
 
     /**
      * Returns an auth_code by the auth_code value
      *
      * @param $code
-     * @return \StdClass the auth_code as StdClass
+     * @return AuthCode the auth_code
      */
     public function getAuthCodeByCode($code)
     {
-        $query = $this->pdo->prepare('SELECT * FROM auth_code WHERE code = :code;');
-        $query->bindParam(':code', $code);
-        $query->execute();
-        $result = $query->fetchObject();
+        $query = new AuthCode();
+        $stmt = $this->db->prepare('SELECT * FROM auth_code WHERE code = :code;');
+        $stmt->setFetchMode(\PDO::FETCH_INTO, $query);
+        $stmt->bindParam(':code', $code);
+        $stmt->execute();
+        $result = $stmt->fetch();
 
         return $result;
     }
@@ -289,13 +316,13 @@ class DatabaseWrapper
             $result = sha1($i . $now->getTimestamp());
             $result = hash('sha512', $result . $data);
             $select = sprintf('SELECT id FROM %s WHERE %s = :hash;', $tableName, $columnName);
-            $query = $this->pdo->prepare($select);
+            $query = $this->db->prepare($select);
             if (!$query) {
                 throw new \PDOException(sprintf('"%s" is not a valid query.'), $select);
             }
             $query->bindParam(':hash', $result);
             $query->execute();
-            $duplicate = $query->fetchObject();
+            $duplicate = $query->fetch();
             $i++;
         } while ($duplicate);
 
@@ -310,23 +337,24 @@ class DatabaseWrapper
     public function setUpDatabase($forceDropTables = false)
     {
         if ($forceDropTables) {
-            $this->pdo->exec('DROP TABLE client');
-            $this->pdo->exec('DROP TABLE user');
-            $this->pdo->exec('DROP TABLE auth_token');
-            $this->pdo->exec('DROP TABLE auth_code');
+            $this->db->exec('DROP TABLE client');
+            $this->db->exec('DROP TABLE user');
+            $this->db->exec('DROP TABLE auth_token');
+            $this->db->exec('DROP TABLE auth_code');
         }
 
-        $this->pdo->exec(
+        $this->db->exec(
             'CREATE TABLE IF NOT EXISTS client (
             id INTEGER primary key,
             name varchar(100),
+            user_id,
             description text,
             client_id varchar(128) unique,
             client_secret varchar(128),
             redirect_uri varchar);'
         );
 
-        $this->pdo->exec(
+        $this->db->exec(
             'CREATE TABLE IF NOT EXISTS user (
             id INTEGER primary key,
             alias varchar unique,
@@ -335,7 +363,7 @@ class DatabaseWrapper
             email varchar);'
         );
 
-        $this->pdo->exec(
+        $this->db->exec(
             'CREATE TABLE IF NOT EXISTS auth_token (
             id INTEGER primary key,
             user_id int,
@@ -343,7 +371,7 @@ class DatabaseWrapper
             token varchar(128) unique);'
         );
 
-        $this->pdo->exec(
+        $this->db->exec(
             'CREATE TABLE IF NOT EXISTS auth_code (
             id INTEGER primary key,
             user_id int,

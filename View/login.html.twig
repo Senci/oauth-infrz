@@ -1,11 +1,17 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ error.error }}{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
     <div class="well well-large">
         <h1>Login!</h1>
         <p>Please login to continue.</p>
+        {% if error is not null %}
+            <div class="alert alert-error">
+                An error occured! <br/>
+                {{ error.error }}: {{ error.error_description }}
+            </div>
+        {% endif %}
         <form class="form-horizontal">
             <p><input type="text" placeholder="Username"/> </p>
             <p><input type="password" placeholder="Password"/> <br/> </p>
