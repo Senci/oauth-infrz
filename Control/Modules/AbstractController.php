@@ -1,8 +1,8 @@
 <?php
 
-namespace Infrz\OAuth\Control\Actions;
+namespace Infrz\OAuth\Control\Modules;
 
-abstract class Action
+abstract class AbstractController
 {
     /* path to root dir */
     protected $root;

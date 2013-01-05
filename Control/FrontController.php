@@ -2,15 +2,15 @@
 
 namespace Infrz\OAuth\Control;
 
-use Infrz\OAuth\ResponseBuilder;
-use Infrz\OAuth\Control\Actions\Action;
+use Infrz\OAuth\View\ResponseBuilder;
+use Infrz\OAuth\Control\Modules\AbstractController;
 
 class FrontController
 {
     /* path to root dir */
     protected $root;
     /* initial action */
-    protected $mainAction = 'index_Home';
+    protected $mainAction = 'Index_home';
     protected $responseBuilder;
     protected $request;
 
@@ -47,37 +47,33 @@ class FrontController
      */
     private function execAction($actionCommand)
     {
-        $moduleName = $this->getModuleName($actionCommand);
+        $moduleName = sprintf('%sController', $this->getModuleName($actionCommand));
         $actionName = sprintf('%sAction', $this->getActionName($actionCommand));
 
         // check for module existence
-        $modulePath = sprintf('%s/Control/%s', $this->root, $moduleName);
-        if (!is_dir($modulePath)) {
-            $this->responseBuilder->buildError('not_found');
-        }
-
-        // check for action existence
-        $actionSource = sprintf('%s/%s.php', $modulePath, $actionName);
-        if (!is_file($actionSource)) {
+        $modulePath = sprintf('%s/Control/Modules/%s.php', $this->root, $moduleName);
+        if (!is_file($modulePath)) {
             $this->responseBuilder->buildError('not_found');
         }
 
         // include action
-        require_once($actionSource);
+        require_once($modulePath);
 
-        $str = 'Infrz\OAuth\ResponseBuilder';
-        var_dump(class_exists($str));
+        $className = sprintf('Infrz\OAuth\Control\Modules\%s', $moduleName);
+        /* @var AbstractController $controller */
+        $controller = new $className($this->root);
 
-        exit();
-        /* @var Action $action */
-//        $action = new IndexAction($this->root);
-        $action = new $actionName($this->root);
-        if (!is_object($actionName)) {
+        // check whether the Controller got initialized correctly
+        if (!is_object($controller)) {
             $this->responseBuilder->buildError('internal_server_error');
         }
 
-        /* @var Action $action */
-        $action->run();
+        // check for action existence
+        if (!method_exists($controller, $actionName)) {
+            $this->responseBuilder->buildError('not_found');
+        }
+
+        $controller->$actionName();
     }
 
     /**

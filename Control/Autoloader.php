@@ -13,7 +13,8 @@ class Autoloader
      */
     public static function loadClass($classname)
     {
-        if (is_file(self::$packages[$classname])) {
+        $filePath = isset(self::$packages[$classname]) ? self::$packages[$classname] : false;
+        if (is_file($filePath)) {
             require_once(self::$packages[$classname]);
         }
     }
@@ -27,7 +28,6 @@ class Autoloader
     public static function addClass($className, $filePath)
     {
         self::$packages[$className] = $filePath;
-        echo 'Added '.$filePath.' to className '.$className.'<br/>';
     }
 
     /**
@@ -54,7 +54,7 @@ class Autoloader
                 }
                 self::addClass($className, $filePath);
             } elseif ($recursive and is_dir($filePath) and ($file != '.') and ($file != '..')) {
-                self::addPath($filePath);
+                self::addPath($filePath, $recursive, $namespacePrefix);
             }
         }
         closedir($dir);
@@ -65,17 +65,15 @@ class Autoloader
      */
     public static function addDefault()
     {
-        self::addPath('Control', true, 'Infrz\\OAuth');
-        self::addPath('Model', true, 'Infrz\\OAuth');
-        self::addClass('Infrz\\OAuth\\ResponseBuilder', 'ResponseBuilder.php');
+        self::addPath('Control', true, 'Infrz\OAuth');
+        self::addPath('Model', true, 'Infrz\OAuth');
+        self::addPath('View', true, 'Infrz\OAuth');
+        self::addClass('Infrz\OAuth\ResponseBuilder', 'ResponseBuilder.php');
     }
 }
 
 function __autoload($classname)
 {
-    if (preg_match('/Twig/', $classname)) {
-        echo $classname.'<br/>';
-    }
     AutoLoader::loadClass($classname);
 }
 
