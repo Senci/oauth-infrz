@@ -31,7 +31,7 @@ class FrontController
      */
     public function run()
     {
-        $actionCommand = isset($request['scope']) ? $request['scope'] : false;
+        $actionCommand = isset($this->request['action']) ? $this->request['action'] : false;
 
         if ($actionCommand) {
             $this->execAction($actionCommand);

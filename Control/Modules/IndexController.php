@@ -9,7 +9,13 @@ class IndexController extends AbstractController
 
     public function homeAction()
     {
+        var_dump($_REQUEST['action']);
         exit('home action! hell yea!');
+    }
+
+    public function birtheAction()
+    {
+        exit('BIRTHE IS TOLL... action! hell yea!');
     }
 
     /**
