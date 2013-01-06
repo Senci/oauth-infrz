@@ -2,10 +2,10 @@
 Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni Hamburg.
 
 # Installation
-# Dependencies
+## Dependencies
 * __twig/twig__: _"1.*"_
 
-## Installing dependencies
+### Installing dependencies
 To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Valid Calls
