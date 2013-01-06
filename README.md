@@ -7,16 +7,20 @@ To install all dependencies, run `php composer.phar install` in your shell from 
 
 # Valid Calls
 ## Web-Page
+Web-Page calls return their information in HTML.
 * __GET "/":__ Main page with informational text
-* __GET "/login":__ Login Form to be used with ActiveDirectory-Credentials
-* __POST "/login?username={un}&password={pw}":__ Login call
+* __GET "/login?redirect={r}":__ Login form to be used with ActiveDirectory-Credentials
+ * __POST "/login/authorize?username={un}&password={pw}&redirect={r}":__ Login call, displaying status on login call and redirecting on success
+* __GET "/authorize?client_id={cid}&response_type={rt}&redirect_uri={ru}":__ Authorize form displaying information about the client and scope
+ * __POST "/authorize/grant?code={c}":__ Displaying information about the access grant and redirecting to client-site with code
 * __GET "/client"__: Client overview (only accessible if the user has permissions to manage clients)
  * __GET "/client/register"__: Form to register a new client
  * __POST "/client/register?name={n}&description={d}&redirect_uri={ru}"__: Actual call to register a new client
- * __GET "/client/client?id={client_id}"__: Page to the client with {client_id}
+ * __GET "/client/client?client_id={cid}"__: Page to the client
 
 ## REST
-to be defined
+REST calls return their information in JSON.
+ * __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: returns a new token if valid
 
 # Database Tables
 SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
