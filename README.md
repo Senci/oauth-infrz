@@ -2,11 +2,14 @@
 Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni Hamburg.
 
 # Installation
+# Dependencies
+* __twig/twig__: _"1.*"_
+
 ## Installing dependencies
 To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Valid Calls
-Keep in mind that all url-values have to be urlencoded when passed (for convenience even on POST-requests).
+Keep in mind that all url-values have to be _urlencoded_ when passed (for convenience even on POST-requests).
 
 ## Web-Page
 Web-Page calls return their information as HTML.
