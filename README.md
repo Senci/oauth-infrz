@@ -7,7 +7,7 @@ To install all dependencies, run `php composer.phar install` in your shell from 
 
 # Valid Calls
 ## Web-Page
-Web-Page calls return their information in HTML.
+Web-Page calls return their information as HTML.
 * __GET "/":__ Main page with informational text
 * __GET "/login?redirect={r}":__ Login form to be used with ActiveDirectory-Credentials
  * __POST "/login/authorize?username={un}&password={pw}&redirect={r}":__ Login call, displaying status on login call and redirecting on success
@@ -19,8 +19,9 @@ Web-Page calls return their information in HTML.
  * __GET "/client/client?client_id={cid}"__: Page to the client
 
 ## REST
-REST calls return their information in JSON.
- * __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: returns a new token if valid
+REST calls return their information as JSON.
+* __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: returns a new token if valid
+* __GET "/user?alias={a}&oauth_token={oat}"__: returns the user-information
 
 # Database Tables
 SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
