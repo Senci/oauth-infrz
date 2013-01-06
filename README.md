@@ -22,7 +22,7 @@ Web-Page calls return their information as HTML.
  * *redirect*: The url to which the user is redirected after successful login.
 * **GET "/authorize?client_id={cid}&redirect_uri={ru}":** Authorize form displaying information about the client and scope.
  * *client_id*: The `client_id` of the client requesting an authorization.
- * *redirect_uri*: The url to which the user is redirected after successful login.
+ * *redirect_uri*: The url to which the user is redirected after successful permission grant.
  * The `grant_type` variable (from the OAuth2 specification) is intentionally being ignored. The authorize-type in this stage is `code`.
 * **POST "/authorize/grant?code={c}":** Displaying information about the access grant and redirecting to client-site with code.
  * *code*: The verification `code` (from the OAuth2 specification) denoting that the user has accepted the permissions.
@@ -39,10 +39,14 @@ Web-Page calls return their information as HTML.
 ## REST
 REST calls return their information as JSON.
 * **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token (`auth_token`) if the call is valid.
- * *grant_type*: The `grant_type` (from Oauth2 specification) which is being used.
-  * The value has to be `authorization_code` or `refresh_token`.
- * *client_id*: The `client_id`
-* **GET "/user?alias={a}&oauth_token={oat}"**: returns the user-information
+ * *grant_type*: The `grant_type` (from Oauth2 specification) which is being used. The value has to be `authorization_code` or `refresh_token`.
+ * *client_id*: The `client_id` from the requesting client.
+ * *client_secret*: The `client_secret` mathing to the client_id.
+ * *code*: Either the *verification code* from the user or a valid *refresh_token*, depending on *grant_type*-setting.
+ * *redirect_uri*: The url to which the user gets forwarded after successful permission grant.
+* **GET "/user?alias={a}&oauth_token={oat}"**: Returns the user-information.
+ * *alias*: The infrz-alias ("Kennung") from the user.
+ * *oauth_token*: The valid *oauth_token* from the client.
 
 # Database Tables
 SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
