@@ -4,11 +4,11 @@ namespace Infrz\OAuth\Control\Modules;
 
 use Infrz\OAuth\Control\Modules\AbstractController;
 
-class IndexController extends AbstractController
+class ClientController extends AbstractController
 {
     public function mainAction()
     {
-        $this->response_builder->buildLogin('http://www.google.de/');
+        $this->response_builder->buildError('not_found');
     }
 
     /**

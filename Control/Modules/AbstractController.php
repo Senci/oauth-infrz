@@ -2,20 +2,22 @@
 
 namespace Infrz\OAuth\Control\Modules;
 
+use Infrz\OAuth\View\ResponseBuilder;
+use Infrz\OAuth\Model\DatabaseWrapper;
+
 abstract class AbstractController
 {
-    /* path to root dir */
-    protected $root;
+    protected $response_builder;
+    protected $database;
 
-    public function __construct($rootDir)
+    public function __construct()
     {
-        $this->root = $rootDir;
+        $this->response_builder = new ResponseBuilder();
+        $this->database = new DatabaseWrapper();
     }
 
     /**
-     * This is where the magic happens.
-     *
-     * @return mixed
+     * The main action. Gets executed on "/{module-name}" call
      */
-    abstract public function run();
+    abstract public function mainAction();
 }

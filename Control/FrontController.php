@@ -10,7 +10,7 @@ class FrontController
     /* path to root dir */
     protected $root;
     /* initial action */
-    protected $mainAction = 'Index_home';
+    protected $mainAction = 'index_main';
     protected $responseBuilder;
     protected $request;
 
@@ -84,7 +84,7 @@ class FrontController
      */
     protected function getActionName($actionCommand)
     {
-        return substr($actionCommand, strrpos($actionCommand, "_") + 1);
+        return lcfirst(substr($actionCommand, strrpos($actionCommand, "_") + 1));
     }
 
     /**
@@ -95,6 +95,6 @@ class FrontController
      */
     protected function getModuleName($actionCommand)
     {
-        return substr($actionCommand, 0, strrpos($actionCommand, "_"));
+        return ucfirst(substr($actionCommand, 0, strrpos($actionCommand, "_")));
     }
 }
