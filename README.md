@@ -13,37 +13,36 @@ Keep in mind that all url-values have to be _urlencoded_ when passed (for conven
 
 ## Web-Page
 Web-Page calls return their information as HTML.
-* __GET "/":__ The main page with informational text.
-* __GET "/login?redirect={r}":__ The login form to be used with ActiveDirectory-Credentials.
- * _redirect_: The url to which the user is redirected after successful login.
-* __POST "/login/authorize?username={un}&password={pw}&redirect={r}":__ The login call, displaying status on login call and redirecting on success.
- * _username_: The infrz-alias ("Kennung") from the user.
- * _password_: The password to the Infrz account.
- * _redirect_: The url to which the user is redirected after successful login.
-* __GET "/authorize?client_id={cid}&redirect_uri={ru}":__ Authorize form displaying information about the client and scope.
- * _client\_id_: The `client_id` of the client requesting an authorization.
+* **GET "/":** The main page with informational text.
+* **GET "/login?redirect={r}":** The login form to be used with ActiveDirectory-Credentials.
+ * *redirect*: The url to which the user is redirected after successful login.
+* **POST "/login/authorize?username={un}&password={pw}&redirect={r}":** The login call, displaying status on login call and redirecting on success.
+ * *username*: The infrz-alias ("Kennung") from the user.
+ * *password*: The password to the Infrz account.
+ * *redirect*: The url to which the user is redirected after successful login.
+* **GET "/authorize?client_id={cid}&redirect_uri={ru}":** Authorize form displaying information about the client and scope.
  * *client_id*: The `client_id` of the client requesting an authorization.
- * _redirect\_uri_: The url to which the user is redirected after successful login.
+ * *redirect_uri*: The url to which the user is redirected after successful login.
  * The `grant_type` variable (from the OAuth2 specification) is intentionally being ignored. The authorize-type in this stage is `code`.
-* __POST "/authorize/grant?code={c}":__ Displaying information about the access grant and redirecting to client-site with code.
- * _code_: The verification `code` (from the OAuth2 specification) denoting that the user has accepted the permissions.
-* __GET "/client"__: The client overview displays a list of all clients the currently logged in user manages.
+* **POST "/authorize/grant?code={c}":** Displaying information about the access grant and redirecting to client-site with code.
+ * *code*: The verification `code` (from the OAuth2 specification) denoting that the user has accepted the permissions.
+* **GET "/client"**: The client overview displays a list of all clients the currently logged in user manages.
  * The client module (and all its actions) is only accessible if the user has permissions to manage clients.
-* __GET "/client/new"__: The form to register a new client.
-* __POST "/client/register?name={n}&description={d}&redirect_uri={ru}"__: The actual call to register a new client.
- * _name_: The name of the new client.
- * _description_: A short description of the new client and its functionality/purpose.
- * _redirect_uri_: The url to which the user is redirected for authorization.
-* __GET "/client/client?client_id={cid}"__: The page to a specific client.
- * _client\_id_: The `client_id` of the client.
+* **GET "/client/new"**: The form to register a new client.
+* **POST "/client/register?name={n}&description={d}&redirect_uri={ru}"**: The actual call to register a new client.
+ * *name*: The name of the new client.
+ * *description*: A short description of the new client and its functionality/purpose.
+ * *redirect_uri*: The url to which the user is redirected for authorization.
+* **GET "/client/client?client_id={cid}"**: The page to a specific client.
+ * *client_id*: The `client_id` of the client.
 
 ## REST
 REST calls return their information as JSON.
-* __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: Returns a new authorization token (`auth_token`) if the call is valid.
- * _grant\_type_: The `grant_type` (from Oauth2 specification) which is being used.
+* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token (`auth_token`) if the call is valid.
+ * *grant_type*: The `grant_type` (from Oauth2 specification) which is being used.
   * The value has to be `authorization_code` or `refresh_token`.
- * _client\_id_: The `client\_id`
-* __GET "/user?alias={a}&oauth_token={oat}"__: returns the user-information
+ * *client_id*: The `client_id`
+* **GET "/user?alias={a}&oauth_token={oat}"**: returns the user-information
 
 # Database Tables
 SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
