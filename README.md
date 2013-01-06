@@ -22,8 +22,9 @@ Web-Page calls return their information as HTML.
  * _redirect_: The url to which the user is redirected after successful login.
 * __GET "/authorize?client_id={cid}&redirect_uri={ru}":__ Authorize form displaying information about the client and scope.
  * _client\_id_: The `client_id` of the client requesting an authorization.
+ * *client_id*: The `client_id` of the client requesting an authorization.
  * _redirect\_uri_: The url to which the user is redirected after successful login.
- * The `grant\_type` variable (from the OAuth2 specification) is intentionally being ignored. The authorize-type in this stage is `code`.
+ * The `grant_type` variable (from the OAuth2 specification) is intentionally being ignored. The authorize-type in this stage is `code`.
 * __POST "/authorize/grant?code={c}":__ Displaying information about the access grant and redirecting to client-site with code.
  * _code_: The verification `code` (from the OAuth2 specification) denoting that the user has accepted the permissions.
 * __GET "/client"__: The client overview displays a list of all clients the currently logged in user manages.
@@ -38,7 +39,10 @@ Web-Page calls return their information as HTML.
 
 ## REST
 REST calls return their information as JSON.
-* __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: returns a new token if valid
+* __POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"__: Returns a new authorization token (`auth_token`) if the call is valid.
+ * _grant\_type_: The `grant_type` (from Oauth2 specification) which is being used.
+  * The value has to be `authorization_code` or `refresh_token`.
+ * _client\_id_: The `client\_id`
 * __GET "/user?alias={a}&oauth_token={oat}"__: returns the user-information
 
 # Database Tables
