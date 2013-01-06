@@ -6,17 +6,20 @@ Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni
 To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Valid Calls
+Keep in mind that all url-values have to be urlencoded when passed (for convenience even on POST-requests).
+
 ## Web-Page
 Web-Page calls return their information as HTML.
 * __GET "/":__ Main page with informational text
 * __GET "/login?redirect={r}":__ Login form to be used with ActiveDirectory-Credentials
- * __POST "/login/authorize?username={un}&password={pw}&redirect={r}":__ Login call, displaying status on login call and redirecting on success
+ * _redirect_: url to which the user is redirected after successful login.
+* __POST "/login/authorize?username={un}&password={pw}&redirect={r}":__ Login call, displaying status on login call and redirecting on success
 * __GET "/authorize?client_id={cid}&response_type={rt}&redirect_uri={ru}":__ Authorize form displaying information about the client and scope
- * __POST "/authorize/grant?code={c}":__ Displaying information about the access grant and redirecting to client-site with code
+* __POST "/authorize/grant?code={c}":__ Displaying information about the access grant and redirecting to client-site with code
 * __GET "/client"__: Client overview (only accessible if the user has permissions to manage clients)
- * __GET "/client/register"__: Form to register a new client
- * __POST "/client/register?name={n}&description={d}&redirect_uri={ru}"__: Actual call to register a new client
- * __GET "/client/client?client_id={cid}"__: Page to the client
+* __GET "/client/register"__: Form to register a new client
+* __POST "/client/register?name={n}&description={d}&redirect_uri={ru}"__: Actual call to register a new client
+* __GET "/client/client?client_id={cid}"__: Page to the client
 
 ## REST
 REST calls return their information as JSON.
