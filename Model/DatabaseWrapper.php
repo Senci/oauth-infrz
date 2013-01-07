@@ -23,17 +23,17 @@ class DatabaseWrapper
         $this->setUpDatabase();
         //$this->loadFixtures();
 
-        //        echo "<pre>";
-        //
-        //        $stmt = $this->db->prepare('SELECT * FROM user;');
-        //        $user = new User();
-        //        var_dump($stmt->setFetchMode(\PDO::FETCH_INTO, $user));
-        //        $stmt->execute();
-        //        $stmt->fetch();
-        //        var_dump($user);
-        //
-        //        echo "</pre>";
-        //        exit();
+        /*echo "<pre>";
+
+        $stmt = $this->db->prepare('SELECT * FROM user;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\User');
+        $stmt->execute();
+        $user = $stmt->fetch();
+        var_dump($user);
+        var_dump($user->isMemberOf('admin'));
+
+        echo "</pre>";
+        exit();*/
     }
 
     /**
@@ -145,12 +145,11 @@ class DatabaseWrapper
      */
     public function getClientById($client_id)
     {
-        $client = new Client();
         $stmt = $this->db->prepare('SELECT * FROM client WHERE client_id = :client_id;');
         $stmt->bindParam(':client_id', $client_id);
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $client);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\Client');
         $stmt->execute();
-        $stmt->fetch();
+        $client = $stmt->fetch();
 
         return $client;
     }
@@ -203,12 +202,11 @@ class DatabaseWrapper
      */
     public function getUserByAlias($alias)
     {
-        $user = new User();
         $stmt = $this->db->prepare('SELECT * FROM user WHERE alias = :alias;');
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $user);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\User');
         $stmt->bindParam(':alias', $alias);
         $stmt->execute();
-        $stmt->fetch();
+        $user = $stmt->fetch();
 
         return $user;
     }
@@ -259,14 +257,13 @@ class DatabaseWrapper
      */
     public function getAuthCodeByCode($code)
     {
-        $query = new AuthCode();
         $stmt = $this->db->prepare('SELECT * FROM auth_code WHERE code = :code;');
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $query);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AuthCode');
         $stmt->bindParam(':code', $code);
         $stmt->execute();
-        $result = $stmt->fetch();
+        $auth_code = $stmt->fetch();
 
-        return $result;
+        return $auth_code;
     }
 
     /**
@@ -315,12 +312,11 @@ class DatabaseWrapper
      */
     public function getAuthTokenByToken($token)
     {
-        $auth_token = new AuthToken();
         $stmt = $this->db->prepare('SELECT * FROM auth_token WHERE token = :token;');
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $auth_token);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AuthToken');
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        $stmt->fetch();
+        $auth_token = $stmt->fetch();
 
         return $auth_token;
     }
@@ -363,18 +359,17 @@ class DatabaseWrapper
      * Returns an refresh_token by the refresh_token-value.
      *
      * @param $token
-     * @return AuthCode the auth_code
+     * @return RefreshToken
      */
     public function getRefreshTokenByToken($token)
     {
-        $query = new AuthCode();
         $stmt = $this->db->prepare('SELECT * FROM refresh_token WHERE token = :token;');
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $query);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\RefreshToken');
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        $result = $stmt->fetch();
+        $auth_code = $stmt->fetch();
 
-        return $result;
+        return $auth_code;
     }
 
     /**

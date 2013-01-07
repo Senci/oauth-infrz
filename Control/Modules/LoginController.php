@@ -16,6 +16,10 @@ class LoginController extends AbstractController
      */
     public function mainAction()
     {
+        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+            $this->responseBuilder->buildError('not_found');
+        }
+
         $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : '%2F';
 
         $this->responseBuilder->buildLogin($redirect);

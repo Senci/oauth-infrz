@@ -17,4 +17,9 @@ class Client
     public $client_secret;
     public $redirect_uri;
     public $default_scope;
+
+    public function __construct()
+    {
+        $this->default_scope = json_decode($this->default_scope);
+    }
 }

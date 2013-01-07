@@ -14,4 +14,20 @@ class AuthToken
     public $client_id;
     public $token;
     public $scope;
+
+    public function __construct()
+    {
+        $this->scope = json_decode($this->scope);
+    }
+
+    /**
+     * Determines whether the AuthToken has the given scope.
+     *
+     * @param $scopeName
+     * @return bool
+     */
+    public function hasScope($scopeName)
+    {
+        return in_array($scopeName, $this->scope);
+    }
 }
