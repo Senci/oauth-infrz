@@ -77,6 +77,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * client_id: int
 * token: varchar unique
 * scope: varchar
+* expires_at: int
 
 ## auth_code
 * id: INTEGER primary key
@@ -84,8 +85,15 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * client_id: int
 * code: varchar unique
 * scope: varchar
+* created: int
 
 ## refresh_token
 * id: INTEGER primary key
 * auth_token_id: int
 * token: varchar unique
+
+## web_token
+* id: INTEGER primary key
+* user_id: int
+* token: varchar unique
+* expires_at: int
