@@ -91,6 +91,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * id: INTEGER primary key
 * auth_token_id: int
 * token: varchar unique
+* created: int
 
 ## web_token
 * id: INTEGER primary key
