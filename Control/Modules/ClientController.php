@@ -13,7 +13,9 @@ class ClientController extends AbstractController
 {
     public function mainAction()
     {
-        $this->responseBuilder->buildError('not_found');
+        if ($this->authFactory->isClientModerator()) {
+            $this->responseBuilder->buildError('no_permission');
+        }
     }
 
     /**

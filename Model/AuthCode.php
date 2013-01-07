@@ -13,4 +13,5 @@ class AuthCode
     public $user_id;
     public $client_id;
     public $code;
+    public $scope;
 }

@@ -7,14 +7,9 @@
 
 namespace Infrz\OAuth\Model;
 
-class Client
+class RefreshToken
 {
     public $id;
-    public $name;
-    public $user_id;
-    public $description;
-    public $client_id;
-    public $client_secret;
-    public $redirect_uri;
-    public $default_scope;
+    public $auth_token_id;
+    public $token;
 }

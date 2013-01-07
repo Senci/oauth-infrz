@@ -31,8 +31,8 @@ Web-Page calls return their information as HTML.
 * **GET "/client/new"**: The form to register a new client.
 * **POST "/client/register?name={n}&description={d}&redirect_uri={ru}&default_scope={ds}"**: The actual call to register a new client.
  * *name*: The name of the new client.
- * *description*: A short description of the new client and its functionality/purpose.
- * *redirect_uri*: The url to which the user is redirected for authorization.
+ * *description*: A brief description of the new client and its functionality/purpose.
+ * *redirect_uri*: The url to which the user is redirected after authorization.
  * *default_scope*: The `scope` which the client is requesting by default.
 * **GET "/client/client?client_id={cid}"**: The page to a specific client.
  * *client_id*: The *client_id* of the client.

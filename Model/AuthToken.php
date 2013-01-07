@@ -13,4 +13,5 @@ class AuthToken
     public $user_id;
     public $client_id;
     public $token;
+    public $scope;
 }
