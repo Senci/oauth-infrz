@@ -21,8 +21,8 @@ class DatabaseWrapper
     public function __construct()
     {
         $this->db = new \PDO('sqlite:oauth-infrz.sqlite3');
-        $this->setUpDatabase();
-        //$this->loadFixtures();
+        $this->setUpDatabase(true);
+        $this->loadFixtures();
 
         /*echo "<pre>";
 
@@ -89,7 +89,7 @@ class DatabaseWrapper
         $stmt->bindParam(':client_id', $client_id);
         $stmt->bindParam(':client_secret', $client_secret);
         $stmt->bindParam(':redirect_uri', $redirect_uri);
-        $stmt->bindParam(':default_scope', json_encode($default_scope));
+        $stmt->bindValue(':default_scope', json_encode($default_scope));
         $stmt->execute();
 
         return $this->getClientById($client_id);
@@ -174,7 +174,7 @@ class DatabaseWrapper
         $stmt->bindParam(':first_name', $first_name);
         $stmt->bindParam(':last_name', $last_name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':groups', json_encode($groups));
+        $stmt->bindValue(':groups', json_encode($groups));
         $stmt->execute();
 
         return $this->getUserByAlias($alias);
@@ -223,13 +223,14 @@ class DatabaseWrapper
     public function insertAuthCode(Client $client, User $user, $scope)
     {
         $auth_code = $this->getUniqueHash($user->alias, 'auth_code', 'code');
-        $query = 'INSERT INTO auth_code (user_id, client_id, code, scope)
-                         VALUES (:user_id, :client_id, :code, :scope);';
+        $query = 'INSERT INTO auth_code (user_id, client_id, code, scope, created)
+                         VALUES (:user_id, :client_id, :code, :scope, :created);';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam('user_id', $user->id);
         $stmt->bindParam('client_id', $client->id);
         $stmt->bindParam('code', $auth_code);
-        $stmt->bindParam('scope', json_encode($scope));
+        $stmt->bindValue('scope', json_encode($scope));
+        $stmt->bindValue('created', time());
         $stmt->execute();
 
         return $this->getAuthCodeByCode($auth_code);
@@ -278,13 +279,14 @@ class DatabaseWrapper
     public function insertAuthToken(Client $client, User $user, $scope)
     {
         $auth_token = $this->getUniqueHash($client->name, 'auth_token', 'token');
-        $insert_token = 'INSERT INTO auth_token (user_id, client_id, token, scope)
-                         VALUES (:user_id, :client_id, :token, :scope);';
+        $insert_token = 'INSERT INTO auth_token (user_id, client_id, token, scope, expires_at)
+                         VALUES (:user_id, :client_id, :token, :scope, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
         $stmt->bindParam('user_id', $user->id);
         $stmt->bindParam('client_id', $client->id);
         $stmt->bindParam('token', $auth_token);
-        $stmt->bindParam('scope', json_encode($scope));
+        $stmt->bindValue('scope', json_encode($scope));
+        $stmt->bindValue('expires_at', time()+(30*60));
         $stmt->execute();
 
         return $this->getAuthTokenByToken($auth_token);
@@ -331,11 +333,12 @@ class DatabaseWrapper
     public function insertRefreshToken(AuthToken $auth_token)
     {
         $refresh_token = $this->getUniqueHash($auth_token->token, 'refresh_token', 'token');
-        $query = 'INSERT INTO refresh_token (auth_token_id, token)
-                         VALUES (:auth_token_id, :token);';
+        $query = 'INSERT INTO refresh_token (auth_token_id, token, created)
+                         VALUES (:auth_token_id, :token, :created);';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam('auth_token_id', $auth_token->id);
-        $stmt->bindParam('refresh_token', $refresh_token);
+        $stmt->bindParam('token', $token);
+        $stmt->bindValue('created', time());
         $stmt->execute();
 
         return $this->getRefreshTokenByToken($refresh_token);
@@ -382,11 +385,12 @@ class DatabaseWrapper
     public function insertWebToken(User $user)
     {
         $web_token = $this->getUniqueHash($user->alias, 'web_token', 'token');
-        $insert_token = 'INSERT INTO web_token (user_id, token)
-                         VALUES (:user_id, :token);';
+        $insert_token = 'INSERT INTO web_token (user_id, token, expires_at)
+                         VALUES (:user_id, :token, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
         $stmt->bindParam('user_id', $user->id);
         $stmt->bindParam('token', $web_token);
+        $stmt->bindValue('expires_at', time()+(30*60));
         $stmt->execute();
 
         return $this->getWebTokenByToken($web_token);
@@ -466,6 +470,8 @@ class DatabaseWrapper
             $this->db->exec('DROP TABLE user');
             $this->db->exec('DROP TABLE auth_token');
             $this->db->exec('DROP TABLE auth_code');
+            $this->db->exec('DROP TABLE refresh_token');
+            $this->db->exec('DROP TABLE web_token');
         }
 
         $this->db->exec(
@@ -496,7 +502,8 @@ class DatabaseWrapper
             user_id int,
             client_id int,
             token varchar(128) unique,
-            scope varchar);'
+            scope varchar,
+            expires_at int);'
         );
 
         $this->db->exec(
@@ -505,21 +512,24 @@ class DatabaseWrapper
             user_id int,
             client_id int,
             code varchar(128) unique,
-            scope varchar);'
+            scope varchar,
+            created int);'
         );
 
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS refresh_token (
             id INTEGER primary key,
             auth_token_id int,
-            token varchar(128) unique);'
+            token varchar(128) unique,
+            created int);'
         );
 
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS web_token (
             id INTEGER primary key,
             user_id int,
-            token varchar(128) unique);'
+            token varchar(128) unique,
+            expires_at int);'
         );
     }
 }

@@ -62,7 +62,7 @@ class ResponseBuilder
      * @param $redirect
      * @param $error_code
      */
-    public function buildLogin($redirect, $error_code = null)
+    public function buildLogin($redirect = '%2F', $error_code = null)
     {
         $error = $error_code ? $this->getError($error_code) : null;
 

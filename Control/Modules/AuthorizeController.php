@@ -51,7 +51,7 @@ class AuthorizeController extends AbstractController
         if ($this->isAuthorized()) {
             $this->responseBuilder->buildAuthorize($client, $scope);
         } else {
-            $this->responseBuilder->buildLogin('https://google.de');
+            $this->responseBuilder->buildLogin();
         }
     }
 

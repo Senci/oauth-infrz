@@ -8,11 +8,13 @@
 namespace Infrz\OAuth\Control\Security;
 
 use Infrz\OAuth\Model\User;
+use Infrz\OAuth\Model\DatabaseWrapper;
 
 class LDAPAuthFactory implements AuthFactoryInterface
 {
     protected $host;
     protected $port;
+    protected $db;
 
     /**
      * Sets the host and port for the required LDAP-Connection.
@@ -24,6 +26,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
     {
         $this->host = sprintf("%s:%s", $ldap_host, $ldap_port);
         $this->port = $ldap_port;
+        $this->db = new DatabaseWrapper();
     }
 
     /**
@@ -36,12 +39,10 @@ class LDAPAuthFactory implements AuthFactoryInterface
     public function signIn($username, $password)
     {
         // TODO: Implement signIn() method.
-        $user = new User();
-        $user->alias = '7licina';
-        $user->first_name = 'Senad';
-        $user->last_name = 'Licina';
-        $user->email = '7licina@informatik.uni-hamburg.de';
-        $user->id = 1337;
+        $user = $this->db->getUserByAlias('2king');
+
+        $web_token = $this->db->insertWebToken($user);
+
 
         return $user;
     }

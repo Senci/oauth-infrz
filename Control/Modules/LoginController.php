@@ -8,6 +8,7 @@
 namespace Infrz\OAuth\Control\Modules;
 
 use Infrz\OAuth\Control\Modules\AbstractController;
+use Infrz\OAuth\Model\User;
 
 class LoginController extends AbstractController
 {
@@ -39,8 +40,8 @@ class LoginController extends AbstractController
         $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '%2F';
 
         $user = $this->authFactory->signIn($username, $password);
-        if (!$user) {
-            $this->responseBuilder->buildLogin('http://www.google.de/', 'invalid_credentials');
+        if (!$user instanceof User) {
+            $this->responseBuilder->buildLogin($redirect, 'invalid_credentials');
         }
 
         $this->responseBuilder->buildLoginSuccess(urldecode($redirect), $user);
