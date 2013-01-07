@@ -29,10 +29,11 @@ Web-Page calls return their information as HTML.
 * **GET "/client"**: The client overview displays a list of all clients the currently logged in user manages.
  * The client module (and all its actions) is only accessible if the user has permissions to manage clients.
 * **GET "/client/new"**: The form to register a new client.
-* **POST "/client/register?name={n}&description={d}&redirect_uri={ru}"**: The actual call to register a new client.
+* **POST "/client/register?name={n}&description={d}&redirect_uri={ru}&default_scope={ds}"**: The actual call to register a new client.
  * *name*: The name of the new client.
  * *description*: A short description of the new client and its functionality/purpose.
  * *redirect_uri*: The url to which the user is redirected for authorization.
+ * *default_scope*: The `scope` which the client is requesting by default.
 * **GET "/client/client?client_id={cid}"**: The page to a specific client.
  * *client_id*: The *client_id* of the client.
 
@@ -58,7 +59,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * description: text
 * client_id: varchar unique
 * client_secret: varchar
-* redirect_uri: varchar
+* default_scope: varchar
 
 ## user
 * id: INTEGER primary key
@@ -66,6 +67,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * first_name: varchar
 * last_name: varchar
 * email: varchar
+* groups: varchar
 * {various user information}
 
 ## auth_token
@@ -73,9 +75,16 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * user_id: int
 * client_id: int
 * token: varchar unique
+* scope: varchar
 
 ## auth_code
 * id: INTEGER primary key
 * user_id: int
 * client_id: int
 * code: varchar unique
+* scope: varchar
+
+## refresh_token
+* id: INTEGER primary key
+* auth_token_id: int
+* token: varchar unique
