@@ -7,10 +7,10 @@
 
 namespace Infrz\OAuth\Model;
 
-class RefreshToken
+class WebToken
 {
     public $id;
-    public $auth_token_id;
+    public $user_id;
     public $token;
     public $expires_at;
 }

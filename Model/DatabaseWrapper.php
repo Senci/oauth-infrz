@@ -12,6 +12,7 @@ use Infrz\OAuth\Model\User;
 use Infrz\OAuth\Model\AuthToken;
 use Infrz\OAuth\Model\AuthCode;
 use Infrz\OAuth\Model\RefreshToken;
+use Infrz\OAuth\Model\WebToken;
 
 class DatabaseWrapper
 {
@@ -99,7 +100,7 @@ class DatabaseWrapper
      *
      * @param string $client_id
      * @return bool Indicates whether the delete was successful.
-     * @throws \PDOException Throws an exception when there has been an db error.
+     * @throws \PDOException Throws an exception when there has been a db error.
      */
     public function deleteClient(g$client_id)
     {
@@ -180,7 +181,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Deletes an user from database by the alias
+     * Deletes a user from database by the alias
      *
      * @param string $alias
      * @return bool Indicates whether the delete was successful.
@@ -250,7 +251,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Returns an auth_code by the auth_code value
+     * Returns an auth_code by the auth_code-value
      *
      * @param $code
      * @return AuthCode the auth_code
@@ -269,12 +270,12 @@ class DatabaseWrapper
     /**
      * Creates an auth_token for the client and user in the database.
      *
-     * @param Client $client The client object as retrieved from db
+     * @param Client $client The client object as retrieved from db.
      * @param User $user The user object as retrieved from db.
      * @param array $scope The scope which the user grants to the client.
      * @return AuthToken
      */
-    public function insertAuthToken(CLient $client, User $user, $scope)
+    public function insertAuthToken(Client $client, User $user, $scope)
     {
         $auth_token = $this->getUniqueHash($client->name, 'auth_token', 'token');
         $insert_token = 'INSERT INTO auth_token (user_id, client_id, token, scope)
@@ -305,7 +306,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Returns an auth_token by the auth_token value.
+     * Returns an auth_token by the auth_token-value.
      *
      * @param $token
      * @return AuthToken
@@ -322,7 +323,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Creates an refresh_token for the auth_token in the database.
+     * Creates a refresh_token for the auth_token in the database.
      *
      * @param AuthToken $auth_token
      * @return RefreshToken
@@ -341,7 +342,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Deletes an auth_code from database by the auth_code-value.
+     * Deletes a refresh_token from database by the refresh_token-value.
      *
      * @param string $refresh_token
      * @return bool Indicates whether the delete was successful.
@@ -356,7 +357,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Returns an refresh_token by the refresh_token-value.
+     * Returns a refresh_token by the refresh_token-value.
      *
      * @param $token
      * @return RefreshToken
@@ -367,9 +368,60 @@ class DatabaseWrapper
         $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\RefreshToken');
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        $auth_code = $stmt->fetch();
+        $refresh_token = $stmt->fetch();
 
-        return $auth_code;
+        return $refresh_token;
+    }
+
+    /**
+     * Creates a web_token for the client and user in the database.
+     *
+     * @param User $user The user object as retrieved from db.
+     * @return WebToken
+     */
+    public function insertWebToken(User $user)
+    {
+        $web_token = $this->getUniqueHash($user->alias, 'web_token', 'token');
+        $insert_token = 'INSERT INTO web_token (user_id, token)
+                         VALUES (:user_id, :token);';
+        $stmt = $this->db->prepare($insert_token);
+        $stmt->bindParam('user_id', $user->id);
+        $stmt->bindParam('token', $web_token);
+        $stmt->execute();
+
+        return $this->getWebTokenByToken($web_token);
+    }
+
+    /**
+     * Deletes a web_token from database by the web_token-value.
+     *
+     * @param string $token
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deleteWebToken($token)
+    {
+        $query = 'DELETE FROM web_token WHERE token = :token';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':token', $token);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Returns a web_token by the web_token-value.
+     *
+     * @param $token
+     * @return WebToken
+     */
+    public function getWebTokenByToken($token)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM web_token WHERE token = :token;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\WebToken');
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $web_token = $stmt->fetch();
+
+        return $web_token;
     }
 
     /**
@@ -391,7 +443,7 @@ class DatabaseWrapper
             $select = sprintf('SELECT id FROM %s WHERE %s = :hash;', $tableName, $columnName);
             $query = $this->db->prepare($select);
             if (!$query) {
-                throw new \PDOException(sprintf('"%s" is not a valid query.'), $select);
+                throw new \PDOException(sprintf('"%s" is not a valid query.', $select));
             }
             $query->bindParam(':hash', $result);
             $query->execute();
@@ -443,7 +495,7 @@ class DatabaseWrapper
             id INTEGER primary key,
             user_id int,
             client_id int,
-            token varchar(128) unique
+            token varchar(128) unique,
             scope varchar);'
         );
 
@@ -452,7 +504,7 @@ class DatabaseWrapper
             id INTEGER primary key,
             user_id int,
             client_id int,
-            code varchar(128) unique
+            code varchar(128) unique,
             scope varchar);'
         );
 
@@ -460,6 +512,13 @@ class DatabaseWrapper
             'CREATE TABLE IF NOT EXISTS refresh_token (
             id INTEGER primary key,
             auth_token_id int,
+            token varchar(128) unique);'
+        );
+
+        $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS web_token (
+            id INTEGER primary key,
+            user_id int,
             token varchar(128) unique);'
         );
     }

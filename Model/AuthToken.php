@@ -14,6 +14,7 @@ class AuthToken
     public $client_id;
     public $token;
     public $scope;
+    public $expires_at;
 
     public function __construct()
     {
