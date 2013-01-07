@@ -36,6 +36,15 @@ class ResponseBuilder
         exit($this->twig->render('error.html.twig', array('error' => $error)));
     }
 
+
+    /**
+     * Builds the home page.
+     */
+    public function buildHome()
+    {
+        exit($this->twig->render('home.html.twig'));
+    }
+
     /**
      * Builds an authorize page.
      *

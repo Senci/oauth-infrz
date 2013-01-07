@@ -11,7 +11,7 @@ class LoginController extends AbstractController
      */
     public function mainAction()
     {
-        $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : '';
+        $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : '%2F';
 
         $this->responseBuilder->buildLogin($redirect);
     }
@@ -27,7 +27,7 @@ class LoginController extends AbstractController
 
         $username     = isset($_POST['username']) ? $_POST['username'] : false;
         $password     = isset($_POST['password']) ? $_POST['password'] : false;
-        $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '';
+        $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '%2F';
 
         $user = $this->authFactory->signIn($username, $password);
         if (!$user) {

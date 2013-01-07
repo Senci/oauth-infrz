@@ -8,7 +8,7 @@ class IndexController extends AbstractController
 {
     public function mainAction()
     {
-        $this->responseBuilder->buildLogin('http://www.google.de/');
+        $this->responseBuilder->buildHome();
     }
 
     /**
