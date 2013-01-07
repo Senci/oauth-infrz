@@ -21,8 +21,8 @@ class DatabaseWrapper
     public function __construct()
     {
         $this->db = new \PDO('sqlite:oauth-infrz.sqlite3');
-        $this->setUpDatabase(true);
-        $this->loadFixtures();
+        $this->setUpDatabase();
+        //$this->loadFixtures();
 
         /*echo "<pre>";
 
@@ -102,7 +102,7 @@ class DatabaseWrapper
      * @return bool Indicates whether the delete was successful.
      * @throws \PDOException Throws an exception when there has been a db error.
      */
-    public function deleteClient(g$client_id)
+    public function deleteClient($client_id)
     {
         $client = $this->getClientById($client_id);
 
@@ -181,7 +181,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Deletes a user from database by the alias
+     * Deletes a user from database by his alias
      *
      * @param string $alias
      * @return bool Indicates whether the delete was successful.
@@ -196,7 +196,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Returns a user by its alias (also known as "Kennung").
+     * Returns a user by his alias (also known as "Kennung").
      *
      * @param string $alias
      * @return User
@@ -206,6 +206,23 @@ class DatabaseWrapper
         $stmt = $this->db->prepare('SELECT * FROM user WHERE alias = :alias;');
         $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\User');
         $stmt->bindParam(':alias', $alias);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        return $user;
+    }
+
+    /**
+     * Returns a user by his id.
+     *
+     * @param string $id
+     * @return User
+     */
+    public function getUserById($id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM user WHERE id = :id;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\User');
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         $user = $stmt->fetch();
 

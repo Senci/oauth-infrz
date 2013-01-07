@@ -11,19 +11,20 @@
             <div class="navbar-inner">
                 <a class="brand" href="/">OAuth InfRZ</a>
                 <ul class="nav">
+                    {% if is_client_moderator %}
                     <li><a href="/client"><i class="icon-leaf icon-white"></i> Manage clients</a></li>
-                </ul>
-
-                <ul class="nav pull-right">
-                    {% if username is defined %}
-                        <li>{{ username }}</li>
                     {% endif %}
-                    {% if is_authorized %}
-                        <li><a href="#"><i class="icon-user icon-white"></i> logout</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    {% if user is defined %}
+                        <li><a href="/logout"><i class="icon-user icon-white"></i> logout</a></li>
                     {% else %}
                         <li><a href="/login"><i class="icon-user icon-white"></i> login</a></li>
                     {% endif %}
                 </ul>
+                {% if user is defined %}
+                    <p class="nav pull-right navbar-text">Moin {{ user.first_name }} =) </p>
+                {% endif %}
             </div>
         </div>
 

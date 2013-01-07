@@ -44,6 +44,7 @@ class LoginController extends AbstractController
             $this->responseBuilder->buildLogin($redirect, 'invalid_credentials');
         }
 
+        $this->responseBuilder->addTwigGlobals();
         $this->responseBuilder->buildLoginSuccess(urldecode($redirect), $user);
 
     }

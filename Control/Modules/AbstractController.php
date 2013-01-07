@@ -9,22 +9,20 @@ namespace Infrz\OAuth\Control\Modules;
 
 use Infrz\OAuth\View\ResponseBuilder;
 use Infrz\OAuth\Model\DatabaseWrapper;
-use Infrz\OAuth\Control\Security\LDAPAuthFactory;
+use Infrz\OAuth\Control\Security\AuthFactoryInterface;
 
 abstract class AbstractController
 {
     protected $responseBuilder;
     protected $database;
+    /* @var $authFactory AuthFactoryInterface */
     protected $authFactory;
-    const LDAP_PORT = 636;
-    const LDAP_HOST = 'ldaps://fbidc2.informatik.uni-hamburg.de';
 
-
-    public function __construct()
+    public function __construct($authFactory)
     {
-        $this->responseBuilder = new ResponseBuilder();
         $this->database = new DatabaseWrapper();
-        $this->authFactory = new LDAPAuthFactory(self::LDAP_HOST, self::LDAP_PORT);
+        $this->authFactory = $authFactory;
+        $this->responseBuilder = new ResponseBuilder($this->authFactory);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Infrz\OAuth\View;
 
 use Infrz\OAuth\Model\ErrorCodes;
+use Infrz\OAuth\Control\Security\AuthFactoryInterface;
 
 /**
  * ResponseGenerator generates Responses
@@ -15,11 +16,17 @@ class ResponseBuilder
 {
     protected $loader;
     protected $twig;
+    /* @var AuthFactoryInterface $authFactory */
+    protected $authFactory;
 
-    public function __construct()
+    public function __construct(AuthFactoryInterface $authFactory)
     {
         $this->loader = new \Twig_Loader_Filesystem('View');
         $this->twig = new \Twig_Environment($this->loader, array('/cache' => 'cache'));
+        $this->authFactory = $authFactory;
+        if ($authFactory->isAuthenticated()) {
+            $this->addTwigGlobals($authFactory);
+        }
     }
 
     /**
@@ -102,5 +109,16 @@ class ResponseBuilder
         }
 
         return $error;
+    }
+
+    /**
+     * Adds all needed twig-globals
+     *
+     * @param AuthFactoryInterface $authFactory
+     */
+    public function addTwigGlobals()
+    {
+        $this->twig->addGlobal('user', $this->authFactory->getUser());
+        $this->twig->addGlobal('is_client_moderator', $this->authFactory->isClientModerator());
     }
 }

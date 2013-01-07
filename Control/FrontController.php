@@ -8,6 +8,7 @@
 namespace Infrz\OAuth\Control;
 
 use Infrz\OAuth\View\ResponseBuilder;
+use Infrz\OAuth\Control\Security\LDAPAuthFactory;
 use Infrz\OAuth\Control\Modules\AbstractController;
 
 class FrontController
@@ -18,14 +19,19 @@ class FrontController
     protected $mainAction = 'index_main';
     protected $responseBuilder;
     protected $request;
+    protected $authFactory;
+    /* LDAP Config */
+    const LDAP_PORT = 636;
+    const LDAP_HOST = 'ldaps://fbidc2.informatik.uni-hamburg.de';
 
     /**
      * @param string $rootPath path to root directory
      */
     public function __construct($rootPath)
     {
+        $this->authFactory = new LDAPAuthFactory(self::LDAP_HOST, self::LDAP_PORT);
         $this->root = $rootPath;
-        $this->responseBuilder = new ResponseBuilder();
+        $this->responseBuilder = new ResponseBuilder($this->authFactory);
         $this->request = array_merge($_GET, $_POST);
         //$this->request['method'] = $_SERVER['REQUEST_METHOD'];
         // TODO load autoloader packages
@@ -66,7 +72,7 @@ class FrontController
 
         $className = sprintf('Infrz\OAuth\Control\Modules\%s', $moduleName);
         /* @var AbstractController $controller */
-        $controller = new $className();
+        $controller = new $className($this->authFactory);
 
         // check whether the Controller got initialized correctly
         if (!is_object($controller)) {

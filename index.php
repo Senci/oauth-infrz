@@ -20,5 +20,8 @@ mb_language('uni');
 mb_regex_encoding('UTF-8');
 ob_start('mb_output_handler');
 
+// start a session
+session_start();
+
 $front_controller = new FrontController(dirname(__FILE__));
 $front_controller->run();

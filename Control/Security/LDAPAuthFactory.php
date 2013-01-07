@@ -9,6 +9,7 @@ namespace Infrz\OAuth\Control\Security;
 
 use Infrz\OAuth\Model\User;
 use Infrz\OAuth\Model\DatabaseWrapper;
+use Infrz\OAuth\Model\WebToken;
 
 class LDAPAuthFactory implements AuthFactoryInterface
 {
@@ -42,9 +43,21 @@ class LDAPAuthFactory implements AuthFactoryInterface
         $user = $this->db->getUserByAlias('2king');
 
         $web_token = $this->db->insertWebToken($user);
-
+        $_SESSION['web_token'] = $web_token->token;
 
         return $user;
+    }
+
+    /**
+     * Destroys the current session and signs out the user
+     *
+     * @return bool true if successful false when there is no open session.
+     */
+    public function signOut()
+    {
+        session_destroy();
+
+        return $this->db->deleteWebToken($_SESSION['web_token']);
     }
 
     /**
@@ -54,7 +67,12 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function isAuthenticated()
     {
-        // TODO: Implement isAuthenticated() method.
+        $web_token = $_SESSION['web_token'];
+        $web_token = $this->db->getWebTokenByToken($web_token);
+        if (!$web_token instanceof WebToken) {
+            return false;
+        }
+
         return true;
     }
 
@@ -65,7 +83,22 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function isClientModerator()
     {
-        // TODO: Implement isClientModerator() method.
         return true;
+    }
+
+    /**
+     * Returns the currently logged in user.
+     *
+     * @return bool|User false when there is no open session.
+     */
+    public function getUser()
+    {
+        if (!$this->isAuthenticated()) {
+            return false;
+        }
+        $web_token = $_SESSION['web_token'];
+        $web_token = $this->db->getWebTokenByToken($web_token);
+
+        return $this->db->getUserById($web_token->user_id);
     }
 }

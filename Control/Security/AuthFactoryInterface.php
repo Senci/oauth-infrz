@@ -1,11 +1,8 @@
 <?php
-/**
- * @author   Senad Licina <senad@licina.eu>
- * @license  http://www.gnu.org/licenses/gpl.html GPLv3
- * @link     https://github.com/Senci/oauth-infrz/
- */
 
 namespace Infrz\OAuth\Control\Security;
+
+use Infrz\OAuth\Model\User;
 
 /**
  * An AuthFactory signs in a User and provides authorization information.
@@ -22,6 +19,13 @@ interface AuthFactoryInterface
     public function signIn($username, $password);
 
     /**
+     * Destroys the current session and signs out the user
+     *
+     * @return bool true if successful false when there is no session
+     */
+    public function signOut();
+
+    /**
      * Returns whether the user is authenticated.
      *
      * @return bool
@@ -34,4 +38,11 @@ interface AuthFactoryInterface
      * @return bool
      */
     public function isClientModerator();
+
+    /**
+     * Returns the currently logged in user.
+     *
+     * @return bool|User false when there is no open session.
+     */
+    public function getUser();
 }

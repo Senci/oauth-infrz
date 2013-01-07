@@ -4,8 +4,12 @@
 
 {% block content %}
     <div class="well well-large">
-        <h1>Hey there!</h1>
-        <p>This is an Signle-Sign-On-System for the ActiveDirectory (LDAP) of the Informatik Rechenzentrum (Universität Hamburg).</p>
+        {% if user is defined %}
+            <h1>Moin {{ user.first_name }}!</h1>
+        {% else %}
+            <h1>Moin!</h1>
+        {% endif %}
+        <p>This is a Signle-Sign-On-System for the ActiveDirectory (LDAP) of the Informatik Rechenzentrum (Universität Hamburg).</p>
         <p>You can simply login with your Informatik Rechenzentrum credentials to achieve authorization to our clients services.</p>
     </div>
 {% endblock %}
