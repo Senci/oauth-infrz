@@ -59,6 +59,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * description: text
 * client_id: varchar unique
 * client_secret: varchar
+* redirect_uri: varchar
 * default_scope: varchar
 
 ## user
