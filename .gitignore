@@ -2,3 +2,5 @@ oauth-infrz.sqlite3
 composer.lock
 vendor/
 cache/
+ldap_connect.php
+Control/Modules/LdapController.php

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @author   Senad Licina <senad@licina.eu>
+ * @license  http://www.gnu.org/licenses/gpl.html GPLv3
+ * @link     https://github.com/Senci/oauth-infrz/
+ */
 
 namespace Infrz\OAuth\Control;
 
@@ -7,7 +12,7 @@ use Infrz\OAuth\Control\Modules\AbstractController;
 
 class FrontController
 {
-    /* path to root dir */
+    /* root directory */
     protected $root;
     /* initial action */
     protected $mainAction = 'index_main';
@@ -61,7 +66,7 @@ class FrontController
 
         $className = sprintf('Infrz\OAuth\Control\Modules\%s', $moduleName);
         /* @var AbstractController $controller */
-        $controller = new $className($this->root);
+        $controller = new $className();
 
         // check whether the Controller got initialized correctly
         if (!is_object($controller)) {
