@@ -23,7 +23,7 @@ Web-Page calls return their information as HTML.
 * **GET "/authorize?client_id={cid}&redirect_uri={ru}":** Authorize form displaying information about the client and scope.
  * *client_id*: The *client_id* of the client requesting an authorization.
  * *redirect_uri*: The url to which the user is redirected after successful permission grant.
- * The *grant_type* variable (from the OAuth2 specification) is intentionally being ignored. The authorize-type in this stage is *code*.
+ * The *response_type* variable (from the OAuth2 specification) is intentionally being ignored. The response-type at this stage is *code*.
 * **POST "/authorize/grant?code={c}":** Displaying information about the access grant and redirecting to client-site with code.
  * *code*: The verification *code* (from the OAuth2 specification) denoting that the user has accepted the permissions.
 * **GET "/client"**: The client overview displays a list of all clients the currently logged in user manages.

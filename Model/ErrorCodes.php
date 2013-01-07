@@ -27,7 +27,7 @@ class ErrorCodes
         ),
         'invalid_credentials' => array(
             'error' => 'invalid_credentials',
-            'error_description' => 'Username or Password is missing.',
+            'error_description' => 'Username or Password is wrong.',
             'http_status' => 400
         ),
         'invalid_password' => array(

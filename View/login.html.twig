@@ -8,13 +8,13 @@
         <p>Please login to continue.</p>
         {% if error is not null %}
             <div class="alert alert-error">
-                An error occured! <br/>
-                {{ error.error }}: {{ error.error_description }}
+                {{ error.error|replace({'_': ' '})|capitalize }}: {{ error.error_description }}
             </div>
         {% endif %}
-        <form class="form-horizontal">
-            <p><input type="text" placeholder="Username"/> </p>
-            <p><input type="password" placeholder="Password"/> <br/> </p>
+        <form action="/login/authorize" method="POST" class="form-horizontal">
+            <p><input type="text" name="name" placeholder="Username"/> </p>
+            <p><input type="password" name="password" placeholder="Password"/> <br/> </p>
+            <input type="hidden" name="redirect" value="{{ redirect }}"/>
             <button type="submit" class="btn btn-success">Login</button>
         </form>
     </div>

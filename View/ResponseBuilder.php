@@ -51,13 +51,26 @@ class ResponseBuilder
      * Builds a login page.
      *
      * @param $redirect
-     * @param $error
+     * @param $error_code
      */
     public function buildLogin($redirect, $error_code = null)
     {
         $error = $error_code ? $this->getError($error_code) : null;
 
         exit($this->twig->render('login.html.twig', array('redirect' => $redirect, 'error' => $error)));
+    }
+
+    /**
+     * Builds a login success page.
+     *
+     * @param $redirect
+     * @param $error_code
+     */
+    public function buildLoginSuccess($redirect, $error_code = null)
+    {
+        $error = $error_code ? $this->getError($error_code) : null;
+
+        exit($this->twig->render('login_successful.html.twig', array('redirect' => $redirect, 'error' => $error)));
     }
 
     /**

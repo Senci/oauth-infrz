@@ -8,7 +8,7 @@ class ClientController extends AbstractController
 {
     public function mainAction()
     {
-        $this->response_builder->buildError('not_found');
+        $this->responseBuilder->buildError('not_found');
     }
 
     /**

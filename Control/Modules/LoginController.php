@@ -11,18 +11,30 @@ class LoginController extends AbstractController
      */
     public function mainAction()
     {
-        $this->response_builder->buildLogin('http://www.google.de/');
+        $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : '';
+
+        $this->responseBuilder->buildLogin($redirect);
     }
 
+    /**
+     * Authorizes the user with given username nad password.
+     */
     public function authorizeAction()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->response_builder->buildError('not_found');
+            $this->responseBuilder->buildError('not_found');
         }
 
         $username     = isset($_POST['username']) ? $_POST['username'] : false;
         $password     = isset($_POST['password']) ? $_POST['password'] : false;
+        $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '';
 
-        $this->response_builder->buildLogin('http://www.google.de/');
+        $user = $this->authFactory->signIn($username, $password);
+        if (!$user) {
+            $this->responseBuilder->buildLogin('http://www.google.de/', 'invalid_credentials');
+        }
+
+        $this->responseBuilder->buildLoginSuccess(urldecode($redirect), $user);
+
     }
 }

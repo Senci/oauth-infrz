@@ -12,7 +12,7 @@ class AuthorizeController extends AbstractController
     public function mainAction()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'GET') {
-            $this->response_builder->buildError('not_found');
+            $this->responseBuilder->buildError('not_found');
         }
 
         // set all needed GET-Variables to ${get-variable-name} if set
@@ -24,7 +24,7 @@ class AuthorizeController extends AbstractController
 
 
         if (!$response_type or !$client_id or !$redirect_uri) {
-            $this->response_builder->buildError('missing_param');
+            $this->responseBuilder->buildError('missing_param');
         }
 
         // set scope to array or default value
@@ -37,23 +37,23 @@ class AuthorizeController extends AbstractController
         $client = $this->database->getClientById($client_id);
 
         if (!$client) {
-            $this->response_builder->buildError('invalid_param', 'The given client_id is invalid.');
+            $this->responseBuilder->buildError('invalid_param', 'The given client_id is invalid.');
         }
         if ($client->redirect_uri != urldecode($redirect_uri)) {
-            $this->response_builder->buildError('invalid_param', 'The given redirect_uri is invalid.');
+            $this->responseBuilder->buildError('invalid_param', 'The given redirect_uri is invalid.');
         }
 
         if ($this->isAuthorized()) {
-            $this->response_builder->buildAuthorize($client, $scope);
+            $this->responseBuilder->buildAuthorize($client, $scope);
         } else {
-            $this->response_builder->buildLogin('https://google.de');
+            $this->responseBuilder->buildLogin('https://google.de');
         }
     }
 
     public function grantAction()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->response_builder->buildError('not_found');
+            $this->responseBuilder->buildError('not_found');
         }
     }
 

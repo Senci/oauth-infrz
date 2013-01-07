@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Login successful{% endblock %}
+
+{% block content %}
+    <div class="well well-large">
+        <h1>Welcome {{ user.first_name }} {{ user.last_name }}!</h1>
+        <p>You have successfully been logged in.</p>
+        <p>You will be redirected to your <a href="{{ redirect }}">origin</a> in 5 seconds.</p>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        setTimeout("window.location = '{{ redirect }}'", 5000);
+    </script>
+{% endblock %}
