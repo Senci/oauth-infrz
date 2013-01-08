@@ -53,13 +53,41 @@ class ResponseBuilder
     }
 
     /**
-     * Builds the client overview page.
+     * Builds the clients overview page.
      *
      * @param array $clients
      */
     public function buildClientOverview($clients)
     {
         exit($this->twig->render('client_overview.html.twig', array('clients' => $clients)));
+    }
+
+    /**
+     * Builds the client page.
+     *
+     * @param array $client
+     */
+    public function buildClientPage($client)
+    {
+        exit($this->twig->render('client_page.html.twig', array('client' => $client)));
+    }
+
+    /**
+     * Builds the new client page.
+     */
+    public function buildNewClient()
+    {
+        exit($this->twig->render('client_new.html.twig'));
+    }
+
+    /**
+     * Builds the client edit page.
+     *
+     * @param array $client
+     */
+    public function buildClientEditPage($client)
+    {
+        exit($this->twig->render('client_edit_page.html.twig', array('client' => $client)));
     }
 
     /**

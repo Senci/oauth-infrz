@@ -16,9 +16,7 @@ class AuthorizeController extends AbstractController
      */
     public function mainAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
-            $this->responseBuilder->buildError('not_found');
-        }
+        $this->isGetRequest();
 
         // set all needed GET-Variables to ${get-variable-name} if set
         $response_type = isset($_GET['response_type']) ? $_GET['response_type'] : false;
@@ -39,7 +37,7 @@ class AuthorizeController extends AbstractController
             $scope = array('username', 'first_name', 'last_name');
         }
 
-        $client = $this->db->getClientById($client_id);
+        $client = $this->db->getClientByClientId($client_id);
 
         if (!$client) {
             $this->responseBuilder->buildError('invalid_param', 'The given client_id is invalid.');
@@ -48,7 +46,7 @@ class AuthorizeController extends AbstractController
             $this->responseBuilder->buildError('invalid_param', 'The given redirect_uri is invalid.');
         }
 
-        if ($this->isAuthorized()) {
+        if ($this->authFactory->isAuthenticated()) {
             $this->responseBuilder->buildAuthorize($client, $scope);
         } else {
             $this->responseBuilder->buildLogin();
@@ -57,13 +55,6 @@ class AuthorizeController extends AbstractController
 
     public function grantAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->responseBuilder->buildError('not_found');
-        }
-    }
-
-    protected function isAuthorized()
-    {
-        return true;
+        $this->isPostRequest();
     }
 }

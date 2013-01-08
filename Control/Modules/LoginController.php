@@ -17,9 +17,7 @@ class LoginController extends AbstractController
      */
     public function mainAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
-            $this->responseBuilder->buildError('not_found');
-        }
+        $this->isGetRequest();
 
         $redirect = isset($_GET['redirect']) ? $_GET['redirect'] : '%2F';
 
@@ -31,13 +29,15 @@ class LoginController extends AbstractController
      */
     public function authorizeAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->responseBuilder->buildError('not_found');
-        }
+        $this->isPostRequest();
 
         $username     = isset($_POST['username']) ? $_POST['username'] : false;
         $password     = isset($_POST['password']) ? $_POST['password'] : false;
         $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '%2F';
+
+        if (!$username or !$password) {
+            $this->responseBuilder->buildLogin($redirect, 'missing_param');
+        }
 
         $user = $this->authFactory->signIn($username, $password);
         if (!$user instanceof User) {

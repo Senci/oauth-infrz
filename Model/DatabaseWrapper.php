@@ -44,6 +44,7 @@ class DatabaseWrapper
     {
         // user fixtures
         $user = $this->insertUser('2king', 'Joe', 'King', 'joe@king.com', array('admin', 'svs', 'oauth_client'));
+        $user2 = $this->insertUser('2ill', 'Eve', 'Ill', 'eve@ill.com', array('oauth_client'));
 
         // client fixtures
         $client = $this->insertClient(
@@ -51,6 +52,20 @@ class DatabaseWrapper
             $user,
             'A corporation you can trust!',
             'https://tw.com/',
+            array('alias', 'groups')
+        );
+        $client2 = $this->insertClient(
+            'Ikum GmbH',
+            $user,
+            'Let us be friends... <3!',
+            'https://ig.com/',
+            array()
+        );
+        $this->insertClient(
+            'Eve Pharm',
+            $user2,
+            'We wantz your Dataz, nao! <br/> P.S.: Buy our cheap medicine please!',
+            'https://ei.com/',
             array('alias', 'groups')
         );
 
@@ -92,7 +107,25 @@ class DatabaseWrapper
         $stmt->bindValue(':default_scope', json_encode($default_scope));
         $stmt->execute();
 
-        return $this->getClientById($client_id);
+        return $this->getClientByClientId($client_id);
+    }
+
+    public function updateClient(Client $client)
+    {
+        $update_query = 'UPDATE client SET
+                          name = :name, description = :description,
+                          redirect_uri = :redirect_uri, default_scope = :default_scope
+                         WHERE
+                          id = :id';
+        $stmt = $this->db->prepare($update_query);
+        $stmt->bindParam(':name', $client->name);
+        $stmt->bindParam(':description', $client->description);
+        $stmt->bindParam(':redirect_uri', $client->redirect_uri);
+        $stmt->bindValue(':default_scope', json_encode($client->default_scope));
+        $stmt->bindValue(':id', $client->id);
+        $stmt->execute();
+
+        return $this->getClientById($client->id);
     }
 
     /**
@@ -104,7 +137,7 @@ class DatabaseWrapper
      */
     public function deleteClient($client_id)
     {
-        $client = $this->getClientById($client_id);
+        $client = $this->getClientByClientId($client_id);
 
         // delete all token belonging to the client
         $selectToken_query = 'SELECT token FROM auth_token WHERE client_id = :client_id';
@@ -139,12 +172,29 @@ class DatabaseWrapper
     }
 
     /**
+     * Returns a client by its id (in database).
+     *
+     * @param string $id
+     * @return Client
+     */
+    public function getClientById($id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM client WHERE id = :id;');
+        $stmt->bindParam(':id', $id);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\Client');
+        $stmt->execute();
+        $client = $stmt->fetch();
+
+        return $client;
+    }
+
+    /**
      * Returns a client by its client_id.
      *
      * @param string $client_id
      * @return Client
      */
-    public function getClientById($client_id)
+    public function getClientByClientId($client_id)
     {
         $stmt = $this->db->prepare('SELECT * FROM client WHERE client_id = :client_id;');
         $stmt->bindParam(':client_id', $client_id);

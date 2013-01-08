@@ -2,11 +2,12 @@
 
 {% block title %}{{ error.error }}{% endblock %}
 
+{% block header %}Error {{ error.http_status }}{% endblock %}
+
 {% block content %}
     {% set status = (error.error|replace({'_': ' '})|capitalize) %}
     <div class="alert alert-error">
-        <h1>Error {{ error.http_status }}</h1>
         <h2>{{ error.error|replace({'_': ' '})|capitalize }}!</h2>
-        <p>{{ error.error_description }}</p>
+        <p class="lead">{{ error.error_description }}</p>
     </div>
 {% endblock %}

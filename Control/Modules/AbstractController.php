@@ -26,6 +26,26 @@ abstract class AbstractController
     }
 
     /**
+     * Checks if the request method is GET. Builds an error otherwise.
+     */
+    public function isGetRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+            $this->responseBuilder->buildError('not_found');
+        }
+    }
+
+    /**
+     * Checks if the request method is POST. Builds an error otherwise.
+     */
+    public function isPostRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            $this->responseBuilder->buildError('not_found');
+        }
+    }
+
+    /**
      * The main action. Gets executed on "/{module-name}" call
      */
     abstract public function mainAction();

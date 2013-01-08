@@ -1,12 +1,32 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Your Clients{% endblock %}
+{% block title %}Clients{% endblock %}
 
-{% block header %}Your Clients{% endblock %}
+{% block header %}Clients{% endblock %}
 
 {% block content %}
-    {% for client in clients %}
-        {{ client.name }} <br/>
-        {{ client.description }}
-    {% endfor %}
+    <a href="/client/new" class="btn btn-primary">
+        <i class="icon-plus-sign icon-white"></i> Register a new client
+    </a>
+    <table class="table table-bordered table-hover table-condensed">
+        <caption>Your clients:</caption>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>
+                    <a href="/client/_{{ client.id }}">{{ client.name }}</a>
+                </td>
+                <td>
+                    {{ client.description }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

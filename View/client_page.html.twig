@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ client.name }} - Client{% endblock %}
+
+{% block header %}{{ client.name }}{% endblock %}
+
+{% block content %}
+    <p class="pull-right">
+        <a class="btn btn-primary" href="/client/_{{ client.id }}/edit">
+            <i class="icon-edit icon-white"></i> Edit
+        </a>
+    </p>
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ client.name }}</dd><br/>
+        <dt>Description</dt>
+        <dd>{{ client.description }}</dd><br/>
+        <dt>Redirect URI</dt>
+        <dd>{{ client.redirect_uri }}</dd><br/>
+        <dt>Default scope</dt>
+        {% if client.default_scope is empty %}
+            <dd>None <br/>
+                <small>
+                    Yay, you have earned one Internetz for being awesome. =)
+                </small>
+            </dd><br/>
+        {% else %}
+            <dd>{{ client.default_scope | join(', ') }}</dd><br/>
+        {% endif %}
+        <dt>Client-ID</dt>
+        <dd><pre>{{ client.client_id }}</pre></dd><br/>
+        <dt>Client-Secret <i id="cs_hint" class="icon-question-sign"></i></dt>
+        <dd><pre>{{ client.client_secret }}</pre></dd>
+    </dl>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        // tooltips
+        $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
+    </script>
+{% endblock %}

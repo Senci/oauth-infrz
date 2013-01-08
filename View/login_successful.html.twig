@@ -2,9 +2,10 @@
 
 {% block title %}Login successful{% endblock %}
 
+{% block header %}Welcome {{ user.first_name }} {{ user.last_name }}!{% endblock %}
+
 {% block content %}
-    <h1>Welcome {{ user.first_name }} {{ user.last_name }}!</h1>
-    <p>You have successfully been logged in.</p>
+    <p class="lead">You have successfully been logged in.</p>
     <p>You will be redirected to your <a href="{{ redirect }}">origin</a> in 5 seconds.</p>
 {% endblock %}
 

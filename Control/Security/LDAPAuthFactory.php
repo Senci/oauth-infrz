@@ -84,6 +84,9 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function isClientModerator()
     {
+        if (!$this->isAuthenticated() or !$this->getUser()->isMemberOf('oauth_client')) {
+            return false;
+        }
         return true;
     }
 

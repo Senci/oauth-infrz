@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% set available_scopes = ['alias', 'first_name', 'last_name', 'email', 'groups'] %}
+
+{% block title %}New Client{% endblock %}
+
+{% block header %}Register a new client{% endblock %}
+
+{% block content %}
+    <form action="/client/register" method="POST" class="form-horizontal">
+        <dl>
+            <dt>Name</dt>
+            <dd><input type="text" name="name" value="{{ client.name }}"/></dd><br/>
+            <dt>Description <i id="desc_hint" class="icon-question-sign"></i></dt>
+            <dd><textarea name="description" rows="3">{{ client.description }}</textarea></dd><br/>
+            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign"></i></dt>
+            <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
+            <dt>Default scope <i id="ds_hint" class="icon-question-sign"></i></dt>
+            <dd>
+                <input type="hidden" name="default_scope" id="scope">
+                {% for scope in available_scopes %}
+                    <label class="checkbox inline">
+                        {% if scope in client.default_scope %}
+                            <input type="checkbox" id="{{ scope }}" onchange="generateScopeValue()" checked="checked"> {{ scope }}
+                        {% else %}
+                            <input type="checkbox" id="{{ scope }}" onchange="generateScopeValue()"> {{ scope }}
+                        {% endif %}
+                    </label>
+                {% endfor %}
+            </dd>
+        </dl>
+        <button type="submit" class="btn btn-success">
+            <i class="icon-plus-sign icon-white"></i> Register client
+        </button>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        // set scope value right
+        function generateScopeValue() {
+            var scope = [];
+            var checkboxes = $(':checkbox');
+            $.each(checkboxes, function() {
+                if (this.checked) {
+                    scope.push(this.getAttribute('id'));
+                }
+            });
+            var json = JSON.stringify(scope);
+            $('#scope').val(json);
+        }
+        generateScopeValue();
+
+        // tooltips
+        $('#desc_hint').tooltip({title:'A brief description of the clients functionality and purpose.'});
+        $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
+        $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
+        $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
+
+        {% for scope in client.default_scope %}
+        {% endfor %}
+    </script>
+{% endblock %}

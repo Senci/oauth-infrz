@@ -33,9 +33,14 @@ Web-Page calls return their information as HTML.
  * *name*: The name of the new client.
  * *description*: A brief description of the new client and its functionality/purpose.
  * *redirect_uri*: The url to which the user is redirected after authorization.
- * *default_scope*: The `scope` which the client is requesting by default.
-* **GET "/client/client?client_id={cid}"**: The page to a specific client.
- * *client_id*: The *client_id* of the client.
+ * *default_scope*: The *scope* which the client is requesting by default.
+* **GET "/client/_{id}"**: The object page to the *client* with the given id.
+* **GET "/client/_{id}/edit"**: The edit page to the *client* with the given id.
+* **POST "/client/_{id}/save?name={n}&description={d}&redirect_uri={ru}&default_scope={ds}"**: The save action to the *client* with the given id.
+ * *name*: The name of the new client.
+ * *description*: A brief description of the new client and its functionality/purpose.
+ * *redirect_uri*: The url to which the user is redirected after authorization.
+ * *default_scope*: The *scope* which the client is requesting by default.
 
 ## REST
 REST calls return their information as JSON.

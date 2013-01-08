@@ -5,3 +5,11 @@ body {
 .login {
     width: 400px;
 }
+
+.container {
+    max-width: 700px;
+}
+
+.break-word {
+    word-wrap:break-word;
+}

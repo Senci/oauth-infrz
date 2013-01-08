@@ -17,9 +17,7 @@ class LogoutController extends AbstractController
      */
     public function mainAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
-            $this->responseBuilder->buildError('not_found');
-        }
+        $this->isGetRequest();
 
         $this->authFactory->signOut();
 
