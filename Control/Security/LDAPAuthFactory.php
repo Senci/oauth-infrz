@@ -45,6 +45,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
         $web_token = $this->db->insertWebToken($user);
         $_SESSION['web_token'] = $web_token->token;
 
+        //return false;
         return $user;
     }
 

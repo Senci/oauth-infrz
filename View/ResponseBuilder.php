@@ -53,6 +53,16 @@ class ResponseBuilder
     }
 
     /**
+     * Builds the client overview page.
+     *
+     * @param array $clients
+     */
+    public function buildClientOverview($clients)
+    {
+        exit($this->twig->render('client_overview.html.twig', array('clients' => $clients)));
+    }
+
+    /**
      * Builds an authorize page.
      *
      * @param $client

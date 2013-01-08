@@ -39,7 +39,7 @@ class AuthorizeController extends AbstractController
             $scope = array('username', 'first_name', 'last_name');
         }
 
-        $client = $this->database->getClientById($client_id);
+        $client = $this->db->getClientById($client_id);
 
         if (!$client) {
             $this->responseBuilder->buildError('invalid_param', 'The given client_id is invalid.');

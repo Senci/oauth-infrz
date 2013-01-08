@@ -3,12 +3,10 @@
 {% block title %}{{ error.error }}{% endblock %}
 
 {% block content %}
-    <div class="well well-large">
-        {% set status = (error.error|replace({'_': ' '})|capitalize) %}
-        <div class="alert alert-error">
-            <h1>Error {{ error.http_status }}</h1>
-            <h2>{{ error.error|replace({'_': ' '})|capitalize }}!</h2>
-            <p>{{ error.error_description }}</p>
-        </div>
+    {% set status = (error.error|replace({'_': ' '})|capitalize) %}
+    <div class="alert alert-error">
+        <h1>Error {{ error.http_status }}</h1>
+        <h2>{{ error.error|replace({'_': ' '})|capitalize }}!</h2>
+        <p>{{ error.error_description }}</p>
     </div>
 {% endblock %}

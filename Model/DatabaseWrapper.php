@@ -156,6 +156,23 @@ class DatabaseWrapper
     }
 
     /**
+     * Returns all clients from the user.
+     *
+     * @param string $user_id
+     * @return Client
+     */
+    public function getClientsFromUser($user)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM client WHERE user_id = :user_id;');
+        $stmt->bindParam(':user_id', $user->id);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\Client');
+        $stmt->execute();
+        $clients = $stmt->fetchAll();
+
+        return $clients;
+    }
+
+    /**
      * Creates a user in the database.
      *
      * @param string $alias An identifier for the IT at UHH. also known as "Kennung".

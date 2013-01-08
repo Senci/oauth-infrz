@@ -2,20 +2,19 @@
 
 {% block title %}{{ error.error }}{% endblock %}
 
+{% block header %}{{ client.name }} is requesting your datas!{% endblock %}
+
 {% block content %}
-    <div class="well well-large">
-        <h1>{{ client.name }} is requesting your datas!</h1>
-        <p>Click "Agree" to allow sharing of your ActiveDirectory information with {{ client.name }}.</p>
-        <p class="alert alert-info"><b>{{ client.name }}:</b><br/>{{ client.description }}</p>
-        <form class="form-horizontal">
-            <p>You are authorizing access to:</p>
-            {% for scope in scopes %}
-                <label class="checkbox">
-                    <input type="checkbox" value="{{ scope }}" id="{{ scope }}" checked="true">
-                    {{ scope|replace({'_': ' '})|capitalize }}
-                </label>
-            {% endfor %}
-            <button type="submit" class="btn btn-success">Agree</button>
-        </form>
-    </div>
+    <p class="lead">Click "Agree" to allow sharing of your ActiveDirectory information with {{ client.name }}.</p>
+    <p class="alert alert-info"><b>{{ client.name }}:</b><br/>{{ client.description }}</p>
+    <form class="form-horizontal">
+        <p>You are authorizing access to:</p>
+        {% for scope in scopes %}
+            <label class="checkbox">
+                <input type="checkbox" value="{{ scope }}" id="{{ scope }}" checked="true">
+                {{ scope|replace({'_': ' '})|capitalize }}
+            </label>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Agree</button>
+    </form>
 {% endblock %}

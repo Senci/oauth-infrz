@@ -13,9 +13,12 @@ class ClientController extends AbstractController
 {
     public function mainAction()
     {
-        if ($this->authFactory->isClientModerator()) {
+        if (!$this->authFactory->isClientModerator()) {
             $this->responseBuilder->buildError('no_permission');
         }
+        $clients = $this->db->getClientsFromUser($this->authFactory->getUser());
+
+        $this->responseBuilder->buildClientOverview($clients);
     }
 
     /**

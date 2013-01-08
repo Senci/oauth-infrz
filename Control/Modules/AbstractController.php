@@ -14,13 +14,13 @@ use Infrz\OAuth\Control\Security\AuthFactoryInterface;
 abstract class AbstractController
 {
     protected $responseBuilder;
-    protected $database;
+    protected $db;
     /* @var $authFactory AuthFactoryInterface */
     protected $authFactory;
 
     public function __construct($authFactory)
     {
-        $this->database = new DatabaseWrapper();
+        $this->db = new DatabaseWrapper();
         $this->authFactory = $authFactory;
         $this->responseBuilder = new ResponseBuilder($this->authFactory);
     }

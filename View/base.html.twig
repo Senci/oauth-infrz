@@ -3,32 +3,39 @@
     <head>
         {% block head %}
             <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+            <link href="/css/site.css" rel="stylesheet" media="screen">
             <title>{% block title %}{% endblock %} - OAuth Informatik Universität Hamburg</title>
         {% endblock %}
     </head>
     <body>
-        <div class="navbar navbar-inverse">
+        <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
-                <a class="brand" href="/">OAuth InfRZ</a>
-                <ul class="nav">
-                    {% if is_client_moderator %}
-                    <li><a href="/client"><i class="icon-leaf icon-white"></i> Manage clients</a></li>
-                    {% endif %}
-                </ul>
-                <ul class="nav pull-right">
+                <div class="container">
+                    <a class="brand" href="/">OAuth InfRZ</a>
+                    <ul class="nav">
+                        <li class="divider-vertical"></li>
+                        {% if is_client_moderator %}
+                        <li><a href="/client"><i class="icon-leaf icon-white"></i> Manage clients</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav pull-right">
+                        {% if user is defined %}
+                            <li><a href="/logout"><i class="icon-user icon-white"></i> logout</a></li>
+                        {% else %}
+                            <li><a href="/login"><i class="icon-user icon-white"></i> login</a></li>
+                        {% endif %}
+                    </ul>
                     {% if user is defined %}
-                        <li><a href="/logout"><i class="icon-user icon-white"></i> logout</a></li>
-                    {% else %}
-                        <li><a href="/login"><i class="icon-user icon-white"></i> login</a></li>
+                        <p class="nav pull-right navbar-text">Moin {{ user.first_name }} =) </p>
                     {% endif %}
-                </ul>
-                {% if user is defined %}
-                    <p class="nav pull-right navbar-text">Moin {{ user.first_name }} =) </p>
-                {% endif %}
+                </div>
             </div>
         </div>
 
         <div id="content" class="container">
+            <div class="page-header">
+                <h1>{% block header %}{% endblock %}</h1>
+            </div>
             {% block content %}{% endblock %}
         </div>
 
