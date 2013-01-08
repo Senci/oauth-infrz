@@ -68,7 +68,10 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function isAuthenticated()
     {
-        $web_token = $_SESSION['web_token'];
+        $web_token = isset($_SESSION['web_token']) ? $_SESSION['web_token'] : false;
+        if (!$web_token) {
+            return false;
+        }
         $web_token = $this->db->getWebTokenByToken($web_token);
         if (!$web_token instanceof WebToken) {
             return false;

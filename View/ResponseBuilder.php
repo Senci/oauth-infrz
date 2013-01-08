@@ -107,7 +107,7 @@ class ResponseBuilder
      * @param $redirect
      * @param $error_code
      */
-    public function buildLogin($redirect = '%2F', $error_code = null)
+    public function buildLogin($redirect = '%2F', $error_code = false)
     {
         $error = $error_code ? $this->getError($error_code) : null;
 
@@ -120,21 +120,19 @@ class ResponseBuilder
      * @param $redirect
      * @param $error_code
      */
-    public function buildLoginSuccess($redirect, $error_code = null)
+    public function buildLoginSuccess($redirect)
     {
-        $error = $error_code ? $this->getError($error_code) : null;
-
-        exit($this->twig->render('login_successful.html.twig', array('redirect' => $redirect, 'error' => $error)));
+        exit($this->twig->render('login_successful.html.twig', array('redirect' => $redirect)));
     }
 
     /**
      * Returns an Error by the error_code, alters the description if given.
      *
-     * @param $error_code
-     * @param $error_description
+     * @param string $error_code
+     * @param string $error_description
      * @return array The desired Error as array
      */
-    protected function getError($error_code, $error_description = null)
+    protected function getError($error_code, $error_description = false)
     {
         $errors = ErrorCodes::getErrors();
         $error = $errors[$error_code];
