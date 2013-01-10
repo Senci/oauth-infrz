@@ -8,7 +8,7 @@
     <div class="well pagination-centered login">
         <p class="lead">Please login to continue.</p>
         <form action="/login/authorize" method="POST" class="form-horizontal">
-            {% if error is not null %}
+            {% if error is defined %}
                 <div class="alert alert-error">
                     <b>{{ error.error|replace({'_': ' '})|capitalize }}:</b><br>{{ error.error_description }}
                 </div>

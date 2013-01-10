@@ -129,16 +129,14 @@ class DatabaseWrapper
     }
 
     /**
-     * Deletes a client and all its data from database by the client_id.
+     * Deletes a Client and all its data from database.
      *
-     * @param string $client_id
+     * @param Client $client
      * @return bool Indicates whether the delete was successful.
      * @throws \PDOException Throws an exception when there has been a db error.
      */
-    public function deleteClient($client_id)
+    public function deleteClient(Client $client)
     {
-        $client = $this->getClientByClientId($client_id);
-
         // delete all token belonging to the client
         $selectToken_query = 'SELECT token FROM auth_token WHERE client_id = :client_id';
         $token_stmt = $this->db->prepare($selectToken_query);
@@ -164,9 +162,9 @@ class DatabaseWrapper
         }
 
         // delete client itself
-        $delete_query = 'DELETE FROM client WHERE client_id = :client_id';
+        $delete_query = 'DELETE FROM client WHERE id = :id';
         $stmt = $this->db->prepare($delete_query);
-        $stmt->bindParam(':client_id', $client_id);
+        $stmt->bindParam(':id', $client->id);
 
         return $stmt->execute();
     }

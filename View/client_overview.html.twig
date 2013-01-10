@@ -5,6 +5,11 @@
 {% block header %}Clients{% endblock %}
 
 {% block content %}
+    {% if success is defined %}
+        <div class="alert alert-success">
+            <b>{{ success.title }}:</b><br>{{ success.message }}
+        </div>
+    {% endif %}
     <a href="/client/new" class="btn btn-primary">
         <i class="icon-plus-sign icon-white"></i> Register a new client
     </a>

@@ -57,9 +57,13 @@ class ResponseBuilder
      *
      * @param array $clients
      */
-    public function buildClientOverview($clients)
+    public function buildClientOverview($clients, $success = false)
     {
-        exit($this->twig->render('client_overview.html.twig', array('clients' => $clients)));
+        $args = array('clients' => $clients);
+        if ($success) {
+            $args['success'] = $success;
+        }
+        exit($this->twig->render('client_overview.html.twig', $args));
     }
 
     /**
@@ -111,7 +115,12 @@ class ResponseBuilder
     {
         $error = $error_code ? $this->getError($error_code) : null;
 
-        exit($this->twig->render('login.html.twig', array('redirect' => $redirect, 'error' => $error)));
+        $args = array('redirect' => $redirect);
+        if ($error) {
+            $args['error'] = $error;
+        }
+
+        exit($this->twig->render('login.html.twig', $args));
     }
 
     /**

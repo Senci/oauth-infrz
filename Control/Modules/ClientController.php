@@ -39,7 +39,25 @@ class ClientController extends AbstractController
         }
 
         $this->responseBuilder->buildNewClient();
+    }
 
+    public function deleteAction()
+    {
+        $this->isPostRequest();
+        $client = $this->getClient();
+
+        if (!$this->db->deleteClient($client)) {
+            $this->responseBuilder->buildError(
+                'internal_server_error',
+                'There has been an error deleting the client.' .
+                'Please retry and contact a system administrator if the error reoccurs.'
+            );
+        }
+        $clients = $this->db->getClientsFromUser($this->authFactory->getUser());
+        $success_message = sprintf('Yay, your client "%s" has successfully been deleted!', $client->name);
+        $success = array('title' => 'Client successfully deleted', 'message' => $success_message);
+
+        $this->responseBuilder->buildClientOverview($clients, $success);
     }
 
     public function registerAction()
@@ -49,9 +67,9 @@ class ClientController extends AbstractController
             $this->responseBuilder->buildError('no_permission');
         }
 
-        $name          = isset($_POST['name'])          ? $_POST['name'] : false;
-        $description   = isset($_POST['description'])   ? $_POST['description'] : false;
-        $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
+        $name = isset($_POST['name']) ? $_POST['name'] : false;
+        $description = isset($_POST['description']) ? $_POST['description'] : false;
+        $redirect_uri = isset($_POST['redirect_uri']) ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
         if (!$name or !$description or !$redirect_uri or !$default_scope) {
@@ -69,7 +87,6 @@ class ClientController extends AbstractController
         header(sprintf('Location: /client/_%s', $client->id));
 
         $this->responseBuilder->buildNewClient();
-
     }
 
     public function editAction()
@@ -85,10 +102,10 @@ class ClientController extends AbstractController
         $this->isPostRequest();
         $client = $this->getClient();
 
-        $id            = isset($_POST['id'])            ? $_POST['id'] : false;
-        $name          = isset($_POST['name'])          ? $_POST['name'] : false;
-        $description   = isset($_POST['description'])   ? $_POST['description'] : false;
-        $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
+        $id = isset($_POST['id']) ? $_POST['id'] : false;
+        $name = isset($_POST['name']) ? $_POST['name'] : false;
+        $description = isset($_POST['description']) ? $_POST['description'] : false;
+        $redirect_uri = isset($_POST['redirect_uri']) ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
         if (!$id or !$name or !$description or !$redirect_uri or !$default_scope) {

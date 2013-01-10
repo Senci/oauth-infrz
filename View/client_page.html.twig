@@ -6,6 +6,9 @@
 
 {% block content %}
     <p class="pull-right">
+        <a class="btn btn-danger" href="#delete" data-toggle="modal">
+            <i class="icon-remove-sign icon-white"></i> Delete
+        </a>
         <a class="btn btn-primary" href="/client/_{{ client.id }}/edit">
             <i class="icon-edit icon-white"></i> Edit
         </a>
@@ -32,6 +35,23 @@
         <dt>Client-Secret <i id="cs_hint" class="icon-question-sign"></i></dt>
         <dd><pre>{{ client.client_secret }}</pre></dd>
     </dl>
+
+    <div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3>Delete "{{ client.name }}"?</h3>
+        </div>
+        <div class="modal-body">
+            <p class="lead">You are about to delete your client "{{ client.name }}"!</p>
+            <p>Are you sure you want to proceed?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="/client/_{{ client.id }}/delete" method="POST">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
