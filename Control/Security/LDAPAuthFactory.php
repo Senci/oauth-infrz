@@ -135,7 +135,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
         $first_name = $ldap_user['givenname'][0];
         $last_name = $ldap_user['sn'][0];
         $email = strtolower($ldap_user['userprincipalname'][0]);
-        $groups = $ldap_user['memberof'];
+        $groups = $this->generateGroups($ldap_user['memberof']);
 
         if ($user = $this->db->getUserByAlias($alias)) {
             $user->groups = $groups;
@@ -145,5 +145,16 @@ class LDAPAuthFactory implements AuthFactoryInterface
         }
 
         return  $user;
+    }
+
+    protected function generateGroups($ldap_groups)
+    {
+        unset($ldap_groups['count']);
+        $groups = array();
+        foreach ($ldap_groups as $group) {
+            $groups[] = ldap_dn2ufn($group);
+        }
+
+        return $groups;
     }
 }
