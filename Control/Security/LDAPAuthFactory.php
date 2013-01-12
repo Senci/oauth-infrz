@@ -45,7 +45,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
         $link = ldap_connect($this->host, $this->port);
         ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
-        $mail = sprintf('%s@informatik.uni-hamburg.de');
+        $mail = sprintf('%s@informatik.uni-hamburg.de', $username);
         if (!ldap_bind($link, $mail, $password)) {
             return false;
         }
