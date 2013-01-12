@@ -39,13 +39,28 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function signIn($username, $password)
     {
-        // TODO: Implement signIn() method.
-        $user = $this->db->getUserByAlias('2king');
+        if (!$username or !$password) {
+            return false;
+        }
+        $link = ldap_connect($this->host, $this->port);
+        $mail = sprintf('%s@informatik.uni-hamburg.de');
+        if (!ldap_bind($link, $mail, $password)) {
+            return false;
+        }
+        $base_dn = 'dc=informatik,dc=uni-hamburg,dc=de';
+        $filter = sprintf('uid=%s', $username);
+        $fields = array('uid', 'sn', 'givenname', 'memberof', 'userprincipalname');
 
-        $web_token = $this->db->insertWebToken($user);
-        $_SESSION['web_token'] = $web_token->token;
+        $ldap_result = ldap_search($link, $base_dn, $filter, $fields);
+        if (!$ldap_result or (ldap_count_entries($link, $ldap_result) != 1)) {
+            return false;
+        }
 
-        //return false;
+        $ldap_user = ldap_get_entries($link, $ldap_result);
+        $ldap_user = $ldap_user[0];
+        ldap_close($link);
+        $user = $this->generateUser($ldap_user);
+
         return $user;
     }
 
@@ -107,5 +122,23 @@ class LDAPAuthFactory implements AuthFactoryInterface
         $web_token = $this->db->getWebTokenByToken($web_token);
 
         return $this->db->getUserById($web_token->user_id);
+    }
+
+    protected function generateUser($ldap_user)
+    {
+        $alias = $ldap_user['uid'];
+        $first_name = $ldap_user['givenname'];
+        $last_name = $ldap_user['sn'];
+        $email = strtolower($ldap_user['userprincipalname']);
+        $groups = $ldap_user['memberof'];
+
+        if ($user = $this->db->getUserByAlias($alias)) {
+            $user->groups = $groups;
+            $user = $this->db->updateUser($user);
+        } else {
+            $user = $this->db->insertUser($alias, $first_name, $last_name, $email, $groups);
+        }
+
+        return  $user;
     }
 }

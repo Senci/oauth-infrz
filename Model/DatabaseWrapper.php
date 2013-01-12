@@ -245,6 +245,20 @@ class DatabaseWrapper
         return $this->getUserByAlias($alias);
     }
 
+    public function updateUser(User $user)
+    {
+        $update_query = 'UPDATE user SET
+                          groups = :groups
+                         WHERE
+                          id = :id';
+        $stmt = $this->db->prepare($update_query);
+        $stmt->bindValue(':groups', json_encode($user->groups));
+        $stmt->bindValue(':id', $user->id);
+        $stmt->execute();
+
+        return $this->getUserById($user->id);
+    }
+
     /**
      * Deletes a user from database by his alias
      *
