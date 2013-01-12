@@ -128,11 +128,11 @@ class LDAPAuthFactory implements AuthFactoryInterface
 
     protected function generateUser($ldap_user)
     {
-        $alias = $ldap_user['uid'];
-        $first_name = $ldap_user['givenname'];
-        $last_name = $ldap_user['sn'];
-        $email = strtolower($ldap_user['userprincipalname']);
-        $groups = $ldap_user['memberof'];
+        $alias = $ldap_user['uid'][0];
+        $first_name = $ldap_user['givenname'][0];
+        $last_name = $ldap_user['sn'][0];
+        $email = strtolower($ldap_user['userprincipalname'][0]);
+        $groups = $ldap_user['memberof'][0];
 
         if ($user = $this->db->getUserByAlias($alias)) {
             $user->groups = $groups;
