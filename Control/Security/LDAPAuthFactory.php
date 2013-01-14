@@ -39,6 +39,13 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function signIn($username, $password)
     {
+        /*$user = $this->db->getUserByAlias('2king');
+
+        $web_token = $this->db->insertWebToken($user);
+        $_SESSION['web_token'] = $web_token->token;
+
+        return $user;*/
+
         if (!$username or !$password) {
             return false;
         }
@@ -107,7 +114,11 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function isClientModerator()
     {
-        if (!$this->isAuthenticated() or !$this->getUser()->isMemberOf('oauth_client')) {
+        // TODO create Groups in LDAP and use them to authorize clientModerators.
+        $clientModerators = array('7licina', 'herrmann', 'federrath', '2king');
+        return (in_array($this->getUser()->alias, $clientModerators));
+
+        if (!$this->isAuthenticated() or !$this->getUser()->isMemberOf('svs_sso')) {
             return false;
         }
         return true;

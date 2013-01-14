@@ -104,3 +104,6 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * user_id: int
 * token: varchar unique
 * expires_at: int
+
+# TODO
+* write How-Tos
