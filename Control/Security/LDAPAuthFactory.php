@@ -129,6 +129,13 @@ class LDAPAuthFactory implements AuthFactoryInterface
         return $this->db->getUserById($web_token->user_id);
     }
 
+    /**
+     * Parses the LDAP-User-Information.
+     * Either gets the User from the Database or creates a new User and returns it.
+     *
+     * @param array $ldap_user
+     * @return User false on error.
+     */
     protected function generateUser($ldap_user)
     {
         $alias = $ldap_user['uid'][0];
@@ -147,12 +154,20 @@ class LDAPAuthFactory implements AuthFactoryInterface
         return  $user;
     }
 
+    /**
+     * Parses the LDAP-Group-Information (cleans it) and transforms it to an Array.
+     *
+     * @param $ldap_groups
+     * @return array
+     */
     protected function generateGroups($ldap_groups)
     {
         unset($ldap_groups['count']);
         $groups = array();
         foreach ($ldap_groups as $group) {
-            $groups[] = ldap_dn2ufn($group);
+            $group = ldap_dn2ufn($group);
+            $group = substr($group, 0, strpos($group, ','));
+            $groups[] = $group;
         }
 
         return $groups;
