@@ -12,6 +12,9 @@ use Infrz\OAuth\Model\Client;
 
 class ClientController extends AbstractController
 {
+    /**
+     * @inheritdoc
+     */
     public function mainAction()
     {
         $this->isGetRequest();
@@ -23,6 +26,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildClientOverview($clients);
     }
 
+    /**
+     * The object page to the client with the given id.
+     */
     public function objectAction()
     {
         $this->isGetRequest();
@@ -31,6 +37,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildClientPage($client);
     }
 
+    /**
+     * The form to register a new client.
+     */
     public function newAction()
     {
         $this->isGetRequest();
@@ -41,6 +50,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildNewClient();
     }
 
+    /**
+     * Deletes the client with the given id.
+     */
     public function deleteAction()
     {
         $this->isPostRequest();
@@ -60,6 +72,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildClientOverview($clients, $success);
     }
 
+    /**
+     * Call to register a new client.
+     */
     public function registerAction()
     {
         $this->isPostRequest();
@@ -89,6 +104,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildNewClient();
     }
 
+    /**
+     * Form to edit a client.
+     */
     public function editAction()
     {
         $this->isGetRequest();
@@ -97,6 +115,9 @@ class ClientController extends AbstractController
         $this->responseBuilder->buildClientEditPage($client);
     }
 
+    /**
+     * Updates a client with the given parameters.
+     */
     public function updateAction()
     {
         $this->isPostRequest();
@@ -123,7 +144,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * Returns the Client
+     * Determines the client by the given id-parameter and returns it.
      */
     protected function getClient()
     {

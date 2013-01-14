@@ -11,6 +11,9 @@ use Infrz\OAuth\Control\Modules\AbstractController;
 
 class IndexController extends AbstractController
 {
+    /**
+     * @inheritdoc
+     */
     public function mainAction()
     {
         $this->isGetRequest();

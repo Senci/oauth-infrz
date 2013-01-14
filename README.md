@@ -41,6 +41,7 @@ Web-Page calls return their information as HTML.
  * *description*: A brief description of the new client and its functionality/purpose.
  * *redirect_uri*: The url to which the user is redirected after authorization.
  * *default_scope*: The *scope* which the client is requesting by default.
+* **POST "/client/_{id}/delete"**: Deletes the *client* with the given id.
 
 ## REST
 REST calls return their information as JSON.

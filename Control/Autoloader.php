@@ -45,6 +45,14 @@ class Autoloader
         self::$packages = array_merge(self::$packages, $package);
     }
 
+    /**
+     * Adds a new directory (and its subdirectories) to the autoloader.
+     * All php Files matching the regular expression '/[-a-zA-Z0-9_]+.php/' are added.
+     *
+     * @param string $path
+     * @param bool $recursive when true subdirectories are added as well.
+     * @param null $namespacePrefix Prefix to the Namespace.
+     */
     public static function addPath($path, $recursive = false, $namespacePrefix = null)
     {
         $dir = opendir($path);

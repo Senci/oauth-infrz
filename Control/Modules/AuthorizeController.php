@@ -19,14 +19,12 @@ class AuthorizeController extends AbstractController
         $this->isGetRequest();
 
         // set all needed GET-Variables to ${get-variable-name} if set
-        $response_type = isset($_GET['response_type']) ? $_GET['response_type'] : false;
         $client_id     = isset($_GET['client_id'])     ? $_GET['client_id'] : false;
         $redirect_uri  = isset($_GET['redirect_uri'])  ? $_GET['redirect_uri'] : false;
         $scope         = isset($_GET['scope'])         ? $_GET['scope'] : false;
-        $state         = isset($_GET['state'])         ? $_GET['state'] : false;
 
 
-        if (!$response_type or !$client_id or !$redirect_uri) {
+        if (!$client_id or !$redirect_uri) {
             $this->responseBuilder->buildError('missing_param');
         }
 
@@ -34,7 +32,7 @@ class AuthorizeController extends AbstractController
         if ($scope) {
             $scope = explode(',', $scope);
         } else {
-            $scope = array('username', 'first_name', 'last_name');
+            $scope = array();
         }
 
         $client = $this->db->getClientByClientId($client_id);
@@ -53,8 +51,13 @@ class AuthorizeController extends AbstractController
         }
     }
 
+    /**
+     * Displaying information about the access grant and redirecting to client-site with code.
+     */
     public function grantAction()
     {
         $this->isPostRequest();
+
+        //TODO implement me!
     }
 }

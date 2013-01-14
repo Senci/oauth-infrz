@@ -110,6 +110,12 @@ class DatabaseWrapper
         return $this->getClientByClientId($client_id);
     }
 
+    /**
+     * Updates the client in the database.
+     *
+     * @param Client $client
+     * @return Client
+     */
     public function updateClient(Client $client)
     {
         $update_query = 'UPDATE client SET
@@ -245,6 +251,12 @@ class DatabaseWrapper
         return $this->getUserByAlias($alias);
     }
 
+    /**
+     * Updates the user in the database.
+     *
+     * @param User $user
+     * @return User
+     */
     public function updateUser(User $user)
     {
         $update_query = 'UPDATE user SET

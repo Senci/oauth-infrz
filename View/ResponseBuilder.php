@@ -56,6 +56,7 @@ class ResponseBuilder
      * Builds the clients overview page.
      *
      * @param array $clients
+     * @param bool $success an optional success message as an array with 'title' and 'message'
      */
     public function buildClientOverview($clients, $success = false)
     {
@@ -127,7 +128,6 @@ class ResponseBuilder
      * Builds a login success page.
      *
      * @param $redirect
-     * @param $error_code
      */
     public function buildLoginSuccess($redirect)
     {
@@ -138,7 +138,7 @@ class ResponseBuilder
      * Returns an Error by the error_code, alters the description if given.
      *
      * @param string $error_code
-     * @param string $error_description
+     * @param bool|string $error_description
      * @return array The desired Error as array
      */
     protected function getError($error_code, $error_description = false)
@@ -158,8 +158,6 @@ class ResponseBuilder
 
     /**
      * Adds all needed twig-globals
-     *
-     * @param AuthFactoryInterface $authFactory
      */
     public function addTwigGlobals()
     {
