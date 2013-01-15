@@ -547,11 +547,11 @@ class DatabaseWrapper
      */
     protected function getUniqueHash($data, $tableName, $columnName)
     {
-        $i = 0;
         do {
             $now = new \DateTime();
-            $result = sha1($i . $now->getTimestamp());
-            $result = hash('sha512', $result . $data);
+            $random = bin2hex(openssl_random_pseudo_bytes(50));
+            $hashMe = sprintf('%s - %s : %s', $random, $data, $now->getTimestamp());
+            $result = hash('sha512', $hashMe);
             $select = sprintf('SELECT id FROM %s WHERE %s = :hash;', $tableName, $columnName);
             $query = $this->db->prepare($select);
             if (!$query) {
@@ -560,7 +560,6 @@ class DatabaseWrapper
             $query->bindParam(':hash', $result);
             $query->execute();
             $duplicate = $query->fetch();
-            $i++;
         } while ($duplicate);
 
         return $result;
@@ -581,6 +580,8 @@ class DatabaseWrapper
             $this->db->exec('DROP TABLE refresh_token');
             $this->db->exec('DROP TABLE web_token');
         }
+
+        $this->db->errorInfo();
 
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS client (
