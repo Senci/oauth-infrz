@@ -581,8 +581,6 @@ class DatabaseWrapper
             $this->db->exec('DROP TABLE web_token');
         }
 
-        $this->db->errorInfo();
-
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS client (
             id INTEGER primary key,
