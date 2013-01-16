@@ -83,9 +83,10 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function signOut()
     {
+        $web_token = $_SESSION['web_token'];
         session_destroy();
 
-        return $this->db->deleteWebToken($_SESSION['web_token']);
+        return $this->db->deleteWebToken($web_token);
     }
 
     /**
@@ -100,7 +101,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
             return false;
         }
         $web_token = $this->db->getWebTokenByToken($web_token);
-        if (!$web_token instanceof WebToken) {
+        if (!$web_token instanceof WebToken or $web_token->expires_at < time()) {
             return false;
         }
 
@@ -115,7 +116,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
     public function isClientModerator()
     {
         // TODO create Groups in LDAP and use them to authorize clientModerators.
-        $clientModerators = array('7licina', 'herrmann', 'federrath', '2king');
+        $clientModerators = array('7licina', 'herrmann', 'federrath', '2king', '2ill');
         return (in_array($this->getUser()->alias, $clientModerators));
 
         if (!$this->isAuthenticated() or !$this->getUser()->isMemberOf('svs_sso')) {
