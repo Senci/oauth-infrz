@@ -29,11 +29,11 @@ class LoginController extends AbstractController
      */
     public function authorizeAction()
     {
-        $this->isPostRequest();
+        $this->isPostRequest(false);
 
-        $username     = isset($_POST['username']) ? $_POST['username'] : false;
-        $password     = isset($_POST['password']) ? $_POST['password'] : false;
-        $redirect     = isset($_POST['redirect']) ? $_POST['redirect'] : '%2F';
+        $username = isset($_POST['username']) ? $_POST['username'] : false;
+        $password = isset($_POST['password']) ? $_POST['password'] : false;
+        $redirect = isset($_POST['redirect']) ? $_POST['redirect'] : '%2F';
 
         if (!$username or !$password) {
             $this->responseBuilder->buildLogin($redirect, 'missing_param');

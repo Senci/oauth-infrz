@@ -9,6 +9,7 @@
 {% block content %}
     <form action="/client/_{{ client.id }}/save" method="POST" class="form-horizontal">
         <input type="hidden" name="id" value="{{ client.id }}">
+        <input type="hidden" name="page_token" value="{{ page_token }}">
         <p class="pull-right">
             <button type="submit" class="btn btn-success">
                 <i class="icon-edit icon-white"></i> Save

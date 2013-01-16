@@ -33,8 +33,9 @@ class ClientController extends AbstractController
     {
         $this->isGetRequest();
         $client = $this->getClient();
+        $page_token = $this->db->insertPageToken($this->authFactory->getUser());
 
-        $this->responseBuilder->buildClientPage($client);
+        $this->responseBuilder->buildClientPage($client, $page_token->token);
     }
 
     /**
@@ -46,8 +47,9 @@ class ClientController extends AbstractController
         if (!$this->authFactory->isClientModerator()) {
             $this->responseBuilder->buildError('no_permission');
         }
+        $page_token = $this->db->insertPageToken($this->authFactory->getUser());
 
-        $this->responseBuilder->buildNewClient();
+        $this->responseBuilder->buildNewClient($page_token->token);
     }
 
     /**
@@ -82,9 +84,9 @@ class ClientController extends AbstractController
             $this->responseBuilder->buildError('no_permission');
         }
 
-        $name = isset($_POST['name']) ? $_POST['name'] : false;
-        $description = isset($_POST['description']) ? $_POST['description'] : false;
-        $redirect_uri = isset($_POST['redirect_uri']) ? $_POST['redirect_uri'] : false;
+        $name          = isset($_POST['name'])          ? $_POST['name'] : false;
+        $description   = isset($_POST['description'])   ? $_POST['description'] : false;
+        $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
         if (!$name or !$description or !$redirect_uri or !$default_scope) {
@@ -111,8 +113,9 @@ class ClientController extends AbstractController
     {
         $this->isGetRequest();
         $client = $this->getClient();
+        $page_token = $this->db->insertPageToken($this->authFactory->getUser());
 
-        $this->responseBuilder->buildClientEditPage($client);
+        $this->responseBuilder->buildClientEditPage($client, $page_token->token);
     }
 
     /**
@@ -123,13 +126,12 @@ class ClientController extends AbstractController
         $this->isPostRequest();
         $client = $this->getClient();
 
-        $id = isset($_POST['id']) ? $_POST['id'] : false;
-        $name = isset($_POST['name']) ? $_POST['name'] : false;
-        $description = isset($_POST['description']) ? $_POST['description'] : false;
-        $redirect_uri = isset($_POST['redirect_uri']) ? $_POST['redirect_uri'] : false;
+        $name          = isset($_POST['name'])          ? $_POST['name'] : false;
+        $description   = isset($_POST['description'])   ? $_POST['description'] : false;
+        $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
-        if (!$id or !$name or !$description or !$redirect_uri or !$default_scope) {
+        if (!$name or !$description or !$redirect_uri or !$default_scope) {
             $this->responseBuilder->buildError('missing_param');
         }
 
@@ -138,9 +140,22 @@ class ClientController extends AbstractController
         $client->redirect_uri = urldecode($redirect_uri);
         $client->default_scope = json_decode(urldecode($default_scope));
 
-        $this->db->updateClient($client);
+        $client = $this->db->updateClient($client);
 
-        header(sprintf('Location: /client/_%s', $id));
+        header(sprintf('Location: /client/_%s', $client->id));
+    }
+
+    /**
+     * Generates new credentials and updates them.
+     */
+    public function newCredentialsAction()
+    {
+        $this->isPostRequest();
+        $client = $this->getClient();
+
+        $client = $this->db->updateClientCredentials($client);
+
+        header(sprintf('Location: /client/_%s', $client->id));
     }
 
     /**

@@ -71,28 +71,31 @@ class ResponseBuilder
      * Builds the client page.
      *
      * @param array $client
+     * @param string $page_token
      */
-    public function buildClientPage($client)
+    public function buildClientPage($client, $page_token)
     {
-        exit($this->twig->render('client_page.html.twig', array('client' => $client)));
+        exit($this->twig->render('client_page.html.twig', array('client' => $client, 'page_token' => $page_token)));
     }
 
     /**
      * Builds the new client page.
+     * @param string $page_token
      */
-    public function buildNewClient()
+    public function buildNewClient($page_token)
     {
-        exit($this->twig->render('client_new.html.twig'));
+        exit($this->twig->render('client_new.html.twig', array('page_token' => $page_token)));
     }
 
     /**
      * Builds the client edit page.
      *
      * @param array $client
+     * @param string $page_token
      */
-    public function buildClientEditPage($client)
+    public function buildClientEditPage($client, $page_token)
     {
-        exit($this->twig->render('client_edit_page.html.twig', array('client' => $client)));
+        exit($this->twig->render('client_edit_page.html.twig', array('client' => $client, 'page_token' => $page_token)));
     }
 
     /**

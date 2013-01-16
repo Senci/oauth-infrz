@@ -5,33 +5,39 @@
 {% block header %}Clients{% endblock %}
 
 {% block content %}
+    <p class="lead">Welcome to the client-overview page.</p>
     {% if success is defined %}
         <div class="alert alert-success">
             <b>{{ success.title }}:</b><br>{{ success.message }}
         </div>
     {% endif %}
+    <p>
     <a href="/client/new" class="btn btn-primary">
         <i class="icon-plus-sign icon-white"></i> Register a new client
-    </a>
-    <table class="table table-bordered table-hover table-condensed">
-        <caption>Your clients:</caption>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for client in clients %}
+    </a></p>
+    {% if clients is not empty %}
+        <table class="table table-bordered table-hover table-condensed">
+            <caption>Your clients:</caption>
+            <thead>
             <tr>
-                <td>
-                    <a href="/client/_{{ client.id }}">{{ client.name }}</a>
-                </td>
-                <td>
-                    {{ client.description }}
-                </td>
+                <th>Name</th>
+                <th>Description</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>
+                        <a href="/client/_{{ client.id }}">{{ client.name }}</a>
+                    </td>
+                    <td>
+                        {{ client.description }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You are currently not managing any clients. Add a new client by clicking on the button. =)</p>
+    {% endif %}
 {% endblock %}

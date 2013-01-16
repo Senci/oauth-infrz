@@ -13,6 +13,7 @@ use Infrz\OAuth\Model\AuthToken;
 use Infrz\OAuth\Model\AuthCode;
 use Infrz\OAuth\Model\RefreshToken;
 use Infrz\OAuth\Model\WebToken;
+use Infrz\OAuth\Model\PageToken;
 
 class DatabaseWrapper
 {
@@ -128,6 +129,28 @@ class DatabaseWrapper
         $stmt->bindParam(':description', $client->description);
         $stmt->bindParam(':redirect_uri', $client->redirect_uri);
         $stmt->bindValue(':default_scope', json_encode($client->default_scope));
+        $stmt->bindValue(':id', $client->id);
+        $stmt->execute();
+
+        return $this->getClientById($client->id);
+    }
+
+    /**
+     * Generates new client_id and client_secret and updates those in the database.
+     *
+     * @param $client
+     */
+    public function updateClientCredentials($client)
+    {
+        $client_id = $this->getUniqueHash($client->secret, 'client', 'client_id');
+        $client_secret = $this->getUniqueHash($client->key, 'client', 'client_secret');
+        $update_query = 'UPDATE client SET
+                          client_id = :client_id, client_secret = :client_secret
+                         WHERE
+                          id = :id';
+        $stmt = $this->db->prepare($update_query);
+        $stmt->bindParam(':client_id', $client_id);
+        $stmt->bindParam(':client_secret', $client_secret);
         $stmt->bindValue(':id', $client->id);
         $stmt->execute();
 
@@ -485,7 +508,7 @@ class DatabaseWrapper
     }
 
     /**
-     * Creates a web_token for the client and user in the database.
+     * Creates a web_token for the user in the database.
      *
      * @param User $user The user object as retrieved from db.
      * @return WebToken
@@ -537,6 +560,57 @@ class DatabaseWrapper
     }
 
     /**
+     * Creates a page_token for the user in the database.
+     *
+     * @param User $user The user object as retrieved from db.
+     * @return WebToken
+     */
+    public function insertPageToken(User $user)
+    {
+        $page_token = $this->getUniqueHash($user->alias, 'page_token', 'token');
+        $insert_token = 'INSERT INTO page_token (user_id, token, expires_at)
+                         VALUES (:user_id, :token, :expires_at);';
+        $stmt = $this->db->prepare($insert_token);
+        $stmt->bindParam('user_id', $user->id);
+        $stmt->bindParam('token', $page_token);
+        $stmt->bindValue('expires_at', time()+(30*60));
+        $stmt->execute();
+
+        return $this->getPageTokenByToken($page_token);
+    }
+
+    /**
+     * Deletes a page_token from database by the page_token-value.
+     *
+     * @param string $token
+     * @return bool Indicates whether the delete was successful.
+     */
+    public function deletePageToken($token)
+    {
+        $query = 'DELETE FROM page_token WHERE token = :token';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':token', $token);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Returns a page_token by the page_token-value.
+     *
+     * @param $token
+     * @return PageToken
+     */
+    public function getPageTokenByToken($token)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM page_token WHERE token = :token;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\PageToken');
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    /**
      * Generates a salted hash which is unique for its table-column.
      *
      * @param string $data string to be hashed
@@ -548,9 +622,8 @@ class DatabaseWrapper
     protected function getUniqueHash($data, $tableName, $columnName)
     {
         do {
-            $now = new \DateTime();
             $random = bin2hex(openssl_random_pseudo_bytes(50));
-            $hashMe = sprintf('%s - %s : %s', $random, $data, $now->getTimestamp());
+            $hashMe = sprintf('%s - %s : %s', $random, $data, time());
             $result = hash('sha512', $hashMe);
             $select = sprintf('SELECT id FROM %s WHERE %s = :hash;', $tableName, $columnName);
             $query = $this->db->prepare($select);
@@ -579,6 +652,7 @@ class DatabaseWrapper
             $this->db->exec('DROP TABLE auth_code');
             $this->db->exec('DROP TABLE refresh_token');
             $this->db->exec('DROP TABLE web_token');
+            $this->db->exec('DROP TABLE page_token');
         }
 
         $this->db->exec(
@@ -633,6 +707,14 @@ class DatabaseWrapper
 
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS web_token (
+            id INTEGER primary key,
+            user_id int,
+            token varchar(128) unique,
+            expires_at int);'
+        );
+
+        $this->db->exec(
+            'CREATE TABLE IF NOT EXISTS page_token (
             id INTEGER primary key,
             user_id int,
             token varchar(128) unique,

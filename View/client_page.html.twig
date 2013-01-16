@@ -35,6 +35,13 @@
         <dt>Client-Secret <i id="cs_hint" class="icon-question-sign"></i></dt>
         <dd><pre>{{ client.client_secret }}</pre></dd>
     </dl>
+    <div class="pull-right">
+        <form action="/client/_{{ client.id }}/new_credentials" method="POST">
+            <input type="hidden" name="page_token" value="{{ page_token }}">
+            <i id="rc_hint" class="icon-question-sign"></i>
+            <button class="btn btn-danger" type="submit">Renew Client-ID & Client-Secret</button>
+        </form>
+    </div>
 
     <div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
         <div class="modal-header">
@@ -47,6 +54,7 @@
         </div>
         <div class="modal-footer">
             <form action="/client/_{{ client.id }}/delete" method="POST">
+                <input type="hidden" name="page_token" value="{{ page_token }}">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
                 <button class="btn btn-danger" type="submit">Delete</button>
             </form>
@@ -58,5 +66,6 @@
     <script type="text/javascript">
         // tooltips
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
+        $('#rc_hint').tooltip({title:'This will invalidate and replace your credentials.'});
     </script>
 {% endblock %}
