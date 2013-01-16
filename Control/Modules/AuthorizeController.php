@@ -16,27 +16,20 @@ class AuthorizeController extends AbstractController
      */
     public function mainAction()
     {
+        if (!$this->authFactory->isAuthenticated()) {
+            $currentURL = sprintf('https://%s%s', $_SERVER["SERVER_NAME"], $_SERVER["REQUEST_URI"]);
+            $this->responseBuilder->buildLogin($currentURL);
+        }
         $this->isGetRequest();
 
         // set all needed GET-Variables to ${get-variable-name} if set
         $client_id     = isset($_GET['client_id'])     ? $_GET['client_id'] : false;
         $redirect_uri  = isset($_GET['redirect_uri'])  ? $_GET['redirect_uri'] : false;
-        $scope         = isset($_GET['scope'])         ? $_GET['scope'] : false;
-
 
         if (!$client_id or !$redirect_uri) {
             $this->responseBuilder->buildError('missing_param');
         }
-
-        // set scope to array or default value
-        if ($scope) {
-            $scope = explode(',', $scope);
-        } else {
-            $scope = array();
-        }
-
         $client = $this->db->getClientByClientId($client_id);
-
         if (!$client) {
             $this->responseBuilder->buildError('invalid_param', 'The given client_id is invalid.');
         }
@@ -44,11 +37,7 @@ class AuthorizeController extends AbstractController
             $this->responseBuilder->buildError('invalid_param', 'The given redirect_uri is invalid.');
         }
 
-        if ($this->authFactory->isAuthenticated()) {
-            $this->responseBuilder->buildAuthorize($client, $scope);
-        } else {
-            $this->responseBuilder->buildLogin();
-        }
+        $this->responseBuilder->buildAuthorize($client, $client->default_scope);
     }
 
     /**

@@ -11,6 +11,6 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        setTimeout("window.location = '{{ redirect }}'", 5000);
+        setTimeout('window.location.href = "{{ redirect | raw }}"', 5000);
     </script>
 {% endblock %}
