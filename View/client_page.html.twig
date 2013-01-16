@@ -18,6 +18,12 @@
         <dd>{{ client.name }}</dd><br/>
         <dt>Description</dt>
         <dd>{{ client.description }}</dd><br/>
+        <dt>Host</dt>
+        {% if client.host is empty %}
+            <dd>Host is not defined.</dd><br/>
+        {% else %}
+            <dd>{{ client.host | join(', ' )}}</dd><br/>
+        {% endif %}
         <dt>Redirect URI</dt>
         <dd>{{ client.redirect_uri }}</dd><br/>
         <dt>Default scope</dt>

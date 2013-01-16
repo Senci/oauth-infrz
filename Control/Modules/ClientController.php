@@ -86,24 +86,27 @@ class ClientController extends AbstractController
 
         $name          = isset($_POST['name'])          ? $_POST['name'] : false;
         $description   = isset($_POST['description'])   ? $_POST['description'] : false;
+        $host          = isset($_POST['host'])          ? $_POST['host'] : false;
         $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
-        if (!$name or !$description or !$redirect_uri or !$default_scope) {
+        if (!$name or !$description or !$host or !$redirect_uri or !$default_scope) {
             $this->responseBuilder->buildError('missing_param');
         }
 
         $name = urldecode($name);
         $user = $this->authFactory->getUser();
         $description = urldecode($description);
+        $host = explode(',', str_replace(' ', '', urldecode($host)));
+        if ((count($host) <= 1) and (empty($host[0]))) {
+            $host = array();
+        }
         $redirect_uri = urldecode($redirect_uri);
         $default_scope = json_decode(urldecode($default_scope));
 
-        $client = $this->db->insertClient($name, $user, $description, $redirect_uri, $default_scope);
+        $client = $this->db->insertClient($name, $user, $description, $host, $redirect_uri, $default_scope);
 
         header(sprintf('Location: /client/_%s', $client->id));
-
-        $this->responseBuilder->buildNewClient();
     }
 
     /**
@@ -128,15 +131,22 @@ class ClientController extends AbstractController
 
         $name          = isset($_POST['name'])          ? $_POST['name'] : false;
         $description   = isset($_POST['description'])   ? $_POST['description'] : false;
+        $host          = isset($_POST['host'])          ? $_POST['host'] : false;
         $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
         $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
 
-        if (!$name or !$description or !$redirect_uri or !$default_scope) {
+        if (!$name or !$description or !$host or !$redirect_uri or !$default_scope) {
             $this->responseBuilder->buildError('missing_param');
         }
 
         $client->name = urldecode($name);
         $client->description = urldecode($description);
+        $host = explode(',', str_replace(' ', '', urldecode($host)));
+        if ((count($host) <= 1) and (empty($host[0]))) {
+            $client->host = array();
+        } else {
+            $client->host = $host;
+        }
         $client->redirect_uri = urldecode($redirect_uri);
         $client->default_scope = json_decode(urldecode($default_scope));
 

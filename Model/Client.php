@@ -15,11 +15,13 @@ class Client
     public $description;
     public $client_id;
     public $client_secret;
+    public $host;
     public $redirect_uri;
     public $default_scope;
 
     public function __construct()
     {
         $this->default_scope = json_decode($this->default_scope);
+        $this->host = json_decode($this->host);
     }
 }

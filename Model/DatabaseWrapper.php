@@ -52,6 +52,7 @@ class DatabaseWrapper
             'Trustworthy inc.',
             $user,
             'A corporation you can trust!',
+            array('tw.com', '192.168.1.56'),
             'https://tw.com/',
             array('alias', 'groups')
         );
@@ -59,6 +60,7 @@ class DatabaseWrapper
             'Ikum GmbH',
             $user,
             'Let us be friends... <3!',
+            array('ig.com', 'yourmama.com'),
             'https://ig.com/',
             array()
         );
@@ -66,6 +68,7 @@ class DatabaseWrapper
             'Eve Pharm',
             $user2,
             'We wantz your Dataz, nao! <br/> P.S.: Buy our cheap medicine please!',
+            array('ei.com'),
             'https://ei.com/',
             array('alias', 'groups')
         );
@@ -90,18 +93,19 @@ class DatabaseWrapper
      * @param array $default_scope
      * @return Client
      */
-    public function insertClient($name, User $user, $description, $redirect_uri, $default_scope)
+    public function insertClient($name, User $user, $description, $host, $redirect_uri, $default_scope)
     {
         $client_id = $this->getUniqueHash($name, 'client', 'client_id');
         $client_secret = $this->getUniqueHash($redirect_uri, 'client', 'client_secret');
         $insert_query = 'INSERT INTO client
-                          (name, user_id, description, client_id, client_secret, redirect_uri, default_scope)
+                          (name, user_id, description, host, client_id, client_secret, redirect_uri, default_scope)
                          VALUES
-                          (:name, :user_id, :description, :client_id, :client_secret, :redirect_uri, :default_scope)';
+                          (:name, :user_id, :description, :host, :client_id, :client_secret, :redirect_uri, :default_scope)';
         $stmt = $this->db->prepare($insert_query);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':user_id', $user->id);
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':host', json_encode($host));
         $stmt->bindParam(':client_id', $client_id);
         $stmt->bindParam(':client_secret', $client_secret);
         $stmt->bindParam(':redirect_uri', $redirect_uri);
@@ -120,13 +124,14 @@ class DatabaseWrapper
     public function updateClient(Client $client)
     {
         $update_query = 'UPDATE client SET
-                          name = :name, description = :description,
+                          name = :name, description = :description, host = :host,
                           redirect_uri = :redirect_uri, default_scope = :default_scope
                          WHERE
                           id = :id';
         $stmt = $this->db->prepare($update_query);
         $stmt->bindParam(':name', $client->name);
         $stmt->bindParam(':description', $client->description);
+        $stmt->bindParam(':host', json_encode($client->host));
         $stmt->bindParam(':redirect_uri', $client->redirect_uri);
         $stmt->bindValue(':default_scope', json_encode($client->default_scope));
         $stmt->bindValue(':id', $client->id);
@@ -664,6 +669,7 @@ class DatabaseWrapper
             client_id varchar(128) unique,
             client_secret varchar(128),
             redirect_uri varchar,
+            host varchar,
             default_scope varchar);'
         );
 

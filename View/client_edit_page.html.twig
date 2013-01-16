@@ -20,6 +20,8 @@
             <dd><input type="text" name="name" value="{{ client.name }}"/></dd><br/>
             <dt>Description <i id="desc_hint" class="icon-question-sign"></i></dt>
             <dd><textarea name="description" rows="3">{{ client.description }}</textarea></dd><br/>
+            <dt>Host <i id="host_hint" class="icon-question-sign"></i></dt>
+            <dd><input type="text" name="host" value="{{ client.host | join(', ') }}"/></dd><br/>
             <dt>Redirect URI <i id="ru_hint" class="icon-question-sign"></i></dt>
             <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
             <dt>Default scope <i id="ds_hint" class="icon-question-sign"></i></dt>
@@ -61,6 +63,7 @@
 
         // tooltips
         $('#desc_hint').tooltip({title:'A brief description of the clients functionality and purpose.'});
+        $('#host_hint').tooltip({title:'The host from which client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.'});
         $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
         $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
