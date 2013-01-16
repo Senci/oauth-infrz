@@ -9,7 +9,7 @@ Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni
 To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Valid Calls
-Keep in mind that all url-values have to be _urlencoded_ when passed (for convenience even on POST-requests).
+Keep in mind that all url-values have to be *urlencoded* when passed. All POST-calls have to have a valid *page_token* set.
 
 ## Web-Page
 Web-Page calls return their information as HTML.
@@ -24,8 +24,8 @@ Web-Page calls return their information as HTML.
  * *client_id*: The *client_id* of the client requesting an authorization.
  * *redirect_uri*: The url to which the user is redirected after successful permission grant.
  * The *response_type* variable (from the OAuth2 specification) is intentionally being ignored. The response-type at this stage is *code*.
-* **POST "/authorize/grant?code={c}":** Displaying information about the access grant and redirecting to client-site with code.
- * *code*: The verification *code* (from the OAuth2 specification) denoting that the user has accepted the permissions.
+* **POST "/authorize/grant?scope={s}":** Displaying information about the access grant and redirecting to client-site with *auth_code*.
+ * *scope*: The *scope* which was granted by the user.
 * **GET "/client"**: The client overview displays a list of all clients the currently logged in user manages.
  * The client module (and all its actions) is only accessible if the user has permissions to manage clients.
 * **GET "/client/new"**: The form to register a new client.
