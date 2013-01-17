@@ -67,8 +67,5 @@
         $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
         $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
-
-        {% for scope in client.default_scope %}
-        {% endfor %}
     </script>
 {% endblock %}

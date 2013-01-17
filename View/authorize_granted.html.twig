@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Authorized {{ client.name }}{% endblock %}
+
+{% block header %}Access Granted!{% endblock %}
+
+{% block content %}
+    <p class="lead">You have successfully granted {{ client.name }} access to your account information.</p>
+    <p class="alert alert-info">
+        {% if scope is not empty %}
+            <b>Granted Scope:</b><br/>
+            You have granted {{ client.name }} access to your {{ scope | join(", ") | replace('_', ' ') | capitalize }}.
+        {% else %}
+            <b>{{ client.name }} doesn't have access to any personal information.</b><br/>
+            That means that you are anonymous to {{ client.name }}. ;)
+        {% endif %}
+    </p>
+    <p>You will be redirected to your <a href="{{ redirect }}">origin</a> in 5 seconds.</p>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        setTimeout('window.location.href = "{{ redirect | raw }}"', 5000);
+    </script>
+{% endblock %}

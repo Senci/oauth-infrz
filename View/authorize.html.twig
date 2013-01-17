@@ -1,24 +1,48 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ error.error }}{% endblock %}
+{% block title %}Authorize {{ client.name }}{% endblock %}
 
 {% block header %}{{ client.name }} is requesting your datas!{% endblock %}
 
 {% block content %}
     <p class="lead">By clicking on "Agree" you are sharing the below selected information with {{ client.name }}.</p>
     <p class="alert alert-info"><b>{{ client.name }}:</b><br/>{{ client.description }}</p>
-    <form class="form-horizontal">
-        {% if scope is not empty %}
-            <p>You are authorizing access to:</p>
-            {% for scope in scopes %}
-                <label class="checkbox">
-                    <input type="checkbox" value="{{ scope }}" id="{{ scope }}" checked="true">
-                    {{ scope|replace({'_': ' '})|capitalize }}
-                </label>
-            {% endfor %}
+    <form class="form-horizontal" action="/authorize/grant" method="POST">
+        <input type="hidden" name="page_token" value="{{ page_token }}" />
+        <input type="hidden" name="client_id" value="{{ client.client_id }}" />
+        <input type="hidden" id="scope" name="scope" />
+        <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}" />
+        {% if client.default_scope is not empty %}
+            <div class="well">
+                <p>You are authorizing access to:</p>
+                {% for scope in client.default_scope %}
+                    <label class="checkbox">
+                        <input type="checkbox" id="{{ scope }}" checked="true">
+                        {{ scope|replace({'_': ' '})|capitalize }}
+                    </label>
+                {% endfor %}
+            </div>
         {% else %}
             <p>{{ client.name }} does not need any of your datas, therefore you will stay anonymous to this client.</p>
         {% endif %}
         <button type="submit" class="btn btn-success">Agree</button>
     </form>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        // set scope value right
+        function generateScopeValue() {
+            var scope = [];
+            var checkboxes = $(':checkbox');
+            $.each(checkboxes, function() {
+                if (this.checked) {
+                    scope.push(this.getAttribute('id'));
+                }
+            });
+            var json = JSON.stringify(scope);
+            $('#scope').val(json);
+        }
+        generateScopeValue();
+    </script>
 {% endblock %}

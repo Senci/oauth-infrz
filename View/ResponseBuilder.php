@@ -4,6 +4,7 @@ namespace Infrz\OAuth\View;
 
 use Infrz\OAuth\Model\ErrorCodes;
 use Infrz\OAuth\Control\Security\AuthFactoryInterface;
+use Infrz\OAuth\Model\Client;
 
 /**
  * ResponseGenerator generates Responses
@@ -70,7 +71,7 @@ class ResponseBuilder
     /**
      * Builds the client page.
      *
-     * @param array $client
+     * @param Client $client
      * @param string $page_token
      */
     public function buildClientPage($client, $page_token)
@@ -90,7 +91,7 @@ class ResponseBuilder
     /**
      * Builds the client edit page.
      *
-     * @param array $client
+     * @param Client $client
      * @param string $page_token
      */
     public function buildClientEditPage($client, $page_token)
@@ -101,19 +102,38 @@ class ResponseBuilder
     /**
      * Builds an authorize page.
      *
-     * @param $client
-     * @param $scopes
+     * @param Client $client
+     * @param string $page_token
+     * @param string $redirect_uri
+     * @param array $scope
      */
-    public function buildAuthorize($client, $scopes)
+    public function buildAuthorize($client, $page_token, $redirect_uri, $scope)
     {
-        exit($this->twig->render('authorize.html.twig', array('client' => $client, 'scopes' => $scopes)));
+        $args = array(
+            'client' => $client, 'page_token' => $page_token, 'redirect_uri' => $redirect_uri, 'scope' => $scope
+        );
+        exit($this->twig->render('authorize.html.twig', $args));
+    }
+
+    /**
+     * Displaying information about the access grant and redirecting to client-site with auth_code.
+     *
+     * @param Client $client
+     * @param string $redirect
+     * @param array $scope
+     * @param string $auth_code
+     */
+    public function buildAuthorizeGranted($client, $redirect, $scope, $auth_code)
+    {
+        $args = array('client' => $client, 'scope' => $scope, 'redirect' => $redirect, 'auth_code' => $auth_code);
+        exit($this->twig->render('authorize_granted.html.twig', $args));
     }
 
     /**
      * Builds a login page.
      *
-     * @param $redirect
-     * @param $error_code
+     * @param string $redirect
+     * @param string $error_code
      */
     public function buildLogin($redirect = '%2F', $error_code = false)
     {
@@ -130,7 +150,7 @@ class ResponseBuilder
     /**
      * Builds a login success page.
      *
-     * @param $redirect
+     * @param string $redirect
      */
     public function buildLoginSuccess($redirect)
     {
