@@ -13,7 +13,9 @@ use Infrz\OAuth\Control\Security\AuthFactoryInterface;
 
 abstract class AbstractController
 {
+    /* @var $responseBuilder ResponseBuilder */
     protected $responseBuilder;
+    /* @var $db DatabaseWrapper */
     protected $db;
     /* @var $authFactory AuthFactoryInterface */
     protected $authFactory;

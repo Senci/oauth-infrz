@@ -9,10 +9,9 @@ Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni
 To install all dependencies, run `php composer.phar install` in your shell from the main directory.
 
 # Valid Calls
-Keep in mind that all url-values have to be *urlencoded* when passed. All POST-calls (except for "/login/authorize") must have a valid *page_token* set.
-
 ## Web-Page
-Web-Page calls return their information as HTML.
+Web-Page calls return their information as a HTML web page.
+Keep in mind that all url-values have to be *urlencoded* when passed. All POST-calls (except for "/login/authorize") must have a valid *page_token* set.
 * **GET "/":** The main page with informational text.
 * **GET "/login?redirect={r}":** The login form to be used with ActiveDirectory-Credentials.
  * *redirect*: The url to which the user is redirected after successful login.
@@ -50,7 +49,7 @@ Web-Page calls return their information as HTML.
 
 ## REST
 REST calls return their information as a JSON encoded string.
-* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token (*auth_token*) if the call is valid.
+* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token ( *auth_token* ) if the call is valid.
  * *grant_type*: The *grant_type* (from Oauth2 specification) which is being used. The value has to be *authorization_code* or *refresh_token*.
  * *client_id*: The *client_id* from the requesting client.
  * *client_secret*: The *client_secret* mathing to the client_id.

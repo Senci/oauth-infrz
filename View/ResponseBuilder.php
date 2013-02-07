@@ -5,6 +5,8 @@ namespace Infrz\OAuth\View;
 use Infrz\OAuth\Model\ErrorCodes;
 use Infrz\OAuth\Control\Security\AuthFactoryInterface;
 use Infrz\OAuth\Model\Client;
+use Infrz\OAuth\Model\AuthToken;
+use Infrz\OAuth\Model\RefreshToken;
 
 /**
  * ResponseGenerator generates Responses
@@ -31,7 +33,7 @@ class ResponseBuilder
     }
 
     /**
-     * Builds an error.
+     * Builds an error web page.
      *
      * @param  string $error_code        The error that was triggered
      * @param  string $error_description Additional Information about the error that was produced
@@ -42,6 +44,20 @@ class ResponseBuilder
         http_response_code($error['http_status']);
 
         exit($this->twig->render('error.html.twig', array('error' => $error)));
+    }
+
+    /**
+     * Builds an error as a JSON encoded string.
+     *
+     * @param  string $error_code        The error that was triggered
+     * @param  string $error_description Additional Information about the error that was produced
+     */
+    public function buildJsonError($error_code, $error_description = null)
+    {
+        $error = $this->getError($error_code, $error_description);
+        http_response_code($error['http_status']);
+
+        exit(json_encode($error));
     }
 
 
@@ -127,6 +143,22 @@ class ResponseBuilder
     }
 
     /**
+     * Builds a JSON encoded auth_token with its information.
+     *
+     * @param AuthToken $auth_token
+     * @param RefreshToken $refresh_token
+     */
+    public function buildAuthToken($auth_token, $refresh_token)
+    {
+        $response = new \StdClass();
+        $response->access_token = $auth_token->token;
+        $response->refresh_token = $refresh_token->token;
+        $response->scope = $auth_token->scope;
+        $response->expires_at = (int) $auth_token->expires_at;
+        exit(json_encode($response));
+    }
+
+    /**
      * Builds a login page.
      *
      * @param string $redirect
@@ -158,7 +190,7 @@ class ResponseBuilder
      * Returns an Error by the error_code, alters the description if given.
      *
      * @param string $error_code
-     * @param bool|string $error_description
+     * @param string $error_description
      * @return array The desired Error as array
      */
     protected function getError($error_code, $error_description = false)

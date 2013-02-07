@@ -444,6 +444,23 @@ class DatabaseWrapper
     }
 
     /**
+     * Returns an auth_token by the id.
+     *
+     * @param int $id
+     * @return AuthToken
+     */
+    public function getAuthTokenById($id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM auth_token WHERE id = :id;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AuthToken');
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $auth_token = $stmt->fetch();
+
+        return $auth_token;
+    }
+
+    /**
      * Returns an auth_token by the auth_token-value.
      *
      * @param $token
@@ -473,7 +490,7 @@ class DatabaseWrapper
                          VALUES (:auth_token_id, :token, :created);';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam('auth_token_id', $auth_token->id);
-        $stmt->bindParam('token', $token);
+        $stmt->bindParam('token', $refresh_token);
         $stmt->bindValue('created', time());
         $stmt->execute();
 
