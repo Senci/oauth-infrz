@@ -182,7 +182,7 @@ class ClientController extends AbstractController
             $this->responseBuilder->buildError('missing_param');
         }
         $client = $this->db->getClientById($id);
-        if ((!$client instanceof Client) or !($client->user_id != $this->authFactory->getUser()->id)) {
+        if (!($client instanceof Client) or ($client->user_id != $this->authFactory->getUser()->id)) {
             $this->responseBuilder->buildError('not_found');
         }
 
