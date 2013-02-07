@@ -4,9 +4,10 @@ namespace Infrz\OAuth\View;
 
 use Infrz\OAuth\Model\ErrorCodes;
 use Infrz\OAuth\Control\Security\AuthFactoryInterface;
-use Infrz\OAuth\Model\Client;
 use Infrz\OAuth\Model\AuthToken;
+use Infrz\OAuth\Model\Client;
 use Infrz\OAuth\Model\RefreshToken;
+use Infrz\OAuth\Model\User;
 
 /**
  * ResponseGenerator generates Responses
@@ -143,7 +144,7 @@ class ResponseBuilder
     }
 
     /**
-     * Builds a JSON encoded auth_token with its information.
+     * Builds a JSON encoded auth_token response.
      *
      * @param AuthToken $auth_token
      * @param RefreshToken $refresh_token
@@ -155,6 +156,21 @@ class ResponseBuilder
         $response->refresh_token = $refresh_token->token;
         $response->scope = $auth_token->scope;
         $response->expires_at = (int) $auth_token->expires_at;
+        exit(json_encode($response));
+    }
+
+    /**
+     * Builds a JSON encoded user response.
+     *
+     * @param User $user
+     * @param array $scope
+     */
+    public function buildUser($user, $scope)
+    {
+        $response = new \StdClass();
+        foreach ($scope as $attribute) {
+            $response->$attribute = $user->$attribute;
+        }
         exit(json_encode($response));
     }
 
