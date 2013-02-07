@@ -105,13 +105,10 @@ class ResponseBuilder
      * @param Client $client
      * @param string $page_token
      * @param string $redirect_uri
-     * @param array $scope
      */
-    public function buildAuthorize($client, $page_token, $redirect_uri, $scope)
+    public function buildAuthorize($client, $page_token, $redirect_uri)
     {
-        $args = array(
-            'client' => $client, 'page_token' => $page_token, 'redirect_uri' => $redirect_uri, 'scope' => $scope
-        );
+        $args = array('client' => $client, 'page_token' => $page_token, 'redirect_uri' => $redirect_uri);
         exit($this->twig->render('authorize.html.twig', $args));
     }
 
