@@ -16,20 +16,19 @@ class UserController extends AbstractController
      */
     public function mainAction()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $this->responseBuilder->buildError('not_found');
+        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+            $this->responseBuilder->buildJsonError('not_found');
         }
 
-        $alias       = isset($_POST['alias'])       ? urldecode($_POST['alias']) : false;
-        $oauth_token = isset($_POST['oauth_token']) ? urldecode($_POST['oauth_token']) : false;
+        $oauth_token = isset($_GET['oauth_token']) ? urldecode($_GET['oauth_token']) : false;
 
-        if (!$alias or !$oauth_token) {
+        if (!$oauth_token) {
             $this->responseBuilder->buildJsonError('missing_param');
         }
         if (!$auth_token = $this->db->getAuthTokenByToken($oauth_token)) {
             $this->responseBuilder->buildJsonError('not_found');
         }
-        if (!$user = $this->db->getUserByAlias($alias)) {
+        if (!$user = $this->db->getUserById($auth_token->user_id)) {
             $this->responseBuilder->buildJsonError('not_found');
         }
         if ($auth_token->user_id != $user->id) {

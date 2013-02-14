@@ -81,7 +81,6 @@ class Autoloader
         self::addPath('Control', true, 'Infrz\OAuth');
         self::addPath('Model', true, 'Infrz\OAuth');
         self::addPath('View', true, 'Infrz\OAuth');
-        self::addClass('Infrz\OAuth\ResponseBuilder', 'ResponseBuilder.php');
     }
 }
 

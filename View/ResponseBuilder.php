@@ -135,11 +135,10 @@ class ResponseBuilder
      * @param Client $client
      * @param string $redirect
      * @param array $scope
-     * @param string $auth_code
      */
-    public function buildAuthorizeGranted($client, $redirect, $scope, $auth_code)
+    public function buildAuthorizeGranted($client, $redirect, $scope)
     {
-        $args = array('client' => $client, 'scope' => $scope, 'redirect' => $redirect, 'auth_code' => $auth_code);
+        $args = array('client' => $client, 'scope' => $scope, 'redirect' => $redirect);
         exit($this->twig->render('authorize_granted.html.twig', $args));
     }
 
@@ -168,9 +167,11 @@ class ResponseBuilder
     public function buildUser($user, $scope)
     {
         $response = new \StdClass();
+        $response->type = 'User';
         foreach ($scope as $attribute) {
             $response->$attribute = $user->$attribute;
         }
+        $response->scope = $scope;
         exit(json_encode($response));
     }
 

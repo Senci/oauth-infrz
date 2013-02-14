@@ -63,11 +63,16 @@ class AuthorizeController extends AbstractController
         if (!($client instanceof Client) or !$redirect_uri or !$scope) {
             $this->responseBuilder->buildError('missing_param');
         }
-        var_dump($scope);
 
         $auth_code = $this->db->insertAuthCode($client, $user, $scope);
+        if (!strpos($redirect_uri, '?')) {
+            $redirect_uri = sprintf('%s?code=%s', $redirect_uri, $auth_code->code);
+        } else {
+            $redirect_uri = rtrim($redirect_uri, '&');
+            $redirect_uri = sprintf('%s&code=%s', $redirect_uri, $auth_code->code);
+        }
 
-        $this->responseBuilder->buildAuthorizeGranted($client, $redirect_uri, $scope, $auth_code->code);
+        $this->responseBuilder->buildAuthorizeGranted($client, $redirect_uri, $scope);
     }
 
     public function tokenAction()
