@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="/css/site.css" rel="stylesheet" media="screen">
+        <title>{% block title %}{% endblock %} - OAuth Informatik Universität Hamburg</title>
+    {% endblock %}
+</head>
+<body>
+<div class="navbar navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/Demo/">OAuth InfRZ Demo Application</a>
+            <ul class="nav">
+                <li><a href="/Demo/?logout">logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="content" class="container">
+    <div class="page-header">
+        <h1>{% block header %}{% endblock %}</h1>
+    </div>
+    {% block content %}{% endblock %}
+</div>
+
+<!-- load js at the end to have faster build time -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+{% block javascript %}{% endblock %}
+</body>
+</html>

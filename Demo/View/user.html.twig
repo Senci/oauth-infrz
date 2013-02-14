@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Demo application{% endblock %}
+
+{% block header %}Demo Application{% endblock %}
+
+{% block content %}
+    <div class="hero">
+        {% if user.first_name is not null %}
+            <h1>Moin {{ user.first_name }}.</h1>
+        {% elseif user.alias is not null %}
+            <h1>Moin {{ user.alias }}.</h1>
+        {% else %}
+            <h1>Moin Anonymous.</h1>
+        {% endif %}
+        <p class="lead">You have successfully proven that you are a Member of the IT-Department from the Universität Hamburg.</p>
+        <p>This are the informations you have granted us with:</p>
+        <dl class="dl-horizontal">
+            {% for key, value in user %}
+                <dt>{{ key | replace('_', ' ') }}</dt>
+                <dd>{{ value | join(', ' )}}</dd>
+            {% endfor %}
+        </dl>
+    </div>
+{% endblock %}

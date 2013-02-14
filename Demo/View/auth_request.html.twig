@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Demo application{% endblock %}
+
+{% block header %}Demo Application{% endblock %}
+
+{% block content %}
+    <p class="lead">Welcome to the Demo Application please authorize us at the <a href="{{ grant_link }}&redirect_uri={{ redirect_uri | url_encode }}">Infrz OAuth Service</a>.</p>
+{% endblock %}
