@@ -17,7 +17,7 @@
                 <p>You are authorizing access to:</p>
                 {% for scope in client.default_scope %}
                     <label class="checkbox">
-                        <input type="checkbox" id="{{ scope }}" checked="true">
+                        <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();">
                         {{ scope|replace({'_': ' '})|capitalize }}
                     </label>
                 {% endfor %}

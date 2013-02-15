@@ -23,8 +23,9 @@ session_start();
 
 $logout = isset($_GET['logout']);
 if ($logout) {
-    session_destroy();
-    header('Location: /Demo/');
+    unset($_SESSION['token']);
+    unset($_SESSION['auth_token']);
+    header('Location: /Demo');
 }
 
 $client_config_path = sprintf('%s/client.ini', getcwd());
