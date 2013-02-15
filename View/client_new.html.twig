@@ -12,13 +12,13 @@
         <dl>
             <dt>Name</dt>
             <dd><input type="text" name="name"/></dd><br/>
-            <dt>Description <i id="desc_hint" class="icon-question-sign"></i></dt>
+            <dt>Description <i id="desc_hint" class="icon-question-sign icon-white"></i></dt>
             <dd><textarea name="description" rows="3"></textarea></dd><br/>
-            <dt>Host <i id="host_hint" class="icon-question-sign"></i></dt>
+            <dt>Host <i id="host_hint" class="icon-question-sign icon-white"></i></dt>
             <dd><input type="text" name="host" value="{{ client.host | join(', ') }}"/></dd><br/>
-            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign"></i></dt>
+            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign icon-white"></i></dt>
             <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
-            <dt>Default scope <i id="ds_hint" class="icon-question-sign"></i></dt>
+            <dt>Default scope <i id="ds_hint" class="icon-question-sign icon-white"></i></dt>
             <dd>
                 <input type="hidden" name="default_scope" id="scope">
                 {% for scope in available_scopes %}
