@@ -1,6 +1,10 @@
 # OAuth-Infrz
 Single-Sign-On solution for ActiveDirectory of "Informatik Rechenzentrum" at Uni Hamburg.
 
+# OAuth
+## How OAuth2 works
+![OAuth2 process](doc/oauth2_process.png)
+
 # Installation
 To install this package simply clone this project and set up a web-server. there is a sample nginx-config in the configs folder.
 
