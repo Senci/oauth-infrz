@@ -5,8 +5,17 @@
 {% block header %}Login{% endblock %}
 
 {% block content %}
+    <img class="pull-right" width="130px" src="/img/oauth_logo.png" />
+    <p class="lead">
+        <b>OAuth InfRZ</b> is an authorization service for your <i>Informatik Rechenzentrum</i> account.
+    </p>
     <div class="well pagination-centered slim">
-        <p class="lead">Please login to continue.</p>
+        <p class="lead">
+            {% if client is defined %}
+                <b>{{ client.name }}</b> requires you to authenticate.<br>
+            {% endif %}
+            Please login to continue.
+        </p>
         <form action="/login/authorize" method="POST" class="form-horizontal">
             {% if error is defined %}
                 <div class="alert alert-error">
@@ -15,7 +24,7 @@
             {% endif %}
             <div class="input-prepend input-block-level">
                 <span class="add-on"><i class="icon-user icon-white"></i></span>
-                <input type="text" name="username" placeholder="Username"/>
+                <input type="text" name="username" placeholder="Kennung"/>
             </div><br/><br/>
             <div class="input-prepend input-block-level">
                 <span class="add-on"><i class="icon-lock icon-white"></i></span>

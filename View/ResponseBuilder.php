@@ -180,14 +180,18 @@ class ResponseBuilder
      *
      * @param string $redirect
      * @param string $error_code
+     * @param Client $client
      */
-    public function buildLogin($redirect = '%2F', $error_code = false)
+    public function buildLogin($redirect = '%2F', $error_code = false, $client = false)
     {
         $error = $error_code ? $this->getError($error_code) : null;
 
         $args = array('redirect' => $redirect);
         if ($error) {
             $args['error'] = $error;
+        }
+        if($client) {
+            $args['client'] = $client;
         }
 
         exit($this->twig->render('login.html.twig', $args));

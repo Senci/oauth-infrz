@@ -17,10 +17,6 @@ class AuthorizeController extends AbstractController
      */
     public function mainAction()
     {
-        if (!$this->authFactory->isAuthenticated()) {
-            $currentURL = sprintf('https://%s%s', $_SERVER["SERVER_NAME"], $_SERVER["REQUEST_URI"]);
-            $this->responseBuilder->buildLogin($currentURL);
-        }
         $this->isGetRequest();
 
         // set all needed GET-Variables to ${get-variable-name} if set
@@ -32,6 +28,10 @@ class AuthorizeController extends AbstractController
         }
         if (!$client = $this->db->getClientByClientId($client_id)) {
             $this->responseBuilder->buildError('invalid_param', 'The given client_id is invalid.');
+        }
+        if (!$this->authFactory->isAuthenticated()) {
+            $currentURL = sprintf('https://%s%s', $_SERVER["SERVER_NAME"], $_SERVER["REQUEST_URI"]);
+            $this->responseBuilder->buildLogin($currentURL, false, $client);
         }
         if ($client->redirect_uri != urldecode($redirect_uri)) {
             $this->responseBuilder->buildError('invalid_param', 'The given redirect_uri is invalid.');
