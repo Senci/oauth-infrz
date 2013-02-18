@@ -19,12 +19,15 @@ abstract class AbstractController
     protected $db;
     /* @var $authFactory AuthFactoryInterface */
     protected $authFactory;
+    /* @var $config array */
+    protected $config;
 
-    public function __construct($authFactory)
+    public function __construct($config, $authFactory)
     {
-        $this->db = new DatabaseWrapper();
+        $this->config = $config;
         $this->authFactory = $authFactory;
         $this->responseBuilder = new ResponseBuilder($this->authFactory);
+        $this->db = new DatabaseWrapper();
     }
 
     /**

@@ -20,13 +20,12 @@ class LDAPAuthFactory implements AuthFactoryInterface
     /**
      * Sets the host and port for the required LDAP-Connection.
      *
-     * @param $ldap_host
-     * @param $ldap_port
+     * @param \StdClass $config
      */
-    public function __construct($ldap_host, $ldap_port)
+    public function __construct(\StdClass $config)
     {
-        $this->host = sprintf("%s:%s", $ldap_host, $ldap_port);
-        $this->port = $ldap_port;
+        $this->host = sprintf("%s:%s", $config->host, $config->port);
+        $this->port = $config->port;
         $this->db = new DatabaseWrapper();
     }
 

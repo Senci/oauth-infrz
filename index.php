@@ -23,5 +23,12 @@ ob_start('mb_output_handler');
 // start a session
 session_start();
 
-$front_controller = new FrontController(dirname(__FILE__));
+// load config
+$config_path = 'config.ini';
+$config = parse_ini_file($config_path);
+if (!isset($config['direct_redirect']) or !isset($config['auth_factory']) or !isset($config['auth_factory_config'])) {
+    $config = false;
+}
+
+$front_controller = new FrontController($config);
 $front_controller->run();

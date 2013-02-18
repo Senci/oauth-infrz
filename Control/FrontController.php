@@ -8,33 +8,37 @@
 namespace Infrz\OAuth\Control;
 
 use Infrz\OAuth\View\ResponseBuilder;
-use Infrz\OAuth\Control\Security\LDAPAuthFactory;
 use Infrz\OAuth\Control\Modules\AbstractController;
 
 class FrontController
 {
-    /* root directory */
-    protected $root;
     /* initial action */
     protected $mainAction = 'index_main';
     protected $responseBuilder;
     protected $request;
+    /* AuthFactoryInterface */
     protected $authFactory;
     /* LDAP Config */
     const LDAP_PORT = 636;
     const LDAP_HOST = 'ldaps://fbidc2.informatik.uni-hamburg.de';
 
     /**
-     * @param string $rootPath path to root directory
+     * @param array $config
      */
-    public function __construct($rootPath)
+    public function __construct($config)
     {
-        $this->authFactory = new LDAPAuthFactory(self::LDAP_HOST, self::LDAP_PORT);
-        $this->root = $rootPath;
+        if (!$config) {
+            exit('Your config file is not set properly, please correct it and try again.');
+        }
+        $this->config = $config;
+        if (!$authFactoryConfig = json_decode($config['auth_factory_config'])) {
+            exit('The "auth_factory_config" variable in your config is not parsable by json_decode().');
+        }
+
+        $authFactoryClassName = sprintf('Infrz\OAuth\Control\Security\%s', $config['auth_factory']);
+        $this->authFactory = new $authFactoryClassName($authFactoryConfig);
         $this->responseBuilder = new ResponseBuilder($this->authFactory);
         $this->request = array_merge($_GET, $_POST);
-        //$this->request['method'] = $_SERVER['REQUEST_METHOD'];
-        // TODO load autoloader packages
     }
 
     /**
@@ -62,7 +66,7 @@ class FrontController
         $actionName = sprintf('%sAction', $this->getActionName($actionCommand));
 
         // check for module existence
-        $modulePath = sprintf('%s/Control/Modules/%s.php', $this->root, $moduleName);
+        $modulePath = sprintf('%s/Control/Modules/%s.php', getcwd(), $moduleName);
         if (!is_file($modulePath)) {
             $this->responseBuilder->buildError('not_found');
         }
@@ -72,7 +76,7 @@ class FrontController
 
         $className = sprintf('Infrz\OAuth\Control\Modules\%s', $moduleName);
         /* @var AbstractController $controller */
-        $controller = new $className($this->authFactory);
+        $controller = new $className($this->config, $this->authFactory);
 
         // check whether the Controller got initialized correctly
         if (!is_object($controller)) {
