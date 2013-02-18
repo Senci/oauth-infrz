@@ -72,6 +72,9 @@ class AuthorizeController extends AbstractController
             $redirect_uri = sprintf('%s&code=%s', $redirect_uri, $auth_code->code);
         }
 
+        if ($this->config['direct_redirect']) {
+            header(sprintf('Location: %s', $redirect_uri));
+        }
         $this->responseBuilder->buildAuthorizeGranted($client, $redirect_uri, $scope);
     }
 

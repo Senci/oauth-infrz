@@ -44,6 +44,9 @@ class LoginController extends AbstractController
             $this->responseBuilder->buildLogin($redirect, 'invalid_credentials');
         }
 
+        if ($this->config['direct_redirect']) {
+            header(sprintf('Location: %s', urldecode($redirect)));
+        }
         $this->responseBuilder->addTwigGlobals();
         $this->responseBuilder->buildLoginSuccess(urldecode($redirect), $user);
 
