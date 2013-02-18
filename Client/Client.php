@@ -6,7 +6,7 @@
  * @link     https://github.com/Senci/oauth-infrz/
  */
 
-namespace Infrz\OAuth;
+namespace Infrz\OAuth\Client;
 
 require_once('Model/AuthToken.php');
 require_once('Model/User.php');
