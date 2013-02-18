@@ -18,9 +18,6 @@ class FrontController
     protected $request;
     /* AuthFactoryInterface */
     protected $authFactory;
-    /* LDAP Config */
-    const LDAP_PORT = 636;
-    const LDAP_HOST = 'ldaps://fbidc2.informatik.uni-hamburg.de';
 
     /**
      * @param array $config
