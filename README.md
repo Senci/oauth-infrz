@@ -44,7 +44,7 @@ Keep in mind that all url-values have to be *urlencoded* when passed. All POST-c
 * **GET "/login?redirect={r}":** The login form to be used with ActiveDirectory-Credentials.
  * *redirect*: The url to which the user is redirected after successful login.
 * **POST "/login/authorize?username={un}&password={pw}&redirect={r}":** The login call, displaying status on login call and redirecting on success.
- * *username*: The infrz-alias ("Kennung") from the user.
+ * *username*: The infrz kennung from the user.
  * *password*: The password to the Infrz account.
  * *redirect*: The url to which the user is redirected after successful login.
 * **GET "/authorize?client_id={cid}&redirect_uri={ru}":** Authorize form displaying information about the client and scope.
@@ -102,9 +102,8 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 
 ## user
 * **id**: INTEGER primary key
-* **alias**: varchar unique
-* **first_name**: varchar
-* **last_name**: varchar
+* **kennung**: varchar unique
+* **name**: varchar
 * **email**: varchar
 * **groups**: varchar
 

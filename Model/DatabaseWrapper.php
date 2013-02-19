@@ -44,8 +44,8 @@ class DatabaseWrapper
     public function loadFixtures()
     {
         // user fixtures
-        $user = $this->insertUser('2king', 'Joe', 'King', 'joe@king.com', array('admin', 'svs', 'oauth_client'));
-        $user2 = $this->insertUser('2ill', 'Eve', 'Ill', 'eve@ill.com', array('oauth_client'));
+        $user = $this->insertUser('2king', 'Joe King', 'joe@king.com', array('admin', 'svs', 'oauth_client'));
+        $user2 = $this->insertUser('2ill', 'Eve Ill', 'eve@ill.com', array('oauth_client'));
 
         // client fixtures
         $client = $this->insertClient(
@@ -54,7 +54,7 @@ class DatabaseWrapper
             'A corporation you can trust!',
             array('tw.com', '192.168.1.56'),
             'https://tw.com/',
-            array('alias', 'groups')
+            array('kennung', 'groups')
         );
         $client2 = $this->insertClient(
             'Ikum GmbH',
@@ -70,14 +70,14 @@ class DatabaseWrapper
             'We wantz your Dataz, nao! <br/> P.S.: Buy our cheap medicine please!',
             array('ei.com'),
             'https://ei.com/',
-            array('alias', 'groups')
+            array('kennung', 'groups')
         );
 
         // auth_code fixtures
-        $this->insertAuthCode($client, $user, array('alias', 'groups'));
+        $this->insertAuthCode($client, $user, array('kennung', 'groups'));
 
         // auth_token fixtures
-        $auth_token = $this->insertAuthToken($client, $user, array('alias', 'groups'));
+        $auth_token = $this->insertAuthToken($client, $user, array('kennung', 'groups'));
 
         // refresh_token fixtures
         $this->insertRefreshToken($auth_token);
@@ -257,26 +257,24 @@ class DatabaseWrapper
     /**
      * Creates a user in the database.
      *
-     * @param string $alias An identifier for the IT at UHH. also known as "Kennung".
-     * @param string $first_name
-     * @param string $last_name
+     * @param string $kennung An identifier for the IT at UHH. also known as "Kennung".
+     * @param string $name
      * @param string $email
      * @param array $groups
      * @return User
      */
-    public function insertUser($alias, $first_name, $last_name, $email, $groups)
+    public function insertUser($kennung, $name, $email, $groups)
     {
-        $insert_query = 'INSERT INTO user (alias, first_name, last_name, email, groups)
-                        VALUES (:alias, :first_name, :last_name, :email, :groups);';
+        $insert_query = 'INSERT INTO user (kennung, name, email, groups)
+                        VALUES (:kennung, :name, :email, :groups);';
         $stmt = $this->db->prepare($insert_query);
-        $stmt->bindParam(':alias', $alias);
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name', $last_name);
+        $stmt->bindParam(':kennung', $kennung);
+        $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);
         $stmt->bindValue(':groups', json_encode($groups));
         $stmt->execute();
 
-        return $this->getUserByAlias($alias);
+        return $this->getUserByKennung($kennung);
     }
 
     /**
@@ -300,31 +298,31 @@ class DatabaseWrapper
     }
 
     /**
-     * Deletes a user from database by his alias
+     * Deletes a user from database by his kennung
      *
-     * @param string $alias
+     * @param string $kennung
      * @return bool Indicates whether the delete was successful.
      */
-    public function deleteUser($alias)
+    public function deleteUser($kennung)
     {
-        $delete_query = 'DELETE FROM auth_token WHERE alias = :alias';
+        $delete_query = 'DELETE FROM auth_token WHERE kennung = :kennung';
         $stmt = $this->db->prepare($delete_query);
-        $stmt->bindParam(':alias', $alias);
+        $stmt->bindParam(':kennung', $kennung);
 
         return $stmt->execute();
     }
 
     /**
-     * Returns a user by his alias (also known as "Kennung").
+     * Returns a user by his kennung
      *
-     * @param string $alias
+     * @param string $kennung
      * @return User
      */
-    public function getUserByAlias($alias)
+    public function getUserByKennung($kennung)
     {
-        $stmt = $this->db->prepare('SELECT * FROM user WHERE alias = :alias;');
+        $stmt = $this->db->prepare('SELECT * FROM user WHERE kennung = :kennung;');
         $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\User');
-        $stmt->bindParam(':alias', $alias);
+        $stmt->bindParam(':kennung', $kennung);
         $stmt->execute();
         $user = $stmt->fetch();
 
@@ -358,7 +356,7 @@ class DatabaseWrapper
      */
     public function insertAuthCode(Client $client, User $user, $scope)
     {
-        $auth_code = $this->getUniqueHash($user->alias, 'auth_code', 'code');
+        $auth_code = $this->getUniqueHash($user->kennung, 'auth_code', 'code');
         $query = 'INSERT INTO auth_code (user_id, client_id, code, scope, created)
                          VALUES (:user_id, :client_id, :code, :scope, :created);';
         $stmt = $this->db->prepare($query);
@@ -537,7 +535,7 @@ class DatabaseWrapper
      */
     public function insertWebToken(User $user)
     {
-        $web_token = $this->getUniqueHash($user->alias, 'web_token', 'token');
+        $web_token = $this->getUniqueHash($user->kennung, 'web_token', 'token');
         $insert_token = 'INSERT INTO web_token (user_id, token, expires_at)
                          VALUES (:user_id, :token, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
@@ -589,7 +587,7 @@ class DatabaseWrapper
      */
     public function insertPageToken(User $user)
     {
-        $page_token = $this->getUniqueHash($user->alias, 'page_token', 'token');
+        $page_token = $this->getUniqueHash($user->kennung, 'page_token', 'token');
         $insert_token = 'INSERT INTO page_token (user_id, token, expires_at)
                          VALUES (:user_id, :token, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
@@ -693,9 +691,8 @@ class DatabaseWrapper
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS user (
             id INTEGER primary key,
-            alias varchar unique,
-            first_name varchar,
-            last_name varchar,
+            kennung varchar unique,
+            name  varchar,
             email varchar,
             groups varchar);'
         );

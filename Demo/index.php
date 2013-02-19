@@ -40,9 +40,9 @@ if ($code) {
         $auth_token = $client->getAuthToken($code);
         $_SESSION['token'] = 'logged_in';
         $_SESSION['auth_token'] = $auth_token->token;
-        header('Location: /Demo/');
+        header('Location: /Demo');
     } catch (Exception $e) {
-        $twig->render('error.html.twig', array('error' => $e->getMessage()));
+        exit($twig->render('error.html.twig', array('error' => $e->getMessage())));
     }
 }
 

@@ -9,9 +9,8 @@ namespace Infrz\OAuth\Client\Model;
 
 class User
 {
-    public $alias;
-    public $first_name;
-    public $last_name;
+    public $kennung;
+    public $name;
     public $email;
     public $groups;
     public $scope;

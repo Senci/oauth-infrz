@@ -38,13 +38,6 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function signIn($username, $password)
     {
-        /*$user = $this->db->getUserByAlias('2king');
-
-        $web_token = $this->db->insertWebToken($user);
-        $_SESSION['web_token'] = $web_token->token;
-
-        return $user;*/
-
         if (!$username or !$password) {
             return false;
         }
@@ -116,7 +109,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
     {
         // TODO create Groups in LDAP and use them to authorize clientModerators.
         $clientModerators = array('7licina', 'herrmann', 'federrath', '2king', '2ill');
-        return (in_array($this->getUser()->alias, $clientModerators));
+        return (in_array($this->getUser()->kennung, $clientModerators));
 
         if (!$this->isAuthenticated() or !$this->getUser()->isMemberOf('svs_sso')) {
             return false;
@@ -149,17 +142,16 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     protected function generateUser($ldap_user)
     {
-        $alias = $ldap_user['uid'][0];
-        $first_name = $ldap_user['givenname'][0];
-        $last_name = $ldap_user['sn'][0];
+        $kennung = $ldap_user['uid'][0];
+        $name = $ldap_user['description'][0];
         $email = strtolower($ldap_user['userprincipalname'][0]);
         $groups = $this->generateGroups($ldap_user['memberof']);
 
-        if ($user = $this->db->getUserByAlias($alias)) {
+        if ($user = $this->db->getUserByKennung($kennung)) {
             $user->groups = $groups;
             $user = $this->db->updateUser($user);
         } else {
-            $user = $this->db->insertUser($alias, $first_name, $last_name, $email, $groups);
+            $user = $this->db->insertUser($kennung, $name, $email, $groups);
         }
 
         return  $user;
