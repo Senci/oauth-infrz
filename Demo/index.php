@@ -65,7 +65,7 @@ try {
             unset($user[$key]);
         }
     }
-    exit($twig->render('user.html.twig', array('user' => $user)));
+    exit($twig->render('user.html.twig', array('user' => $user, 'login' => true)));
 } catch (Exception $e) {
     exit($twig->render('error.html.twig', array('error' => $e->getMessage())));
 }

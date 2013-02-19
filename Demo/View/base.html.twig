@@ -3,23 +3,19 @@
 <head>
     {% block head %}
         <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="/css/site.css" rel="stylesheet" media="screen">
-        <title>{% block title %}{% endblock %} - OAuth Informatik Universität Hamburg</title>
+        <title>{% block title %}{% endblock %} - Demo Application</title>
     {% endblock %}
 </head>
 <body>
-<div class="navbar navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="brand" href="/Demo/">OAuth InfRZ Demo Application</a>
-            <ul class="nav pull-right">
-                <li><a href="/Demo/?logout"><i class="icon-user"></i> logout</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
 
-<div id="content" class="container">
+<div class="container">
+    <div class="pull-right">
+        <img style="margin:5px 0 5px 0;" width="50px" src="http://www2.informatik.uni-hamburg.de/Fachschaft/2009/logo-fbi.png">
+        <img style="margin:5px 0 5px 0;" width="50px" src="http://www2.informatik.uni-hamburg.de/Fachschaft/2009/logo-uhh.png">
+        {% if login is defined %}
+            <br><a class="btn btn-inverse pull-right" href="/Demo/?logout"><i class="icon-user icon-white"></i> logout</a>
+        {% endif %}
+    </div>
     <div class="page-header">
         <h1>{% block header %}{% endblock %}</h1>
     </div>
