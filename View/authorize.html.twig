@@ -2,23 +2,33 @@
 
 {% block title %}Authorize {{ client.name }}{% endblock %}
 
-{% block header %}{{ client.name }} is requesting your datas!{% endblock %}
+{% block header %}{{ client.name }}{% endblock %}
 
 {% block content %}
-    <p class="lead">By clicking on "Agree" you are sharing the below selected information with {{ client.name }}.</p>
+    <p class="lead">{{ client.name }} is requesting you to authenticate.</p>
+    <p>By clicking on "Agree" you are authorizing {{ client.name }} to access the below selected information.</p>
     <p class="alert alert-info"><b>{{ client.name }}:</b><br/>{{ client.description }}</p>
     <form class="form-horizontal" action="/authorize/grant" method="POST">
         <input type="hidden" name="page_token" value="{{ page_token }}" />
         <input type="hidden" name="client_id" value="{{ client.client_id }}" />
         <input type="hidden" id="scope" name="scope" />
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}" />
-        {% if client.default_scope is not empty %}
+        {% if client.scope.available is not empty %}
             <div class="well">
                 <p>You are authorizing access to:</p>
-                {% for scope in client.default_scope %}
+                {% for scope in client.scope.available %}
                     <label class="checkbox">
-                        <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();">
-                        {{ scope|replace({'_': ' '})|capitalize }}
+                        {% if scope in client.scope.required %}
+                            <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();" disabled="true">
+                            {{ scope|replace({'_': ' '})|capitalize }}
+                        {% else %}
+                            <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();">
+                            <b>{{ scope|replace({'_': ' '})|capitalize }} </b>
+                        {% endif %}
+                        <br>
+                        <small>
+                            {{ client.scope.info[scope] }}
+                        </small>
                     </label>
                 {% endfor %}
             </div>

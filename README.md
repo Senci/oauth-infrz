@@ -58,20 +58,20 @@ Keep in mind that all url-values have to be *urlencoded* when passed. All POST-c
 * **GET "/client"**: The client overview displays a list of all clients the currently logged in user manages.
  * The client module (and all its actions) is only accessible if the user has permissions to manage clients.
 * **GET "/client/new"**: The form to register a new client.
-* **POST "/client/register?name={n}&description={d}&host={ħ}&redirect_uri={ru}&default_scope={ds}"**: The actual call to register a new client.
+* **POST "/client/register?name={n}&description={d}&host={ħ}&redirect_uri={ru}&scope={ds}"**: The actual call to register a new client.
  * *name*: The name of the new client.
  * *description*: A brief description of the new client and its functionality/purpose.
  * *host*: The host from which the client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.
  * *redirect_uri*: The url to which the user is redirected after authorization.
- * *default_scope*: The *scope* which the client is requesting by default.
+ * *scope*: The *scope* which the client is requesting by default.
 * **GET "/client/_{id}"**: The object page to the *client* with the given id.
 * **GET "/client/_{id}/edit"**: The edit page to the *client* with the given id.
-* **POST "/client/_{id}/save?name={n}&description={d}&host={h}&redirect_uri={ru}&default_scope={ds}"**: The save action to the *client* with the given id.
+* **POST "/client/_{id}/save?name={n}&description={d}&host={h}&redirect_uri={ru}&scope={ds}"**: The save action to the *client* with the given id.
  * *name*: The name of the new client.
  * *description*: A brief description of the new client and its functionality/purpose.
  * *host*: The host from which client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.
  * *redirect_uri*: The url to which the user is redirected after authorization.
- * *default_scope*: The *scope* which the client is requesting by default.
+ * *scope*: The *scope* which the client is requesting by default.
 * **POST "/client/_{id}/delete"**: Deletes the *client* with the given id.
 * **POST "/client/_{id}/new_credentials"**: Generates und updates new client_id and client_secret (credentials).
 
@@ -98,7 +98,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * **client_secret**: varchar
 * **redirect_uri**: varchar
 * **host**: varchar
-* **default_scope**: varchar
+* **scope**: varchar
 
 ## user
 * **id**: INTEGER primary key

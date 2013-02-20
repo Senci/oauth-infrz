@@ -35,7 +35,7 @@ class ClientController extends AbstractController
         $client = $this->getClient();
         $page_token = $this->db->insertPageToken($this->authFactory->getUser());
 
-        $this->responseBuilder->buildClientPage($client, $page_token->token);
+        $this->responseBuilder->buildClient($client, $page_token->token);
     }
 
     /**
@@ -88,9 +88,9 @@ class ClientController extends AbstractController
         $description   = isset($_POST['description'])   ? $_POST['description'] : false;
         $host          = isset($_POST['host'])          ? $_POST['host'] : false;
         $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
-        $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
+        $scope = isset($_POST['scope']) ? $_POST['scope'] : false;
 
-        if (!$name or !$description or !$host or !$redirect_uri or !$default_scope) {
+        if (!$name or !$description or !$host or !$redirect_uri or !$scope) {
             $this->responseBuilder->buildError('missing_param');
         }
 
@@ -102,9 +102,9 @@ class ClientController extends AbstractController
             $host = array();
         }
         $redirect_uri = urldecode($redirect_uri);
-        $default_scope = json_decode(urldecode($default_scope));
+        $scope = json_decode(urldecode($scope));
 
-        $client = $this->db->insertClient($name, $user, $description, $host, $redirect_uri, $default_scope);
+        $client = $this->db->insertClient($name, $user, $description, $host, $redirect_uri, $scope);
 
         header(sprintf('Location: /client/_%s', $client->id));
     }
@@ -118,7 +118,7 @@ class ClientController extends AbstractController
         $client = $this->getClient();
         $page_token = $this->db->insertPageToken($this->authFactory->getUser());
 
-        $this->responseBuilder->buildClientEditPage($client, $page_token->token);
+        $this->responseBuilder->buildClientEdit($client, $page_token->token);
     }
 
     /**
@@ -133,9 +133,9 @@ class ClientController extends AbstractController
         $description   = isset($_POST['description'])   ? $_POST['description'] : false;
         $host          = isset($_POST['host'])          ? $_POST['host'] : false;
         $redirect_uri  = isset($_POST['redirect_uri'])  ? $_POST['redirect_uri'] : false;
-        $default_scope = isset($_POST['default_scope']) ? $_POST['default_scope'] : false;
+        $scope         = isset($_POST['scope'])         ? $_POST['scope'] : false;
 
-        if (!$name or !$description or !$host or !$redirect_uri or !$default_scope) {
+        if (!$name or !$description or !$host or !$redirect_uri or !$scope) {
             $this->responseBuilder->buildError('missing_param');
         }
 
@@ -148,8 +148,7 @@ class ClientController extends AbstractController
             $client->host = $host;
         }
         $client->redirect_uri = urldecode($redirect_uri);
-        $client->default_scope = json_decode(urldecode($default_scope));
-
+        $client->scope = json_decode(urldecode($scope));
         $client = $this->db->updateClient($client);
 
         header(sprintf('Location: /client/_%s', $client->id));

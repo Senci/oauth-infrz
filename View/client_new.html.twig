@@ -15,21 +15,32 @@
             <dt>Description <i id="desc_hint" class="icon-question-sign icon-white"></i></dt>
             <dd><textarea name="description" rows="3"></textarea></dd><br/>
             <dt>Host <i id="host_hint" class="icon-question-sign icon-white"></i></dt>
-            <dd><input type="text" name="host" value="{{ client.host | join(', ') }}"/></dd><br/>
+            <dd><input type="text" name="host"/></dd><br/>
             <dt>Redirect URI <i id="ru_hint" class="icon-question-sign icon-white"></i></dt>
-            <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
-            <dt>Default scope <i id="ds_hint" class="icon-question-sign icon-white"></i></dt>
+            <dd><input type="text" name="redirect_uri"/></dd><br/>
+            <dt>Scope <i id="scope_hint" class="icon-question-sign icon-white"></i></dt>
             <dd>
-                <input type="hidden" name="default_scope" id="scope">
-                {% for scope in available_scopes %}
-                    <label class="checkbox inline">
-                        {% if scope in client.default_scope %}
-                            <input type="checkbox" id="{{ scope }}" onchange="generateScopeValue()" checked="checked"> {{ scope }}
-                        {% else %}
-                            <input type="checkbox" id="{{ scope }}" onchange="generateScopeValue()"> {{ scope }}
-                        {% endif %}
-                    </label>
-                {% endfor %}
+                <input type="hidden" name="scope" id="scope">
+                <table class="table table-bordered table-condensed" style="width:0;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">scope</th>
+                            <th style="text-align:center;">available <i id="sa_hint" class="icon-question-sign icon-white"></i></th>
+                            <th style="text-align:center;">required <i id="sr_hint" class="icon-question-sign icon-white"></i></th>
+                            <th style="text-align:center;">info <i id="si_hint" class="icon-question-sign icon-white"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scope in available_scopes %}
+                            <tr>
+                                <td>{{ scope }}</td>
+                                <td style="text-align:center;"><input type="checkbox" id="{{ scope }}" onchange="updateScope('{{ scope }}')"></td>
+                                <td style="text-align:center;"><input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')" disabled="true"></td>
+                                <td><input type="text" class="scope_info" id="i_{{ scope }}" onchange="updateScopeInfo('{{ scope }}')" disabled="true"/></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </dd>
         </dl>
         <button type="submit" class="btn btn-success">
@@ -40,28 +51,15 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        // set scope value right
-        function generateScopeValue() {
-            var scope = [];
-            var checkboxes = $(':checkbox');
-            $.each(checkboxes, function() {
-                if (this.checked) {
-                    scope.push(this.getAttribute('id'));
-                }
-            });
-            var json = JSON.stringify(scope);
-            $('#scope').val(json);
-        }
-        generateScopeValue();
-
         // tooltips
         $('#desc_hint').tooltip({title:'A brief description of the clients functionality and purpose.'});
         $('#host_hint').tooltip({title:'The host from which client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.'});
         $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
-        $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
+        $('#scope_hint').tooltip({title:'Please only select the information you really need for your service.'});
+        $('#sa_hint').tooltip({title:'The user has the option to grant access to this information to proceed.'});
+        $('#sr_hint').tooltip({title:'The user must grant access to this information to proceed.'});
+        $('#si_hint').tooltip({title:'Explain what you use this information for. (transparency improves trust)'});
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
-
-        {% for scope in client.default_scope %}
-        {% endfor %}
     </script>
+    <script src="/js/scope.js"></script>
 {% endblock %}

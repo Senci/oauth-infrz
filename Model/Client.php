@@ -17,11 +17,15 @@ class Client
     public $client_secret;
     public $host;
     public $redirect_uri;
-    public $default_scope;
+    public $scope;
 
     public function __construct()
     {
-        $this->default_scope = json_decode($this->default_scope);
+        $this->scope = json_decode($this->scope);
+        $this->scope->info = get_object_vars(($this->scope->info));
         $this->host = json_decode($this->host);
+        if (!$this->scope->info) {
+            $this->scope->info = array();
+        }
     }
 }

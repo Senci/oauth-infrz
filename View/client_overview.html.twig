@@ -5,7 +5,11 @@
 {% block header %}Clients{% endblock %}
 
 {% block content %}
-    <p class="lead">Welcome to the client-overview page.</p>
+    <p class="lead">Welcome to the client management section. You can edit, remove and add new clients here.</p>
+    <div class="alert alert-error" id="js_alert">
+        <h3>JavaScript not working!</h3>
+        JavaScript execution is required for the client management. It seems that JavaScript is not properly working, please fix that before continuing.
+    </div>
     {% if success is defined %}
         <div class="alert alert-success">
             <b>{{ success.title }}:</b><br>{{ success.message }}
@@ -40,4 +44,10 @@
     {% else %}
         <p>You are currently not managing any clients. Add a new client by clicking on the button. =)</p>
     {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $('#js_alert').remove();
+    </script>
 {% endblock %}

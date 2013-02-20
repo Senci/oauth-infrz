@@ -47,22 +47,33 @@ class DatabaseWrapper
         $user = $this->insertUser('2king', 'Joe King', 'joe@king.com', array('admin', 'svs', 'oauth_client'));
         $user2 = $this->insertUser('2ill', 'Eve Ill', 'eve@ill.com', array('oauth_client'));
 
+        $scope = json_decode('{"available":["kennung","name"],"required":["kennung"],"info":{"kennung":"we need this to display identify you."}}');
+        $scope_empty = json_decode('{"available":[],"required":[],"info":{}}');
+        $scope_full = json_decode('{"available":["kennung","name","email","groups"],"required":["kennung","email","groups"],"info":{"kennung":"Required for identification","name":"Needed if you want to use our services with your name","email":"Required for communication","groups":"Required for authentication"}}');
         // client fixtures
-        $client = $this->insertClient(
+        $this->insertClient(
             'Trustworthy inc.',
             $user,
             'A corporation you can trust!',
             array('tw.com', '192.168.1.56'),
             'https://tw.com/',
-            array('kennung', 'groups')
+            $scope
         );
-        $client2 = $this->insertClient(
+        $this->insertClient(
             'Ikum GmbH',
             $user,
             'Let us be friends... <3!',
             array('ig.com', 'yourmama.com'),
             'https://ig.com/',
-            array()
+            $scope_empty
+        );
+        $client = $this->insertClient(
+            'Demo Application',
+            $user,
+            'This application is completely redundant!',
+            array('https://localhost/'),
+            'https://localhost/Demo',
+            $scope_full
         );
         $this->insertClient(
             'Eve Pharm',
@@ -70,7 +81,7 @@ class DatabaseWrapper
             'We wantz your Dataz, nao! <br/> P.S.: Buy our cheap medicine please!',
             array('ei.com'),
             'https://ei.com/',
-            array('kennung', 'groups')
+            $scope
         );
 
         // auth_code fixtures
@@ -90,17 +101,17 @@ class DatabaseWrapper
      * @param User $user The Name of the Client
      * @param string $description A brief description of the new client and its functionality/purpose.
      * @param string $redirect_uri The url to which the user is redirected after authorization.
-     * @param array $default_scope
+     * @param \StdClass $scope
      * @return Client
      */
-    public function insertClient($name, User $user, $description, $host, $redirect_uri, $default_scope)
+    public function insertClient($name, User $user, $description, $host, $redirect_uri, $scope)
     {
         $client_id = $this->getUniqueHash($name, 'client', 'client_id');
         $client_secret = $this->getUniqueHash($redirect_uri, 'client', 'client_secret');
         $insert_query = 'INSERT INTO client
-                          (name, user_id, description, host, client_id, client_secret, redirect_uri, default_scope)
+                          (name, user_id, description, host, client_id, client_secret, redirect_uri, scope)
                          VALUES
-                          (:name, :user_id, :description, :host, :client_id, :client_secret, :redirect_uri, :default_scope)';
+                          (:name, :user_id, :description, :host, :client_id, :client_secret, :redirect_uri, :scope)';
         $stmt = $this->db->prepare($insert_query);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':user_id', $user->id);
@@ -109,7 +120,7 @@ class DatabaseWrapper
         $stmt->bindParam(':client_id', $client_id);
         $stmt->bindParam(':client_secret', $client_secret);
         $stmt->bindParam(':redirect_uri', $redirect_uri);
-        $stmt->bindValue(':default_scope', json_encode($default_scope));
+        $stmt->bindValue(':scope', json_encode($scope));
         $stmt->execute();
 
         return $this->getClientByClientId($client_id);
@@ -125,7 +136,7 @@ class DatabaseWrapper
     {
         $update_query = 'UPDATE client SET
                           name = :name, description = :description, host = :host,
-                          redirect_uri = :redirect_uri, default_scope = :default_scope
+                          redirect_uri = :redirect_uri, scope = :scope
                          WHERE
                           id = :id';
         $stmt = $this->db->prepare($update_query);
@@ -133,7 +144,7 @@ class DatabaseWrapper
         $stmt->bindParam(':description', $client->description);
         $stmt->bindParam(':host', json_encode($client->host));
         $stmt->bindParam(':redirect_uri', $client->redirect_uri);
-        $stmt->bindValue(':default_scope', json_encode($client->default_scope));
+        $stmt->bindValue(':scope', json_encode($client->scope));
         $stmt->bindValue(':id', $client->id);
         $stmt->execute();
 
@@ -685,7 +696,7 @@ class DatabaseWrapper
             client_secret varchar(128),
             redirect_uri varchar,
             host varchar,
-            default_scope varchar);'
+            scope varchar);'
         );
 
         $this->db->exec(

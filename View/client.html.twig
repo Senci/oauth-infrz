@@ -26,15 +26,40 @@
         {% endif %}
         <dt>Redirect URI</dt>
         <dd>{{ client.redirect_uri }}</dd><br/>
-        <dt>Default scope</dt>
-        {% if client.default_scope is empty %}
+        <dt>Scope</dt>
+        {% if client.scope.available is empty %}
             <dd>None <br/>
                 <small>
-                    Yay, you have earned one Internetz for being awesome. =)
+                    Thanks for respecting other peoples privacy! =)
                 </small>
             </dd><br/>
         {% else %}
-            <dd>{{ client.default_scope | join(', ') }}</dd><br/>
+            <dd>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">scope</th>
+                        <th style="text-align:center;">required</th>
+                        <th style="text-align:center;">info</i></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for scope in client.scope.available %}
+                        <tr>
+                            <td>{{ scope }}</td>
+                            <td style="text-align:center;">
+                                {% if scope in client.scope.required %}
+                                    yes
+                                {% else %}
+                                    no
+                                {% endif %}
+                            </td>
+                            <td>{{ client.scope.info[scope] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </dd><br/>
         {% endif %}
         <dt>Client-ID</dt>
         <dd><pre>{{ client.client_id }}</pre></dd><br/>

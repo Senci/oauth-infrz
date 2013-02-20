@@ -1,0 +1,84 @@
+{% extends "base.html.twig" %}
+
+{% set available_scopes = ['kennung', 'name', 'email', 'groups'] %}
+
+{% block title %}{{ client.name }} - Client{% endblock %}
+
+{% block header %}{{ client.name }}{% endblock %}
+
+{% block content %}
+    <form action="/client/_{{ client.id }}/save" method="POST" class="form-horizontal">
+        <input type="hidden" name="id" value="{{ client.id }}">
+        <input type="hidden" name="page_token" value="{{ page_token }}">
+        <p class="pull-right">
+            <button type="submit" class="btn btn-success">
+                <i class="icon-edit icon-white"></i> Save
+            </button>
+        </p>
+        <dl>
+            <dt>Name</dt>
+            <dd><input type="text" name="name" value="{{ client.name }}"/></dd><br/>
+            <dt>Description <i id="desc_hint" class="icon-question-sign icon-white"></i></dt>
+            <dd><textarea name="description" rows="3">{{ client.description }}</textarea></dd><br/>
+            <dt>Host <i id="host_hint" class="icon-question-sign icon-white"></i></dt>
+            <dd><input type="text" name="host" value="{{ client.host | join(', ') }}"/></dd><br/>
+            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign icon-white"></i></dt>
+            <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
+
+
+            <dt>Scope <i id="scope_hint" class="icon-question-sign icon-white"></i></dt>
+            <dd>
+                <input type="hidden" name="scope" id="scope">
+                <table class="table table-bordered table-condensed" style="width:0;">
+                    <thead>
+                    <tr>
+                        <th style="text-align:center;">scope</th>
+                        <th style="text-align:center;">available <i id="sa_hint" class="icon-question-sign icon-white"></i></th>
+                        <th style="text-align:center;">required <i id="sr_hint" class="icon-question-sign icon-white"></i></th>
+                        <th style="text-align:center;">info <i id="si_hint" class="icon-question-sign icon-white"></i></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for scope in available_scopes %}
+                        <tr>
+                            <td>{{ scope }}</td>
+                            {% if scope in client.scope.available %}
+                                <td style="text-align:center;"><input type="checkbox" id="{{ scope }}" onchange="updateScope('{{ scope }}')" checked="checked"></td>
+                                {% if scope in client.scope.required %}
+                                    <td style="text-align:center;"><input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')" checked="checked"></td>
+                                {% else %}
+                                    <td style="text-align:center;"><input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')"></td>
+                                {% endif %}
+                                {% if client.scope.info[scope] is defined %}
+                                    <td><input type="text" class="scope_info" id="i_{{ scope }}" value="{{ client.scope.info[scope] }}" onchange="updateScopeInfo('{{ scope }}')"/></td>
+                                {% else %}
+                                    <td><input type="text" class="scope_info" id="i_{{ scope }}" value="{{ client.scope.info[scope] }}" onchange="updateScopeInfo('{{ scope }}')"/></td>
+                                {% endif %}
+                            {% else %}
+                                <td style="text-align:center;"><input type="checkbox" id="{{ scope }}" onchange="updateScope('{{ scope }}')"></td>
+                                <td style="text-align:center;"><input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')" disabled="true"></td>
+                                <td><input type="text" class="scope_info" id="i_{{ scope }}" onkeyup="updateScopeInfo('{{ scope }}')" disabled="true"/></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        // initialize scope
+        var scope = {{ client.scope | json_encode | raw }};
+
+        // tooltips
+        $('#desc_hint').tooltip({title:'A brief description of the clients functionality and purpose.'});
+        $('#host_hint').tooltip({title:'The host from which client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.'});
+        $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
+        $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
+        $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
+    </script>
+    <script src="/js/scope.js"></script>
+{% endblock %}

@@ -91,9 +91,9 @@ class ResponseBuilder
      * @param Client $client
      * @param string $page_token
      */
-    public function buildClientPage($client, $page_token)
+    public function buildClient($client, $page_token)
     {
-        exit($this->twig->render('client_page.html.twig', array('client' => $client, 'page_token' => $page_token)));
+        exit($this->twig->render('client.html.twig', array('client' => $client, 'page_token' => $page_token)));
     }
 
     /**
@@ -111,9 +111,9 @@ class ResponseBuilder
      * @param Client $client
      * @param string $page_token
      */
-    public function buildClientEditPage($client, $page_token)
+    public function buildClientEdit($client, $page_token)
     {
-        exit($this->twig->render('client_edit_page.html.twig', array('client' => $client, 'page_token' => $page_token)));
+        exit($this->twig->render('client_edit.html.twig', array('client' => $client, 'page_token' => $page_token)));
     }
 
     /**
