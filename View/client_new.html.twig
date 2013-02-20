@@ -51,10 +51,13 @@
 
 {% block javascript %}
     <script type="text/javascript">
+        // initialize scope
+        var scope = {"available":[],"required":[],"info":{}};
+
         // tooltips
         $('#desc_hint').tooltip({title:'A brief description of the clients functionality and purpose.'});
         $('#host_hint').tooltip({title:'The host from which client calls are allowed (either IP or Hostname). Multiple hosts are separated with a comma.'});
-        $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successfull authentication.'});
+        $('#ru_hint').tooltip({title:'The URL to which the user gets redirected after successful authentication.'});
         $('#scope_hint').tooltip({title:'Please only select the information you really need for your service.'});
         $('#sa_hint').tooltip({title:'The user has the option to grant access to this information to proceed.'});
         $('#sr_hint').tooltip({title:'The user must grant access to this information to proceed.'});
