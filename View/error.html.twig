@@ -8,6 +8,6 @@
     {% set status = (error.error|replace({'_': ' '})|capitalize) %}
     <div class="alert alert-error">
         <h2>{{ error.error|replace({'_': ' '})|capitalize }}!</h2>
-        <p class="lead">{{ error.error_description }}</p>
+        <p class="lead">{{ error.error_description|raw }}</p>
     </div>
 {% endblock %}

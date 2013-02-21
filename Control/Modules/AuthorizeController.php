@@ -63,6 +63,16 @@ class AuthorizeController extends AbstractController
         if (!($client instanceof Client) or !$redirect_uri or !$scope) {
             $this->responseBuilder->buildError('missing_param');
         }
+        // calculate the scope that is missing but required by the client.
+        $requiredButNotGrantedScope = array_diff($client->scope->required, $scope);
+        if (!empty($requiredButNotGrantedScope)) {
+            $err_msg = sprintf(
+                'The scope you have selected is insufficient! "%s" requires your to add <i>%s</i> to your scope.',
+                $client->name,
+                implode(', ', $requiredButNotGrantedScope)
+            );
+            $this->responseBuilder->buildError('missing_param', $err_msg);
+        }
 
         $auth_code = $this->db->insertAuthCode($client, $user, $scope);
         if (!strpos($redirect_uri, '?')) {
