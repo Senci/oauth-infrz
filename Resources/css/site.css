@@ -13,3 +13,40 @@ body {
 .break-word {
     word-wrap:break-word;
 }
+
+input[type="checkbox"] {
+    display:none;
+}
+
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    background:url('/img/checkboxes.png') left top no-repeat;
+}
+input[type="checkbox"][disabled] + label span {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    background:url('/img/checkboxes.png') -38px top no-repeat;
+}
+
+input[type="checkbox"]:checked + label span {
+    background:url('/img/checkboxes.png') -19px top no-repeat;
+}
+
+input[type="checkbox"][disabled]:checked + label span {
+    background:url('/img/checkboxes.png') -57px top no-repeat;
+}
+
+label[disabled] {
+    cursor:default;
+}
+
+input[disabled] {
+    cursor:default;
+}
