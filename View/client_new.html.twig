@@ -21,7 +21,7 @@
             <dt>Scope <i id="scope_hint" class="icon-question-sign icon-white"></i></dt>
             <dd>
                 <input type="hidden" name="scope" id="scope">
-                <table class="table table-bordered table-condensed" style="width:0;">
+                <table class="table table-bordered table-condensed">
                     <thead>
                         <tr>
                             <th style="text-align:center;">scope</th>
@@ -34,9 +34,18 @@
                         {% for scope in available_scopes %}
                             <tr>
                                 <td>{{ scope }}</td>
-                                <td style="text-align:center;"><input type="checkbox" id="{{ scope }}" onchange="updateScope('{{ scope }}')"></td>
-                                <td style="text-align:center;"><input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')" disabled="true"></td>
-                                <td><input type="text" class="scope_info" id="i_{{ scope }}" onchange="updateScopeInfo('{{ scope }}')" disabled="true"/></td>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" id="{{ scope }}" onchange="updateScope('{{ scope }}')">
+                                    <label for="{{ scope }}"><span></span></label>
+                                </td>
+                                <td style="text-align:center;">
+                                    <input type="checkbox" id="r_{{ scope }}" onchange="updateScopeRequired('{{ scope }}')" disabled>
+                                    <label for="r_{{ scope }}" disabled><span></span></label>
+                                </td>
+                                <td>
+                                    <input type="text" class="scope_info" id="i_{{ scope }}" onchange="updateScopeInfo('{{ scope }}')" disabled/>
+                                    <label for="i_{{ scope }}" disabled><span></span></label>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

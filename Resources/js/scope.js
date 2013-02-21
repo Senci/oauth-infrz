@@ -8,6 +8,7 @@ $('#scope').val(JSON.stringify(scope));
 $.each($(':checkbox'), function() {
     if (this.checked) {
         this.disabled = false;
+        $(this).next().removeAttr('disabled');
         $('#'+this.id.replace('r_','')).prop('checked', true);
         $('#'+this.id.replace('r_','i_')).prop('disabled', false);
     }
@@ -29,11 +30,13 @@ function updateScope(scope_name) {
     var input = $('#i_'+scope_name);
     if (checkbox.is(':checked')) {
         r_checkbox.prop('disabled', false).prop('checked', true);
+        r_checkbox.next().removeAttr('disabled');
         input.prop('disabled', false);
         addScopeAvailable(scope_name);
         addScopeRequired(scope_name);
     } else {
         r_checkbox.prop('checked', false).prop('disabled', true);
+        r_checkbox.next().attr('disabled', true);
         input.prop('disabled', true).val('');
         delete scope.info[scope_name];
         removeScopeAvailable(scope_name);

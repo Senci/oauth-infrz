@@ -17,14 +17,15 @@
             <div class="well">
                 <p>You are authorizing access to:</p>
                 {% for scope in client.scope.available %}
-                    <label class="checkbox">
                         {% if scope in client.scope.required %}
-                            <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();" disabled="true">
-                            {{ scope|replace({'_': ' '})|capitalize }}
+                            <input type="checkbox" id="{{ scope }}" name="{{ scope }}" disabled checked="true"/>
+                            <label for="{{ scope }}" disabled>
                         {% else %}
-                            <input type="checkbox" id="{{ scope }}" checked="true" onchange="generateScopeValue();">
-                            <b>{{ scope|replace({'_': ' '})|capitalize }} </b>
+                            <input type="checkbox" id="{{ scope }}" name="{{ scope }}" checked="true" />
+                            <label for="{{ scope }}">
                         {% endif %}
+                    <span class=pull-left></span>
+                        <b>{{ scope|replace({'_': ' '})|capitalize|replace({'Email':'E-Mail'}) }}</b>
                         <br>
                         <small>
                             {{ client.scope.info[scope] }}
