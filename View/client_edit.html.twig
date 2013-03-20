@@ -18,24 +18,24 @@
         <dl>
             <dt>Name</dt>
             <dd><input type="text" name="name" value="{{ client.name }}"/></dd><br/>
-            <dt>Description <i id="desc_hint" class="icon-question-sign icon-white"></i></dt>
+            <dt>Description <i id="desc_hint" class="icon-question-sign"></i></dt>
             <dd><textarea name="description" rows="3">{{ client.description }}</textarea></dd><br/>
-            <dt>Host <i id="host_hint" class="icon-question-sign icon-white"></i></dt>
+            <dt>Host <i id="host_hint" class="icon-question-sign"></i></dt>
             <dd><input type="text" name="host" value="{{ client.host | join(', ') }}"/></dd><br/>
-            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign icon-white"></i></dt>
+            <dt>Redirect URI <i id="ru_hint" class="icon-question-sign"></i></dt>
             <dd><input type="text" name="redirect_uri" value="{{ client.redirect_uri }}"/></dd><br/>
 
 
-            <dt>Scope <i id="scope_hint" class="icon-question-sign icon-white"></i></dt>
+            <dt>Scope <i id="scope_hint" class="icon-question-sign"></i></dt>
             <dd>
                 <input type="hidden" name="scope" id="scope">
                 <table class="table table-bordered table-condensed">
                     <thead>
                     <tr>
                         <th style="text-align:center;">scope</th>
-                        <th style="text-align:center;">available <i id="sa_hint" class="icon-question-sign icon-white"></i></th>
-                        <th style="text-align:center;">required <i id="sr_hint" class="icon-question-sign icon-white"></i></th>
-                        <th style="text-align:center;">info <i id="si_hint" class="icon-question-sign icon-white"></i></th>
+                        <th style="text-align:center;">available <i id="sa_hint" class="icon-question-sign"></i></th>
+                        <th style="text-align:center;">required <i id="sr_hint" class="icon-question-sign"></i></th>
+                        <th style="text-align:center;">info <i id="si_hint" class="icon-question-sign"></i></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -52,11 +52,11 @@ class DatabaseWrapper
         $scope_full = json_decode('{"available":["kennung","name","email","groups"],"required":["kennung","email","groups"],"info":{"kennung":"Required for identification","name":"Needed if you want to use our services with your name","email":"Required for communication","groups":"Required for authentication"}}');
         // client fixtures
         $this->insertClient(
-            'Trustworthy inc.',
+            'Deep Thought',
             $user,
-            'A corporation you can trust!',
-            array('tw.com', '192.168.1.56'),
-            'https://tw.com/',
+            'Computing the Answer to the Ultimate Question of Life, The Universe, and Everything!',
+            array('dt.com', '192.168.1.56'),
+            'https://dt.com/',
             $scope
         );
         $this->insertClient(

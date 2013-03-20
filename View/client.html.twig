@@ -63,13 +63,13 @@
         {% endif %}
         <dt>Client-ID</dt>
         <dd><pre>{{ client.client_id }}</pre></dd><br/>
-        <dt>Client-Secret <i id="cs_hint" class="icon-question-sign icon-white"></i></dt>
+        <dt>Client-Secret <i id="cs_hint" class="icon-question-sign"></i></dt>
         <dd><pre>{{ client.client_secret }}</pre></dd>
     </dl>
     <form action="/client/_{{ client.id }}/new_credentials" method="POST">
         <input type="hidden" name="page_token" value="{{ page_token }}">
         <button class="btn btn-danger" type="submit">Renew Client-ID & Client-Secret</button>
-        <i id="rc_hint" class="icon-question-sign icon-white"></i>
+        <i id="rc_hint" class="icon-question-sign"></i>
     </form>
 
     <div id="delete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
