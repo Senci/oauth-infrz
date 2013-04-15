@@ -84,7 +84,7 @@ showstringspaces=false,
 % deactivate block
 \newcommand{\deactivate}[1]{}
 
-\hyphenation{InfRZ OAuth}
+\hyphenation{InfRZ OAuth Web-anwendung Web-anwendungen}
 
 \sloppy
 \setlength{\parindent}{0em}
@@ -194,13 +194,15 @@ Zweitgutachter: Dr. Andreas Günter
 
 Im Informatik-Rechenzentrum der Universität Hamburg werden die Benutzerdaten aller Mitarbeiter und Studenten in einem LDAP-Verzeichnis (MS ActiveDirectory) vorgehalten.
 
-Im Rahmen einer Bachelorarbeit ist auf Basis dieser Infrastruktur ein webbasierter Single-Sign-On-Dienst (SSO-Dienst) zu implementieren, der von verschiedenen (Web-)Anwendungen genutzt werden kann. Dies erlaubt es den Entwicklern von Web-Anwendungen, den sensiblen Prozess der Benutzerauthentifizierung, bei der das vom Benutzer eingegebene Passwort übermittelt und geprüft werden muss, an den SSO-Dienst auszulagern.
+Im Rahmen einer Bachelorarbeit ist auf Basis dieser Infrastruktur ein webbasierter Single-Sign-On-Dienst (SSO-Dienst) zu implementieren, der von verschiedenen \mbox{(Web-)Anwendungen} genutzt werden kann. Dies erlaubt es den Entwicklern von Web-Anwendungen, den sensiblen Prozess der Benutzerauthentifizierung, bei der das vom Benutzer eingegebene Passwort übermittelt und geprüft werden muss, an den SSO-Dienst auszulagern.
 
 Die Nutzung des SSO-Dienstes soll möglichst über (Standard-)Schnittstellen, etwa OAuth 2.0, möglich sein. Im Rahmen der Bachelorarbeit ist ein Entwurf für den Dienst anzufertigen und ein Prototyp zu implementieren. Weiterhin sind Beispiel-Implementierungen sowie eine leicht verständliche Dokumentation mit Tutorial-Charakter für die wesentlichen Entwicklungsumgebungen (z.B. PHP, Java, Ruby on Rails) anzufertigen. Die Umsetzung muss hohen Sicherheitsanforderungen genügen.
 
 \newpage
 %\blankpage
 \section*{Zusammenfassung}
+
+
 
 Für den eiligen Leser sollen auf etwa einer halben, maximal einer Seite die wichtigsten Inhalte, Erkenntnisse, Neuerungen bzw. Ergebnisse der Arbeit beschrieben werden. 
 
@@ -217,7 +219,7 @@ Durch eine solche Zusammenfassung (im engl. auch Abstract genannt) am Anfang der
 
 Ein \textbf{Single-Sign-On-Dienst (SSO-Dienst)} bietet dem Benutzer die Möglichkeit nach einer einmaligen Authentifizierung auf mehrere Ressourcen und Dienste zuzugreifen.
 Der Einsatz eines SSO-Dienstes soll die Benutzung komfortabler und sicherer gestalten.
-In \cite{Hur97} wird Single-Sign-On definert, damit verbundene Implementierungsschwierigkeiten erörter und zwischen unterschiedlichen Modellen unterschieden.
+In \cite{Hur97} wird Single-Sign-On definert, damit verbundene Implementierungsschwierigkeiten erörtert und zwischen unterschiedlichen Modellen unterschieden.
 
 Im Zeitalter des Web 2.0\footnote{vgl. Tim O'Reilly: What Is Web 2.0. \url{http://oreilly.com/web2/archive/what-is-web-20.html} (Zugriff am 26.02.2013)} wird ein simpler und einheitlicher Autorisierungsmechanismus immer wichtiger.
 Besonders in den letzten Jahren hat sich das offene Protokoll \textbf{OAuth} zu diesem Zweck durchgesetzt.
@@ -226,7 +228,7 @@ Der Einsatz eines SSO-Dienstes erleichtert die Entwicklung weiterer unabhängige
 Neben hohen Sicherheitanforderungen, denen ein solcher Dienst entsprechen muss, sollte er auch vertrauenswürdig, benutzerfreundlich, selbsterklärend, wart- und erweiterbar sein.
 
 Das Informatik Rechenzentrum der Universität Hamburg benutzt zur Verwaltung und Bereitstellung der Benutzerdaten den Verzeichnisdienst \textbf{Active Directory}.
-Durch das Ansprechen des Active Directory wird es Benutzern ermöglicht sich mit ihren Informatik Rechenzentrum Anmdeldedaten (Credentials)\footnote{die Benutzerkennung und das dazugehörige Passwort} zu authentifizieren.
+Durch das Ansprechen des Active Directory wird es Benutzern ermöglicht sich mit ihren Informatik-Rechenzentrum-Anmdeldedaten (Credentials)\footnote{die Benutzerkennung und das dazugehörige Passwort} zu authentifizieren.
 Diese Authentifizierung kann gegen alle beim OAuth-Dienst angemeldeten Dienste erfolgen.
 Desweiteren können Benutzer angemeldete Dienste für den Zugriff auf ihre Informationen autorisieren.
 Der Einsatz eines OAuth-Dienstes entkoppelt die Authentifzierung von der Funktionalität weiterer Dienste und kann so deren Sicherheit erhöhen.
@@ -236,7 +238,7 @@ Ein selbsterklärender, transparenter und einheitlicher Authentifizierungs- und 
 Bei diesem Dokument handelt es sich um einen Teil der Dokumentation zu OAuth InfRZ, ein vom Autor im Frühjahr 2013 entwickelter SSO-Dienst für den Fachbereich Informatik der Universität Hamburg.
 OAuth InfRZ ist Bestandteil dieser Bachelorarbeit.
 
-Dieses Dokument ist wie Folgt aufgebaut:
+Dieses Dokument ist wie folgt aufgebaut:
 
 \deactivate{
 Kapitel \ref{sec:einleitung} liefert eine \textbf{Einleitung} in die Materie und soll OAuth InfRZ in einen Kontext bringen.
@@ -271,7 +273,7 @@ Außerdem werden der Verzeichnisdienst Active Directory (AD) und das Lightweight
 % Authentication / Authorization
 \subsection{Authentifizierung und Autorisierung}
 
-Als \textbf{Authentifizierung} wird die Verifizierung behaupteter Eigenschaften bezeichnet.
+Als \textbf{Authentifizierung} wird die Verifizierung behaupteter Eigenschaften bezeichnet.\footnote{vgl. \cite[Section 8.7]{TW10}}
 Im speziellen ist bei einer Authentifizierung im World Wide Web (WWW) meist die Prüfung und Erteilung einer Zugangsberechtigung gemeint.
 Dies kann durch den Login eines Benutzers bei einer Webanwendung geschehen.
 Der Benutzer authentisiert sich bei der Webanwendung indem er sein Passwort übermittelt.
@@ -297,13 +299,14 @@ Es wird von der Internet Engineering Task Force (IETF) gepflegt, welche im Augus
 
 Im Transmission Control Protocol/Internet Protocol Reference Model (TCP/IP-Modell)\footnote{vgl. \cite[Section 1.4.2]{TW10}} wird TLS zwischen der Transport- und Anwendungsschicht angesiedelt.
 \cite[Section 8.9.3]{TW10} gliedert es in eine eigene \emph{,,Security''} Schicht.
-Im Open Systems Interconnection Reference Model (OSI-Modell)\footnote{vgl. \cite[Section 1.4.1]{TW10}} wird es in die Darstellungsschicht gegliedert.
+Im Open Systems Interconnection Reference Model (OSI-Modell)\footnote{vgl. \cite[Section 1.4.1]{TW10}} wird es in die Kommunikationssteuerungsschicht gegliedert.\footnote{vgl. \cite[Section 12.4]{Sin12}}
 Es wird hauptsächlich zur Sicherung von HTTP-Verbindungen eingesetzt.
 
 \subsubsection{Funktionsweise \& Verschlüsselung}
 
 Als ein \textbf{hybrides Verschlüsselungsprotokoll} setzt TLS sowohl auf \emph{symmetrische} als auch auf \emph{asymmetrische} Verschlüsselung.
-Im ersten Schritt handeln die Kommunikationspartner die Sicherheitsparameter durch asymmetische Verschlüsselungsverfahren aus und authentifizieren sich durch Zertifikate.
+Im ersten Schritt handeln die Kommunikationspartner die Sicherheitsparameter durch asymmetische Verschlüsselungsverfahren aus und haben die möglichkeit sich durch Zertifikate zu authentifizieren.
+In der Regel authentifizieren sich nur die Server.
 Der Inhalt der Datenübertragung wird dann mit dem ausgehandelten Schlüssel symmetrisch verschlüsselt.
 Um eine höhere Sicherheit gewährleisten zu können, werden für jede Übertragung neue Sicherheitsparameter ausgehandelt.
 Die Nachrichtenintegrität wird durch Message Authentication Codes (MAC)\footnote{vgl. \cite{TW10} Section 8.6.1} gewährleistet.
@@ -314,14 +317,13 @@ Von Zertifizierungsstellen (Certificate Authorities) signierte Zertifikate diene
 
 Obwohl \emph{TLS 1.2} als hinreichend sicher gilt, steht die Sicherheit von TLS unter Kritik.
 Die meisten Browser unterstützen bislang nur die unter anderem durch \emph{BEAST attacks}\footnote{vgl. \cite{DR11}} angreifbare Version \emph{TLS 1.0}.
-Es sind schon mehrere Exploits zu \emph{TLS 1.0} bekannt.
 Als Grund für die geringe Verbreitung von \emph{TLS 1.2} nennt \cite{Rit12} den zu großen Implementierungsaufwand für einen zu geringen Mehrwert.
 Selbst wenn \emph{TLS 1.2} benutzt werden soll, ist es möglich die Sicherheitslücken von \emph{TLS 1.0} mithilfe einer \emph{downgrade attack} auszunutzen, da bei einem gescheiterten Handshake auf \emph{TLS 1.0} zurückgegriffen wird.
 
 Neben dem Nachteil der geringen Verbreitung von \emph{TLS 1.2} stehen vorwiegend die Zertifizierungsstellen unter Kritik.
 Immer wieder gelingt es Angreifern in Zertifizierungsstellen einzubrechen und sich Zertifikate für beliebige Domains auszustellen.\footnote{vgl. \cite[Section 3]{AE12}}
 Der Besitz eines solchen Zertifikats ermöglicht Angreifern unter anderem das Abhören und Verfälschen von TLS gesicherten Verbindungen.
-Desweiteren wird bemängelt, dass einige Zertifizierungsstellen ihre Ausstellungskriterien zu locker handhaben und die \emph{chain of trust} vom Entwurf her kaputt ist.\footnote{vgl. \cite{SS12}}
+Desweiteren wird bemängelt, dass einige Zertifizierungsstellen ihre Ausstellungskriterien zu locker handhaben und die \emph{chain of trust} grundsätzlich kaputt ist.\footnote{vgl. \cite{SS12}}
 
 % Active Directory
 \subsection{Active Directory}
@@ -347,14 +349,14 @@ Das World Wide Web bildet einen sich schnell verändernden Raum.
 Mit zunehmender Akzeptanz und Nutzung von Social Media\footnote{vgl. \cite{KH10} Section 1} wird eine für den Benutzer einfache, einheitliche und sichere Autorisierungs- und Authentifizierungsmöglichkeit immer wichtiger.
 
 Vor dem großen Web-2.0-Boom um die Jahrtausendwende waren Internet-Nutzer überwiegend Konsumenten, weshalb eine Authentifizierung und Autorisierung für die meisten Anwendungsgebiete unüblich war.
-Heutzutage ermöglichen viele Anwendungen\footnote{neben Webanwendungen auch zunehmend kompilierte Software} es mit dem Web Portal seiner Wahl zu interagieren.
+Heutzutage ermöglichen viele Anwendungen\footnote{neben Webanwendungen auch zunehmend kompilierte Software} es dem Benutzer mit dem Web Portal seiner Wahl zu interagieren.
 Benutzer können Inhalte und Dienste dieser Anwendungen mit ihrem Benutzerkonto (Account) bei dem Web Portal benutzen, aufrufen, kommentieren, teilen und mögen.
 
 Bei OAuth handelt es sich um ein Protokoll, welches eine \emph{Autorisierung dritter Anwendungen} im Auftrag des Benutzers ermöglicht.
 Die größten Web-Portale stellen ihren Benutzern eine OAuth-Autorisierung zur Verfügung.\footnote{vgl. Wikipedia: List of OAuth Service Providers. \url{http://en.wikipedia.org/wiki/OAuth\#List_of_OAuth_service_providers} (Zugriff am 26.02.2013)}
-Dem Benutzer wird eine vertraute Oberfläche an einer ihm bekannten Adresse geboten, auf der er einer einer dritten Anwendung Zugriffsrechte auf seine Ressourcen einräumen kann.
+Dem Benutzer wird eine vertraute Oberfläche an einer ihm bekannten Adresse geboten, auf der er einer dritten Anwendung Zugriffsrechte auf seine Ressourcen einräumen kann.
 In der Praxis bieten Anwendungen Benutzern zunehmend die Möglichkeit sich durch OAuth mit ihrem Facebook-, Google- oder Twitter-Account zu authentifizieren.
-Das macht eine Registrierung bei den Anwendungen und somit das teilen sensibler Geheimnisse mit ihnen obsolet.
+Das macht eine Registrierung bei den Anwendungen und somit das Teilen sensibler Geheimnisse mit ihnen obsolet.
 
 \subsection{Authentifizierung im World Wide Web}
 
@@ -362,7 +364,7 @@ Um sich im World Wide Web zu authentifizieren muss man ein Geheimnis mit der aut
 Ohne Authentifizierungsdienste müsste jede Anwendung ein eigenes Authentifizierungsverfahren implementieren.
 Bei jeder Implementierung können potentiell Fehler entstehen, durch die eine Anwendung unsicher wird.
 Häufige Fehlerquellen bilden eine unausreichend verschlüsselte Übertragung \emph{und} Lagerung der Credentials.
-Da Authentifizierungsvorgänge für Benutzer intransparent sind, müssen sie jeder Anwendung an die sie ihre Credentials übermitteln vertrauen.
+Da Authentifizierungsvorgänge für Benutzer intransparent sind, müssen sie jeder Anwendung an die sie ihre Credentials übermitteln, vertrauen.
 Von einem zentralisierten Authentifizierungs- und Autorisierungsdienst profitieren somit sowohl Entwickler als auch Benutzer von Webanwendungen.
 
 \subsection{Versionsgeschichte}
@@ -384,7 +386,7 @@ Bevor man sich dem \emph{OAuth 2} Autorisierungsablauf widmen kann, gilt es eini
 
 Der Autorisierungsablauf wird als \textbf{3-legged OAuth} bezeichnet.
 Die \textbf{,,drei Beine''} stehen für den \textbf{Benutzer (User)}, den \textbf{OAuth-Server} und eine \textbf{Client-Anwendung}.
-Das OAuth Protokoll wird wirksam, wenn ein Benutzer zugriffsgeschützte\footnote{die Benutzung setzt eine Authentifizierung und gegebenenfalls Autorisierung für den Zugriff der Benutzer-Ressourcen vorraus} Dienste einer Client-Anwendung nutzen möchte.
+Das OAuth Protokoll wird wirksam, wenn ein Benutzer zugriffsgeschützte\footnote{Die Benutzung setzt eine Authentifizierung und gegebenenfalls Autorisierung für den Zugriff der Benutzer-Ressourcen voraus.} Dienste einer Client-Anwendung nutzen möchte.
 
 Der Zugriff auf Ressourcen erfolgt über HTTP-Requests nach \textbf{Representational State Transfer (REST)}.\footnote{vgl. \cite[Chapter 5]{Fie00}}
 Alle Ressourcen werden in der \textbf{JavaScript Object Notation (JSON)}\footnote{vgl. \cite{Cro06}} zurückgegeben.
@@ -395,10 +397,11 @@ Im wesentlichen kennt OAuth drei verschiedene Token Typen:
 	\item[auth\_code] \hfill \\
 		\textbf{Authorization Codes} werden vom Server ausgestellt und über den Benutzer an eine Client-Anwendung übertragen.
 		Diese tauscht den Authorization Code bei dem Server gegen ein Access Token.
-	\item[auth\_token] \hfill \\
-		\textbf{Access Tokens} authorisieren Client-Anwendungen zum Zugriff auf die Ressourcen des Benutzers.
-		Access Token sind an ein vom Benutzer bestimmtes \textbf{Scope} gebunden.
-		Ein Scope definiert auf welche Ressourcen Zugriff gewährt wird.
+	\item[access\_token] \hfill \\
+		\textbf{Access Tokens} autorisieren Client-Anwendungen zum Zugriff auf die Ressourcen des Benutzers.
+		Access Tokens sind an ein vom Benutzer bestimmtes \textbf{Scope} gebunden.
+		Ein Scope definiert auf welche Ressourcen-Zugriff gewährt wird.
+		Access Tokens werden \emph{direkt} vom Server an Clients ausgeteilt.
 	\item[refresh\_token] \hfill \\
 		\textbf{Refresh Tokens} können von Client-Anwendungen gegen Access Tokens getauscht werden.
 		Da sie langlebig sind, ermöglichen sie Client-Anwendungen einen längeren Zugriff auf Benutzer-Ressourcen.
@@ -407,7 +410,7 @@ Im wesentlichen kennt OAuth drei verschiedene Token Typen:
 \end{description}
 
 Aus Sicherheitsgründen müssen sich Client-Anwendungen bei jeder Anfrage mit einem \textbf{Client Password (client\_secret)} beim Server authentifizieren.
-Dadurch wird Angreifern bei Man-in-the-middle-Angriffen\footnote{vgl. Abschnitt \ref{sec:oauth-infrz/security}} erschwert an ein Access-Token und Benuter-Ressourcen zu kommen.
+Dadurch wird Angreifern bei Man-in-the-middle-Angriffen\footnote{vgl. Abschnitt \ref{sec:oauth-infrz/security}} erschwert, an ein Access-Token und Benuter-Ressourcen zu kommen.
 
 % TODO: Fix Image posistion and size
 %\newpage
@@ -436,6 +439,8 @@ Letztendlich kann die Client-Anwendung dem Benutzer ihre Dienste zur Verfügung 
 Da es sich bei OAuth um eine Protokollspezifikation handelt, hängt die Sicherheit des Systems \emph{maßgeblich} von der jeweiligen Implementierung ab.
 Mit \emph{OAuth 2} wurde, in einem eigenen \cite{RFC6750}, auch die Benutzung von \textbf{Bearer Tokens} vorgestellt.
 Bearer Token sind eindeutige Zeichenketten die anstelle von \emph{Credentials} benutzt werden um auf Ressourcen zuzugreifen.
+Authorization Codes, Authorization Tokens und Refresh Tokens können als Bearer Tokens realisiert werden.
+Der Besitzt eines Bearer Token autorisiert den Zugriff auf die damit verbundenen Ressourcen.
 Aus Sicherheitsgründen werden sie durch regelmäßige Invalidierung kurzlebig gehalten.
 Durch ihre Kurzlebigkeit bringt der Besitz eines Tokens einem Angreifer nur kurzzeitig einen Vorteil.
 Aus diesem Grund sind sie bei einer Authentifizierung statischem \emph{,,Wissen''}\footnote{vgl. \cite{WK06} Hannes Federrath, Andreas Pfitzmann: ,,IT-Sicherheit''. Kapitel 2.2 (S. 276-278)} vorzuziehen.
@@ -468,7 +473,7 @@ Good software should deliver the required functionality and performance to the u
 \end{quote}
 
 Die \textbf{Sicherheit von Webanwendungen} ist ein zentraler Faktor in der Webentwicklung.
-Eine sichere Anwendung lässt keinen unauthorisierten Zugriff auf ihre Daten zu.\footnote{vgl. \cite{Som10} Section 10.1.1}
+Eine sichere Anwendung lässt keinen unautorisierten Zugriff auf ihre Daten zu.\footnote{vgl. \cite{Som10} Section 10.1.1}
 Sie umfasst alle zur Laufzeit der Anwendung getroffenen Maßnahmen zur Einhaltung der \emph{Sicherheitsleitlinie}.
 Eine Web-Anwendung ist \emph{hinreichend} sicher, wenn Maßnahmen gegen alle bekannten Angriffsszenarien getroffen wurden.
 %TODO definition sicher ?
@@ -487,7 +492,7 @@ Bei \textbf{selbsterklärenden Webanwendungen} werden Benutzer stets über den Z
 Selbsterklärende Webanwendungen sind benutzerfreundlicher und schaffen durch die dazugewonnene Transparenz Vertrauen.
 
 Eine \textbf{wart- und erweiterbare  Webanwendung} lässt sich einfach an neue Anforderungen anpassen.
-In anbetracht der Tatsache, dass der Autor das Projekt mit der Fertigstellung an das Rechenzentrum übergibt, ist es umso wichtiger die Anwendung für andere Entwickler verständlich zu implementieren.
+In Anbetracht der Tatsache, dass der Autor das Projekt mit der Fertigstellung an das Rechenzentrum übergibt, ist es umso wichtiger die Anwendung für andere Entwickler verständlich zu implementieren.
 Eine hohe Wartbarkeit erreicht man unter anderem durch eine gute Dokumentation und eine sinnvolle Benutzung von verbreiteten Programmierparadigmen und Entwurfsmustern.\footnote{vgl. \cite{Som10} Section 6.3 \& Section 7.2}
 
 Eine gut dokumentierte \emph{Client-Library} bietet Entwicklern eine leicht verständliche Schnittstelle für den Zugriff auf OAuth InfRZ.
@@ -498,13 +503,6 @@ Die Client-Library muss gut dokumentiert und programmiersprachenunabhängig\foot
 
 \subsection{Benutzung}
 \label{sec:oauth-infrz/usage}
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=15cm]{img/oauth_infrz/home}
-\caption{Hauptseite}
-\label{pic:oauth_infrz/home}
-\end{figure}
 
 OAuth InfRZ läuft bereits auf einem Rechner des Rechenzentrums\footnote{erreichbar aus dem Informatik internen Netz unter \url{https://svs-sso.informatik.uni-hamburg.de}} und kann mithilfe der \textbf{Demo Anwendung}\footnote{erreichbar aus dem Informatik internen Netz unter \url{https://svs-sso.informatik.uni-hamburg.de/Demo}} ausprobiert werden.
 Aus Gründen der Barrierefreiheit\footnote{vor allem in Rücksichtname auf unsere internationalen Studierenden} wird OAuth InfRZ in Englisch angeboten.
@@ -521,14 +519,19 @@ OAuth InfRZ wird von zwei Benutzerrollen benutzt, die unterschliedliche Rechte u
 		Mit \textbf{Benutzer} werden die Endnutzer bezeichnet.
 		Sie benutzen OAuth InfRZ um sich gegenüber Anwendungen zu authentifizieren und diese mit dem Zugriff auf ihre Information zu autorisieren. 
 		Sie haben Zugriff auf Haupt, Login-, und Autorisierungsseiten.
-	\item[Client Moderator] \hfill \\
-		\textbf{Client Moderatoren} verwalten Client-Anwendungen in von OAuth InfRZ.
+	\item[Client-Moderator] \hfill \\
+		\textbf{Client-Moderatoren} verwalten Client-Anwendungen von OAuth InfRZ.
 		Sie können Client-Anwendungen erzeugen, bearbeiten und löschen.
-		Sie haben Zugriff auf die zum Ressourcen Zugriff benötigten Credentials -- \emph{Client-ID} und \emph{Client-Secret}.
+		Sie haben Zugriff auf die zum Ressourcen-Zugriff benötigten Credentials -- \emph{Client-ID} und \emph{Client-Secret}.
 		Es ist ihre Aufgabe den Entwicklern ihrer Client-Anwendungen die dazugehörigen Credentials zur Verfügung zu stellen.
 \end{description}
 
 \subsubsection{Menüleiste}
+
+Authentifizierte Benutzer werden namentlich begrüßt.
+So wird sichergestellt, dass der Benutzer zu jedem Zeitpunkt weiß mit welchem Account er authentifiziert ist.
+Client-Moderatoren wird der zusätzliche Menüpunkt \emph{,,Manage clients''} angezeigt, mit dem sie Zugriff auf das Client-Management-System erhalten.
+Abbildung \ref{pic:oauth_infrz/navbar} zeigt eine vollständige Menüleiste.
 
 \begin{figure}[h!]
 \centering
@@ -537,19 +540,26 @@ OAuth InfRZ wird von zwei Benutzerrollen benutzt, die unterschliedliche Rechte u
 \label{pic:oauth_infrz/navbar}
 \end{figure}
 
-Authentifizierte Benutzer werden namentlich begrüßt.
-So wird sichergestellt, dass der Benutzer zu jedem Zeitpunkt weiß mit welchem Account er authentifiziert ist.
-Client Moderatoren wird der zusätzliche Menüpunkt \emph{,,Manage clients''} angezeigt, mit dem sie Zugriff auf das Client-Management-System erhalten.
-Abbildung \ref{pic:oauth_infrz/navbar} zeigt eine vollständige Menüleiste.
-
 \subsubsection{Hauptseite}
-
 
 Die in Abbildung \ref{pic:oauth_infrz/home} dargestellte Hauptseite bietet eine Erklärung der Funktionalität und fasst alle wichtigen Informationen über den Dienst zusammen.
 Sie bietet Links zur verwendeten Lizenz, technischen Dokumentation und zum Repository des Quellcodes.
 Diese Maßnahmen sollen die Verstrauenswürdigkeit fördern.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=15cm]{img/oauth_infrz/home}
+\caption{Hauptseite}
+\label{pic:oauth_infrz/home}
+\end{figure}
+
 \subsubsection{Authentifizierung}
+
+Benutzer können sich auf der \textbf{Loginseite} gegen das Active Directory authentifizieren.
+Die Eingabefelder der Loginseite sind selbsterklärend.
+Üblicherweise gelangen Benutzer über die Autorisierungsanfrage eines Clients auf die Loginseite.
+In diesen Fällen wird, wie in Abbildung \ref{pic:oauth_infrz/login_client} illustriert, eine farblich hervorgehobene Info-Box eingeblendet in welcher der Client genannt wird.
+Außerdem wird der Benutzer nach einer erfolgreichen Authentifizierung zur zum Client gehörigen Autorisierungsseite weitergeleitet.
 
 \begin{figure}[h!]
 \centering
@@ -558,13 +568,17 @@ Diese Maßnahmen sollen die Verstrauenswürdigkeit fördern.
 \label{pic:oauth_infrz/login_client}
 \end{figure}
 
-Benutzer können sich auf der \textbf{Loginseite} gegen das Active Directory authentifizieren.
-Die Eingabefelder der Loginseite sind selbsterklärend.
-Üblicherweise gelangen Benutzer über die Autorisierungsanfrage eines Clients auf die Loginseite.
-In diesen Fällen wird, wie in Abbildung \ref{pic:oauth_infrz/login_client} illustriert, eine farblich hervorgehobene Info-Box eingeblendet in welcher der Client genannt wird.
-Außerdem wird der Benutzer nach einer erfolgreichen Authentifizierung zur zum Client gehörigen Autorisierungsseite weitergeleitet.
-
 \subsubsection{Autorisierung}
+
+Um einen Client-Dienst zu nutzen, müssen Benutzer diesen erst autorisieren.
+Dies geschieht über die in Abbildung \ref{pic:oauth_infrz/authorize} gezeigte \textbf{Autorisierungsseite} des Clients.
+Der Benutzer legt dabei fest, auf welche seiner Informationen die Client-Anwendung über OAuth InfRZ zugreifen darf.
+Diese Seite stellt Informationen zur Client-Anwendung und dem angeforderten Scope bereit.
+Ein Client-Moderator legt das von einer Client-Anwendung angeforderte Scope fest.
+Dabei kann der Client-Moderator sowohl erforderliche (required) als auch optionale Zugriffsrechte beantragen.
+\textbf{Optionale Felder} können Benutzer abwählen und dem Client somit den Zugriff auf die dazugehörige Ressource verwehren.
+\textbf{Erforderliche Felder} hingegen werden ausgegraut angezeigt und können nicht abgewählt werden.
+Nach einer erfolgreichen Autorisierung wird der Benutzer zu einer vom Client bestimmten URL des Clients weitergeleitet.
 
 \begin{figure}[h!]
 \centering
@@ -573,45 +587,36 @@ Außerdem wird der Benutzer nach einer erfolgreichen Authentifizierung zur zum C
 \label{pic:oauth_infrz/authorize}
 \end{figure}
 
-Um einen Client Dienst zu nutzen, müssen Benutzer diesen erst autorisieren.
-Dies geschieht über die in Abbildung \ref{pic:oauth_infrz/authorize} gezeigte \textbf{Autorisierungsseite} des Clients.
-Diese Seite stellt Informationen zur Client-Anwendung und dem angeforderten Scope bereit.
-Client Moderatoren legen das angeforderte Scope einer Client-Anwendung fest.
-Dabei kann er sowohl erforderliche (required) als auch optionale Zugriffsrechte beantragen.
-\textbf{Optionale Felder} können Benutzer abwählen und dem Client somit den Zugriff auf die dazugehörige Ressource verwehren.
-\textbf{Erforderliche Felder} hingegen werden ausgegraut angezeigt und können nicht abgewählt werden.
-Nach einer erfolgreichen Autorisierung wird der Benutzer zu einer vom Client bestimmten URL des Clients weitergeleitet.
+\subsubsection{Client-Management}
 
-\subsubsection{Client Management}
-
-Das \textbf{Client Management} ist ausschließlich für Client Moderatoren einsehbar.
-Clients können von einem Client Moderator angelegt und verwaltet werden.
+Das \textbf{Client-Management} ist ausschließlich für Client-Moderatoren einsehbar.
+Clients können von einem Client-Moderator angelegt und verwaltet werden.
 Technisch sind Moderatoren Benutzer mit besonderen Rechten.
-Für die Benutzung des Client Managements wird eine funktionierende JavaScript-Engine benötigt.
-Client Moderatoren sollen im laufenden Betrieb vom Rechenzentrum verwaltet werden.\footnote{eine ausführliche Diskussion zu diesem Thema gibt es in Abschnitt \ref{sec:oauth-infrz/moderator}}
+Für die Benutzung des Client-Managements wird eine funktionierende JavaScript-Engine benötigt.
+Client-Moderatoren sollen im laufenden Betrieb vom Rechenzentrum verwaltet werden.\footnote{eine ausführliche Diskussion zu diesem Thema gibt es in Abschnitt \ref{sec:oauth-infrz/moderator}}
 
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=15cm]{img/oauth_infrz/clients_overview}
-\caption{Client Übersichtsseite}
+\caption{Client-Übersichtsseite}
 \label{pic:oauth_infrz/clients_overview}
 \end{figure}
 
-Über den Menüpunkt \emph{,,Manage clients''} gelangt ein Moderator auf die in Abbildung \ref{pic:oauth_infrz/clients_overview} illustrierte \emph{Client Übersichtsseite}.
+Über den Menüpunkt \emph{,,Manage clients''} gelangt ein Moderator auf die in Abbildung \ref{pic:oauth_infrz/clients_overview} illustrierte \emph{Client-Übersichtsseite}.
 Auf dieser Seite werden alle vom Moderator verwalteten Clients aufgelistet.
-Von hier aus gelangt man über den \emph{,,Register a new client''}-Button zur in Abbildung \ref{pic:oauth_infrz/client_new} gezeigten \textbf{Client Registrierungsseite}.
+Von hier aus gelangt man über den \emph{,,Register a new client''}-Button zur in Abbildung \ref{pic:oauth_infrz/client_new} gezeigten \textbf{Client-Registrierungsseite}.
 Die Namen in der Tabelle sind Links zur entsprechenden \textbf{Clientseite} (Abbildung \ref{pic:oauth_infrz/client}).
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=15cm]{img/oauth_infrz/client_new}
-\caption{Client Registrierungsseite}
+\caption{Client-Registrierungsseite}
 \label{pic:oauth_infrz/client_new}
 \end{figure}
 
-Auf der \textbf{Client Registrierungsseite} können neue Clients bei OAuth InfRZ registriert werden.
-Die Client Registrierungsseite bietet ein HTML-Formular zur Einstellung der Client Eigenschaften.
+Auf der \textbf{Client-Registrierungsseite} können neue Clients bei OAuth InfRZ registriert werden.
+Die Client-Registrierungsseite bietet ein HTML-Formular zur Einstellung der Client Eigenschaften.
 Nicht sofort ersichtliche Felder werden mit \textbf{Tooltips}\footnote{vgl. TechTerms: Tooltip. \url{http://www.techterms.com/definition/tooltip} (Zugriff am 15.03.2013)} erklärt.
 Der \textbf{,,Name''} soll für den Dienst der dazugehörigen Webanwendung \emph{passend} gewählt werden.
 Am besten entspricht er dem in der Webanwendung selbst benutzten Namen.
@@ -620,7 +625,7 @@ Als \textbf{,,Host''} ist der \emph{Hostname} oder die \emph{IP-Adresse} des Die
 Eine Zugriffsbeschränkung der Requests über die Adresse des Client Servers wird in Abschnitt \ref{sec:oauth-infrz/host} diskutiert.
 Als \textbf{,,Redirect URI''} ist die zur Verarbeitung des Authorization Codes vorgesehene Seite der Client-Anwendung anzugeben.
 Felder zu nicht als \emph{verfügbar (,,available'')} markierten \textbf{,,Scopes''} sind deaktiviert und werden ausgegraut dargestellt.
-Die \textbf{Scope ,,info''} wird auf der Autorisierungsseite als Erklärung zum Scope angezeigt.
+Die \textbf{,,Scope info''} wird auf der Autorisierungsseite als Erklärung zum Scope angezeigt.
 Sie soll Auskunft darüber geben, weshalb der Dienst Zugriff auf diese Information benötigt.
 
 \begin{figure}[h!]
@@ -634,7 +639,7 @@ Neben einer Auflistung aller einstellbaren Eigenschaften, beinhalten Clientseite
 
 \begin{description}
 	\item[Client-ID] \hfill \\
-		Jeder Client bestitzt eine eindeutige \textbf{Client-ID} anhand der er bei OAuth InfRZ identifiziert wird.
+		Jeder Client besitzt eine eindeutige \textbf{Client-ID} anhand der er bei OAuth InfRZ identifiziert wird.
 	\item[Client-Secret] \hfill \\
 		Das \textbf{Client-Secret} ist ein Geheimins, durch dessen Angabe sich ein Client gegenüber OAuth InfRZ authentifiziert.
 		Die Betreiber einer Client Anwendung müssen es angemessen vor unbefugtem Zugriff schützen.
@@ -642,7 +647,7 @@ Neben einer Auflistung aller einstellbaren Eigenschaften, beinhalten Clientseite
 
 Clientseiten bieten die Optionen den Client zu löschen, zu editieren und sich neue Credentials zuweisen zu lassen.
 Vor dem Löschen eines Clients wird eine Löschbestätigung angezeigt.
-Die Oberfläche zum Bearbeiten des Clients ähnelt der Client Registrierungsseite.
+Die Oberfläche zum Bearbeiten des Clients ähnelt der Client-Registrierungsseite.
 
 \subsection{Eingesetzte Werkzeuge}
 \label{sec:oauth-infrz/used-tools}
@@ -710,8 +715,8 @@ Bis zur Erscheinung von \emph{V8}, einer freien von Google entwickelten \emph{JS
 Durch den Einsatz von \emph{just-in-time} Kompilierung\footnote{just-in-time-Kompilierer übersetzen Programme zur Laufzeit in Maschinencode} erzielte V8 deutlich überlegene Ausführungszeiten\footnote{vgl. Heise Online: Google Chrome überholt die Konkurrenz. \url{http://www.heise.de/newsticker/meldung/Google-Chrome-ueberholt-die-Konkurrenz-202963.html} (Zugriff am 04.03.2013)} als alle bis dato verwendeten JS-Engines.
 Mittlerweile haben auch andere Browser auf \emph{just-in-time} Kompilierung umgestellt.
 
-Die Kombination aus HTML5, CSS3 und JavaScript hat mit der Nachfrage an platformunabhängigen Programmiermöglichkeiten\footnote{besonders im Smart Phone Sektor} an Bedeutung gewonnen.
-Eine moderne Webanwendung ohne diese Sprachen zu Programmieren ist undenkbar.
+Die Kombination aus HTML5, CSS3 und JavaScript hat mit der Nachfrage an plattformunabhängigen Programmiermöglichkeiten\footnote{besonders im Smart Phone Sektor} an Bedeutung gewonnen.
+Eine moderne Webanwendung ohne diese Sprachen zu programmieren ist undenkbar.
 
 \subsubsection{Frameworks: Twig, Bootstrap, jQuery}
 
@@ -763,15 +768,15 @@ Mit eingesetzten \textbf{Konzepten} werden in diesem Abschnitt Programmierparadi
 Sie dienen der Strukturierung von Code und machen diesen somit wartbarer und leichter verständlich.
 Für sie gelten analoge Anforderungen wie für Werkzeuge\footnote{in der Einleitung zu Abschnitt \ref{sec:oauth-infrz/used-tools} beschrieben}.
 
-% TODO Objektorientierte Programmierung
+% OOP - Objektorientierte Programmierung
 \textbf{Objektorientierte Programmierung (OOP)} ist ein weit verbreitetes \emph{Programmierparadigma}.
 Es beruht auf der Philosopie der Objektorientierung, nach der Teile des Codes ihrem Zweck nach in Klassen geteilt werden.
 Klassen bilden ein abstraktes Konstrukt und somit Blaupausen für Objekte. Sie beschreiben Funktionen ihrer zugehörigen Objekte.
-Objekte sind instanzen von Klassen, die mit anderen Objekten kommunizieren und interagieren.
+Objekte sind Instanzen von Klassen, die mit anderen Objekten kommunizieren und interagieren.
 \emph{,,The class holds the shared behavior for its instances''}\footnote{vgl. \cite{Kay93} IV.}.
 Objektorientierte Programmierung schafft\footnote{im Vergleich zur klassischen prozedualen Programmierung} klare Strukturen und macht den Quellcode dadurch wartbarer und leichter verständlich.
 
-% Model View Controller
+% MVC - Model View Controller
 \textbf{Model View Controller (MVC)} ist ein \emph{Entwurfsmuster} zur Gliederung von Code nach seiner Aufgabe.
 Grundkonzept von MVC ist es durch die Aufteilung der Softwareteile nach dem \textbf{Datenmodell (Model)}, der \textbf{Benutzerausgabe (View)} und der \textbf{Programmsteuerung (Controller)} eine bessere Modularität zu erzielen.\footnote{vgl. \cite{Som10} Section 6.3}
 Durch den Einsatz von MVC gewinnt Code an Struktur und es wird leichter Teile des Codes auszutauschen.
@@ -903,6 +908,27 @@ Ein Page-Token ist ein an \emph{einen} Benutzer gebundenes Geheimnis.
 Es wird üblicherweise als \emph{Hidden Field} in das \emph{HTML-Formular} eingefügt.
 Für einen Angreifer ist es schwierig Page-Token auszulesen.
 Da für jede Aktion ein gültiges Page-Token notwendig ist, verhindert deren Benutzung CSRF-Angriffe.
+Bei OAuth InfRZ sind die Page-Tokens als Bearer Tokens realisiert und werden als \emph{Form-Encoded Body Parameter}\footnote{vgl. \cite[Section 2.2]{RFC6750}} übertragen.
+Zur Erzeugung wird eine zufällige und eindeutige Zeichenfolge geschaffen, an den Benutzer gebunden und in die Datenbank eingefügt.
+Listing \ref{lst:page_token_creation} beinhaltet eine vereinfachte Version des zuur Erzeugung eines Page-Token benutzten Codes.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=page_token_creation,label=lst:page_token_creation,
+	caption={Erzeugung eines Page-Token},
+	style=PHP]
+	{listings/page_token_creation.php}
+\end{minipage} 
+
+Bei der Verifizierung eines Page-Token wird die Benutzerzugehörigkeit und die zeitliche Gültigkeit des Tokens überprüft.
+Ein Page-Token muss zum aktuell angemeldeten Benutzer gehören und darf nicht älter sein als 30 Minuten.
+Listing \ref{lst:page_token_creation} zeigt eine vereinfachte Form des Codes mit dem ein Page-Token Verifiziert wird.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=page_token_validation,label=lst:page_token_validation,
+	caption={Verifizierung eines Page-Token},
+	style=PHP]
+	{listings/page_token_validation.php}
+\end{minipage}
 
 %\subsubsection{Wart- \& Erweiterbarkeit}
 %• Ausblick Erweiterbarkeit
@@ -914,7 +940,9 @@ Die \textbf{Client-Library} soll\footnote{wie schon in Abschnitt \ref{sec:oauth-
 Sie übernimmt komplexe Abläufe und kapselt diese in gut dokumentierten Funktionen.
 Da die Client-Library primär von weiteren Entwicklern genutzt werden soll, wird an dieser Stelle eine ausführliche Dokumentation zur Benutzung geboten.
 
-Die Client-Library muss vor der Benutzung in der im selben Ordner befindlichen \emph{config.ini} (Listing \ref{lst:client_config}) konfiguriert werden. In Listing \ref{lst:client} werden die wichtigsten Funktionen der Client-Library exemplarisch ausgeführt.
+Die Client-Library muss vor der Benutzung in der im selben Ordner befindlichen \emph{config.ini} (Listing \ref{lst:client_config}) konfiguriert werden.
+In Listing \ref{lst:client} werden die wichtigsten Funktionen der Client-Library exemplarisch ausgeführt.
+Die Konfigurationsdatei enthält sensible Informationen und muss durch geeignete Zugriffskontrollmechanismen geschützt werden.
 
 \begin{minipage}{\textwidth}
 	\lstinputlisting[name=VariableVariable,label=lst:client,
@@ -934,7 +962,7 @@ Dabei ist zu beachten, dass diese URL zu dem selben Host führen muss wie die Cl
 Nach einer erfolgreichen Autorisierung wird der Benutzer, mitsamt Authorization Code, auf eine Client Seite weitergeleitet.
 Mit der Methode \code{getAuthToken(\$code);} (Zeile 9) kann ein Authorization Code gegen ein Access Token getauscht werden.
 Das Access Token wird als ein Objekt des Typs \code{Infrz\\OAuth\\Client\\Model\\AuthToken} zurückgegeben.
-Letztendlich kann man mit der Methode \code{getUser(\$auth_token);} (Zeile 11) auf die vom Benutzer freigegebene Information zugreifen.
+Letztendlich kann man mit der Methode \code{getUser(\$access_token);} (Zeile 11) auf die vom Benutzer freigegebene Information zugreifen.
 Der Benutzer wird als ein Objekt des Typs \code{Infrz\\OAuth\\Client\\Model\\User} zurückgegeben.
 
 Listing \ref{lst:client_config} zeigt eine unveränderte Client Konfiguration.
@@ -948,7 +976,7 @@ Um Unklarheiten zu vermeiden wird an dieser Stelle auf die einzelnen Einstellung
 \end{minipage}
 
 Jeder Client-Anwendung sind eine eindeutige \textbf{Client ID} (Zeile 5)\footnote{von hier an beziehen sich Zeilenangaben auf Listing \ref{lst:client_config}} und ein vertrauliches \textbf{Client Secret} (Zeile 8) zugewiesen.
-Bei beiden handelt es sich um zufällige Zeichenketten, die vom Client Moderator auf der \emph{Clientseite} eingesehen werden können.
+Bei beiden handelt es sich um zufällige Zeichenketten, die vom Client-Moderator auf der \emph{Clientseite} eingesehen werden können.
 Mit der \textbf{Server URL} (Zeile 11) ist die URL des OAuth InfRZ Dienstes gemeint.
 Aktuell läuft dieser auf \emph{,,\url{https://svs-sso.informatik.uni-hamburg.de''}} und ist nur fachbereichsintern erreichbar.
 Die \textbf{Default Redirect URI} (Zeile 14) ist die standardmäßig genutzte URL zu der ein Benutzer nach erfolgreicher Autorisierung weitergeleitet wird.
@@ -972,27 +1000,41 @@ Ferner ist davon auszugehen, dass Programmiersprachen in denen Webanwendungen ge
 \subsubsection{Host}
 \label{sec:oauth-infrz/host}
 
-• Host akzeptanz
+Es ist sinnvoll die Kommunikation zwischen der Client-Anwendung und OAuth InfRZ auf die Hosts\footnote{dabei gilt es nur die Hosts zu erlauben die mit OAuth InfRZ kommunizieren} der Client Anwendung zu begrenzen.
+Ein solcher whitelist-Ansatz sollte sinnvollerweise vom Client-Moderator verwaltet werden.
+Diese Maßnahme erschwert Angreifern den unbefugten Zugriff.
+Eine solche Begrenzung könnte über Host- und IP-Adressen geschehen.
+Eine zusätzliche Authentifizierung des Clients durch ein TLS-Zertifikat würde für weitere Sicherheit sorgen.
+Ein Angreifer müsste zusätzlich zu Client-Secret, Host-Adresse und Kontrolle über die Kommunikation auch das TLS-Zertifikat des Clients besitzen.
+Die Datenbank und Benutzeroberfläche von OAuth InfRZ sind für die Implementierung einer whitelist vorbereitet.
 
-\subsubsection{Client Moderator}
+\subsubsection{Client-Moderator}
 \label{sec:oauth-infrz/moderator}
 
-% verwaltung durch Rechenzentrum
-% multiple client moderatoren
+OAuth InfRZ hat über das Active Directory Zugriff auf die Gruppen eines Benutzers.
+Daher bietet es sich an, Client-Moderatoren durch die Zugehörigkeit zu einer dedizierten Gruppe im Active Directory zu autorisieren.
+Dadurch wird die Verwaltung von zusätzlichen Benutzerkonten für Client-Moderatoren hinfällig, da diese ihren Informatik Rechenzentrum Account nutzen können.
+Durch eine solche Implementation ist die Verwaltung der Client-Moderatoren Aufgabe des Rechenzentrums.
+OAuth InfRZ ist auf die Verwaltung der Client-Moderatoren durch Gruppenzugehörigkeit vorbereitet.
+
+In der aktuellen Implementation von OAuth InfRZ ist jeder Client-Anwendung genau \emph{ein} Client-Moderator zugewiesen.
+Das ist für den Universitätsbetrieb unpraktisch.
+Eine Erweiterung auf eine Gruppe von Benutzern ist möglich und sollte in Betracht gezogen werden.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \addcontentsline{toc}{section}{Literaturverzeichnis}
 \begin{raggedright}%schaltet Blocksatz ab, erzeugt ein stimmigeres Schriftbild im Literaturverzeichnis
 \begin{thebibliography}{XXXXXXXX}
-    \bibitem[AE12]{AE12} Axel Arnbak, Nico Van Eijk: Certificate Authority Collapse: Regulating Systemic Vulnerabilities in the HTTPS Value Chain. Universiteit van Amsterdam, Amsterdam, 2012.
+    \bibitem[AE12]{AE12} Axel Arnbak, Nico Van Eijk: Certificate Authority Collapse: Regulating Systemic Vulnerabilities in the HTTPS Value Chain. 40th Research Conference on Communication, Information and Internet Policy, 2012 TRPC, Arlington (US-VA) September 2012
+	\bibitem[Boy12]{Boy12} Ryan Boyd: Getting Started with OAuth 2.0. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
 	\bibitem[Cro06]{Cro06} Douglas Crockford: JSON: The Fat-Free Alternative to XML. XML 2006, Boston, Dez 2006.
-	\bibitem[DR11]{DR11} Thai Duong, Juliano Rizzo: Here Come The $\oplus$ Ninjas. Ekoparty Security Conference, Buenos Aires, Argentinien, Mai 2011.
-	\bibitem[Fie00]{Fie00} Roy T. Fielding: Architectural Styles and the Design of Network-based Software Architectures. University Of California, Irvine, Dissertation, 2000.
-	\bibitem[Hur97]{Hur97} Jani Hursti: Single Sign-On. Helsinki University of Technology, 1997.
-	\bibitem[Leb11]{Leb11} Jonathan LeBlanc: Programming Social Applications. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
+	\bibitem[DR11]{DR11} Thai Duong, Juliano Rizzo: Here Come The $\oplus$ Ninjas. ekoparty Security Conference 9$^\circ$ edition, Buenos Aires, Argentinien, Mai 2011.
+	\bibitem[Fie00]{Fie00} Roy T. Fielding: Architectural Styles and the Design of Network-based Software Architectures. University Of California, Dissertation, Irvine (US-CA) 2000.
+	\bibitem[Hur97]{Hur97} Jani Hursti: Single Sign-On. Seminar on Network Security, Helsinki University of Technology, Helsinki 1997.
+	\bibitem[Kay93]{Kay93} Alan C. Kay: The Early History Of Smalltalk. History of programming languages II (511-598). Association for Computing Machinery, New York (US-NY) 1993.
 	\bibitem[KH10]{KH10} Andreas M. Kaplan, Michael Haenlein: Users of the world, unite! The challenges and opportunities of Social Media. Business Horizons 53/1 (2010) 60-68.
-	\bibitem[Kay93]{Kay93} Alan C. Kay: The Early History Of Smalltalk, (US-MA) 1993.
+	\bibitem[Leb11]{Leb11} Jonathan LeBlanc: Programming Social Applications. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
 	\bibitem[Po09]{Po09} John Policelli: Active Directory Domain Services 2008 How-To. First Edition, Sams Publishing, Indianapolis (US-IN) 2009.
 	\bibitem[Ree08]{Ree08} Will Reese:  Nginx: the High-Performance Web Server and Reverse Proxy. Linux Journal 173 (2008) Article 2.
 	\bibitem[RFC1866]{RFC1866} Daniel W. Connolly, Tim Berners-Lee: Hypertext Markup Language - 2.0. \url{http://tools.ietf.org/html/rfc1866} (Zugriff am 23.02.2012)
@@ -1002,11 +1044,11 @@ Ferner ist davon auszugehen, dass Programmiersprachen in denen Webanwendungen ge
 	\bibitem[RFC5849]{RFC5849} Eran Hammer-Lahav: The OAuth 1.0 Protocol. \url{http://tools.ietf.org/html/rfc5849} (Zugriff am 25.12.2012).
 	\bibitem[RFC6749]{RFC6749} Dick Hardt: The OAuth 2.0 Authorization Framework. \url{http://tools.ietf.org/html/rfc6749} (Zugriff am 25.12.2012).
 	\bibitem[RFC6750]{RFC6750} Dick Hardt, Michael B. Jones: The OAuth 2.0 Authorization Framework: Bearer Token Usage. \url{http://tools.ietf.org/html/rfc6750} (Zugriff am 25.12.2012).
-	\bibitem[Rit12]{Rit12} Tom Ritter: New Standards for Browser-Based Trust - The Recent Accelleration of Improvements, San Francisco (US-CA) 2012.
-	\bibitem[Boy12]{Boy12} Ryan Boyd: Getting Started with OAuth 2.0. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
+	\bibitem[Rit12]{Rit12} Tom Ritter: New Standards for Browser-Based Trust - The Recent Accelleration of Improvements. iSEC Partners, San Francisco (US-CA) 2012.
+	\bibitem[Sin12]{Sin12} Brijendra Singh: Network Security \& Management. Third Edition, PHI Learning, Delhi, India 2012.
 	\bibitem[Som10]{Som10} Ian Sommerville: Software Engineering. Ninth Edition, Pearson, Boston (US-MA) 2010.
-	\bibitem[SQL1992]{SQL1992} Digital Equipment Corporation: Database Language SQL, Maynard (US-MA) 1992.
-	\bibitem[SS12]{SS12} Christopher Soghoian, Sid Stamm: Certified Lies: Detecting and Defeating Government Interception Attacks Against SSL. Indiana University, Bloomington, 2012.
+	\bibitem[SQL1992]{SQL1992} Database Language SQL. Digital Equipment Corporation, Maynard (US-MA) 1992.
+	\bibitem[SS12]{SS12} Christopher Soghoian, Sid Stamm: Certified Lies: Detecting and Defeating Government Interception Attacks Against SSL. 15th International Conference Financial Cryptography and Data Security '11, Gros Islet, St. Lucia, Feb 2011.
 	\bibitem[TW10]{TW10} Andrew S. Tanenbaum, David J. Wetherall: Computer Networks. Fifth Edition, Pearson, Boston (US-MA) 2010.
 	\bibitem[WK06]{WK06} Martin Wind, Detlef Kröger (Hrsg.): Handbuch IT in der Verwaltung. Auflage 2006, Springer-Verlag, Berlin (DE-BE) 2006.
 \end{thebibliography}
