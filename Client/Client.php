@@ -8,10 +8,10 @@
 
 namespace Infrz\OAuth\Client;
 
-require_once('Model/AuthToken.php');
+require_once('Model/AccessToken.php');
 require_once('Model/User.php');
 
-use Infrz\OAuth\Client\Model\AuthToken;
+use Infrz\OAuth\Client\Model\AccessToken;
 use Infrz\OAuth\Client\Model\User;
 
 Class Client
@@ -50,15 +50,15 @@ Class Client
     }
 
     /**
-     * Exchanges an auth_code for a valid auth_token.
+     * Exchanges an auth_code for a valid access_token.
      *
      * @param string $code The auth code
      * @param string $redirect_uri
      * @param string $grant_type
-     * @return AuthToken
+     * @return AccessToken
      * @throws \Exception Throws an Exception when the server returns an error or the response object is not valid.
      */
-    public function getAuthToken($code, $redirect_uri = '', $grant_type = 'authorization_code')
+    public function getAccessToken($code, $redirect_uri = '', $grant_type = 'authorization_code')
     {
         if (!$redirect_uri) {
             $redirect_uri = $this->default_redirect_uri;
@@ -75,40 +75,40 @@ Class Client
         $this->notAnError($response);
 
         if (!(isset($response->access_token) and isset($response->refresh_token) and isset($response->scope) and isset($response->expires_at))) {
-            throw new \Exception('The response object is not a valid auth_token.');
+            throw new \Exception('The response object is not a valid access_token.');
         }
 
-        $auth_token = new AuthToken();
-        $auth_token->token = $response->access_token;
-        $auth_token->refresh_token = $response->refresh_token;
-        $auth_token->scope = $response->scope;
-        $auth_token->expires_at = $response->expires_at;
+        $access_token = new AccessToken();
+        $access_token->token = $response->access_token;
+        $access_token->refresh_token = $response->refresh_token;
+        $access_token->scope = $response->scope;
+        $access_token->expires_at = $response->expires_at;
 
-        return $auth_token;
+        return $access_token;
     }
 
     /**
-     * Exchanges a refresh_token for a new auth_token.
+     * Exchanges a refresh_token for a new access_token.
      *
      * @param string $refresh_token
      * @param string $redirect_uri
-     * @return AuthToken
+     * @return AccessToken
      */
-    public function getAuthTokenByRefreshToken($refresh_token, $redirect_uri)
+    public function getAccessTokenByRefreshToken($refresh_token, $redirect_uri)
     {
-        return $this->getAuthToken($refresh_token, $redirect_uri, 'refresh_token');
+        return $this->getAccessToken($refresh_token, $redirect_uri, 'refresh_token');
     }
 
     /**
      * Requests the server for user information and returns them as an User object.
      *
-     * @param string $auth_token
+     * @param string $access_token
      * @return User
      * @throws \Exception Throws an Exception when the response is not a valid user object.
      */
-    public function getUser($auth_token)
+    public function getUser($access_token)
     {
-        $url = sprintf('%s/user?oauth_token=%s', $this->server_url, $auth_token);
+        $url = sprintf('%s/user?access_token=%s', $this->server_url, $access_token);
         $response = json_decode($this->requestGet($url));
         $this->notAnError($response);
 

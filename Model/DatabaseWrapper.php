@@ -9,7 +9,7 @@ namespace Infrz\OAuth\Model;
 
 use Infrz\OAuth\Model\Client;
 use Infrz\OAuth\Model\User;
-use Infrz\OAuth\Model\AuthToken;
+use Infrz\OAuth\Model\AccessToken;
 use Infrz\OAuth\Model\AuthCode;
 use Infrz\OAuth\Model\RefreshToken;
 use Infrz\OAuth\Model\WebToken;
@@ -87,11 +87,11 @@ class DatabaseWrapper
         // auth_code fixtures
         $this->insertAuthCode($client, $user, array('kennung', 'groups'));
 
-        // auth_token fixtures
-        $auth_token = $this->insertAuthToken($client, $user, array('kennung', 'groups'));
+        // access_token fixtures
+        $access_token = $this->insertAccessToken($client, $user, array('kennung', 'groups'));
 
         // refresh_token fixtures
-        $this->insertRefreshToken($auth_token);
+        $this->insertRefreshToken($access_token);
     }
 
     /**
@@ -183,13 +183,13 @@ class DatabaseWrapper
     public function deleteClient(Client $client)
     {
         // delete all token belonging to the client
-        $selectToken_query = 'SELECT token FROM auth_token WHERE client_id = :client_id';
+        $selectToken_query = 'SELECT token FROM access_token WHERE client_id = :client_id';
         $token_stmt = $this->db->prepare($selectToken_query);
         $token_stmt->bindParam(':client_id', $client->id);
         $token_stmt->execute();
 
         foreach ($token_stmt as $token) {
-            if (!$this->deleteAuthToken($token['token'])) {
+            if (!$this->deleteAccessToken($token['token'])) {
                 throw new \PDOException('There has been an error deleting all tokens from client.');
             }
         }
@@ -316,7 +316,7 @@ class DatabaseWrapper
      */
     public function deleteUser($kennung)
     {
-        $delete_query = 'DELETE FROM auth_token WHERE kennung = :kennung';
+        $delete_query = 'DELETE FROM access_token WHERE kennung = :kennung';
         $stmt = $this->db->prepare($delete_query);
         $stmt->bindParam(':kennung', $kennung);
 
@@ -414,91 +414,91 @@ class DatabaseWrapper
     }
 
     /**
-     * Creates an auth_token for the client and user in the database.
+     * Creates an access_token for the client and user in the database.
      *
      * @param Client $client The client object as retrieved from db.
      * @param User $user The user object as retrieved from db.
      * @param array $scope The scope which the user grants to the client.
-     * @return AuthToken
+     * @return AccessToken
      */
-    public function insertAuthToken(Client $client, User $user, $scope)
+    public function insertAccessToken(Client $client, User $user, $scope)
     {
-        $auth_token = $this->getUniqueHash($client->name, 'auth_token', 'token');
-        $insert_token = 'INSERT INTO auth_token (user_id, client_id, token, scope, expires_at)
+        $access_token = $this->getUniqueHash($client->name, 'access_token', 'token');
+        $insert_token = 'INSERT INTO access_token (user_id, client_id, token, scope, expires_at)
                          VALUES (:user_id, :client_id, :token, :scope, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
         $stmt->bindParam('user_id', $user->id);
         $stmt->bindParam('client_id', $client->id);
-        $stmt->bindParam('token', $auth_token);
+        $stmt->bindParam('token', $access_token);
         $stmt->bindValue('scope', json_encode($scope));
         $stmt->bindValue('expires_at', time()+(30*60));
         $stmt->execute();
 
-        return $this->getAuthTokenByToken($auth_token);
+        return $this->getAccessTokenByToken($access_token);
     }
 
     /**
-     * Deletes an auth_token from database by the auth_token-value.
+     * Deletes an access_token from database by the access_token-value.
      *
-     * @param string $auth_token
+     * @param string $access_token
      * @return bool Indicates whether the delete was successful.
      */
-    public function deleteAuthToken($auth_token)
+    public function deleteAccessToken($access_token)
     {
-        $query = 'DELETE FROM auth_token WHERE token = :auth_token';
+        $query = 'DELETE FROM access_token WHERE token = :access_token';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':auth_token', $auth_token);
+        $stmt->bindParam(':access_token', $access_token);
 
         return $stmt->execute();
     }
 
     /**
-     * Returns an auth_token by the id.
+     * Returns an access_token by the id.
      *
      * @param int $id
-     * @return AuthToken
+     * @return AccessToken
      */
-    public function getAuthTokenById($id)
+    public function getAccessTokenById($id)
     {
-        $stmt = $this->db->prepare('SELECT * FROM auth_token WHERE id = :id;');
-        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AuthToken');
+        $stmt = $this->db->prepare('SELECT * FROM access_token WHERE id = :id;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AccessToken');
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $auth_token = $stmt->fetch();
+        $access_token = $stmt->fetch();
 
-        return $auth_token;
+        return $access_token;
     }
 
     /**
-     * Returns an auth_token by the auth_token-value.
+     * Returns an access_token by the access_token-value.
      *
      * @param $token
-     * @return AuthToken
+     * @return AccessToken
      */
-    public function getAuthTokenByToken($token)
+    public function getAccessTokenByToken($token)
     {
-        $stmt = $this->db->prepare('SELECT * FROM auth_token WHERE token = :token;');
-        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AuthToken');
+        $stmt = $this->db->prepare('SELECT * FROM access_token WHERE token = :token;');
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, 'Infrz\OAuth\Model\AccessToken');
         $stmt->bindParam(':token', $token);
         $stmt->execute();
-        $auth_token = $stmt->fetch();
+        $access_token = $stmt->fetch();
 
-        return $auth_token;
+        return $access_token;
     }
 
     /**
-     * Creates a refresh_token for the auth_token in the database.
+     * Creates a refresh_token for the access_token in the database.
      *
-     * @param AuthToken $auth_token
+     * @param AccessToken $access_token
      * @return RefreshToken
      */
-    public function insertRefreshToken(AuthToken $auth_token)
+    public function insertRefreshToken(AccessToken $access_token)
     {
-        $refresh_token = $this->getUniqueHash($auth_token->token, 'refresh_token', 'token');
-        $query = 'INSERT INTO refresh_token (auth_token_id, token, created)
-                         VALUES (:auth_token_id, :token, :created);';
+        $refresh_token = $this->getUniqueHash($access_token->token, 'refresh_token', 'token');
+        $query = 'INSERT INTO refresh_token (access_token_id, token, created)
+                         VALUES (:access_token_id, :token, :created);';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam('auth_token_id', $auth_token->id);
+        $stmt->bindParam('access_token_id', $access_token->id);
         $stmt->bindParam('token', $refresh_token);
         $stmt->bindValue('created', time());
         $stmt->execute();
@@ -679,7 +679,7 @@ class DatabaseWrapper
         if ($forceDropTables) {
             $this->db->exec('DROP TABLE client');
             $this->db->exec('DROP TABLE user');
-            $this->db->exec('DROP TABLE auth_token');
+            $this->db->exec('DROP TABLE access_token');
             $this->db->exec('DROP TABLE auth_code');
             $this->db->exec('DROP TABLE refresh_token');
             $this->db->exec('DROP TABLE web_token');
@@ -709,7 +709,7 @@ class DatabaseWrapper
         );
 
         $this->db->exec(
-            'CREATE TABLE IF NOT EXISTS auth_token (
+            'CREATE TABLE IF NOT EXISTS access_token (
             id INTEGER primary key,
             user_id int,
             client_id int,
@@ -731,7 +731,7 @@ class DatabaseWrapper
         $this->db->exec(
             'CREATE TABLE IF NOT EXISTS refresh_token (
             id INTEGER primary key,
-            auth_token_id int,
+            access_token_id int,
             token varchar(128) unique,
             created int);'
         );

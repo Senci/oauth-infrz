@@ -16,12 +16,12 @@ Although I have tried to conform to the protocols conventions the details to dif
 4. *LDAP* confirms the credentials and answers with the user information.
 5. After the user has accepts the authorization on the OAuth Infrz site she is redirected to the client site passing an *auth_code* through a **GET** variable.
  * **GET** `https://client-site.org/client/redirect/page?code={auth_code}`
-6. Now that the client has a valid *auth_code* it can exchange it for an *auth_token*.
+6. Now that the client has a valid *auth_code* it can exchange it for an *access_token*.
  * **POST** `https://my-oauth-server.edu/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={auth_code}&redirect_uri={ru}`
-7. The server returns the client an *auth_token* as a *JSON* encoded object.
+7. The server returns the client an *access_token* as a *JSON* encoded object.
  * At this point it is proven to the client that the user has an *irz* account and therefore is a member of the department.
-8. The client requests user information from the server with his *auth_token*.
- * **GET** `https://my-oauth-server.edu/user?oauth_token={auth_token}`
+8. The client requests user information from the server with his *access_token*.
+ * **GET** `https://my-oauth-server.edu/user?access_token={access_token}`
 9. The server answers with the *JSON* encoded user object.
 10. The client provides its services to the user.
 
@@ -77,14 +77,14 @@ Keep in mind that all url-values have to be *urlencoded* when passed. All POST-c
 
 ## REST
 REST calls return their information as a JSON encoded string.
-* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token ( *auth_token* ) if the call is valid.
+* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token ( *access_token* ) if the call is valid.
  * *grant_type*: The *grant_type* (from Oauth2 specification) which is being used. The value has to be *authorization_code* or *refresh_token*.
  * *client_id*: The *client_id* from the requesting client.
  * *client_secret*: The *client_secret* mathing to the client_id.
  * *code*: Either the *verification code* from the user or a valid *refresh_token*, depending on *grant_type*-setting.
  * *redirect_uri*: The url to which the user gets forwarded after successful permission grant.
-* **GET "/user?oauth_token={oat}"**: Returns the user-information.
- * *oauth_token*: The valid *oauth_token* from the client.
+* **GET "/user?access_token={at}"**: Returns the user-information.
+ * *access_token*: The valid *access_token* from the client.
 
 # Database Tables
 SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
@@ -107,7 +107,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * **email**: varchar
 * **groups**: varchar
 
-## auth_token
+## access_token
 * **id**: INTEGER primary key
 * **user_id**: int
 * **client_id**: int
@@ -125,7 +125,7 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 
 ## refresh_token
 * **id**: INTEGER primary key
-* **auth_token_id**: int
+* **access_token_id**: int
 * **token**: varchar unique
 * **created**: int
 

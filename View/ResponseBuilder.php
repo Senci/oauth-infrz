@@ -4,7 +4,7 @@ namespace Infrz\OAuth\View;
 
 use Infrz\OAuth\Model\ErrorCodes;
 use Infrz\OAuth\Control\Security\AuthFactoryInterface;
-use Infrz\OAuth\Model\AuthToken;
+use Infrz\OAuth\Model\AccessToken;
 use Infrz\OAuth\Model\Client;
 use Infrz\OAuth\Model\RefreshToken;
 use Infrz\OAuth\Model\User;
@@ -143,18 +143,18 @@ class ResponseBuilder
     }
 
     /**
-     * Builds a JSON encoded auth_token response.
+     * Builds a JSON encoded access_token response.
      *
-     * @param AuthToken $auth_token
+     * @param AccessToken $access_token
      * @param RefreshToken $refresh_token
      */
-    public function buildAuthToken($auth_token, $refresh_token)
+    public function buildAccessToken($access_token, $refresh_token)
     {
         $response = new \StdClass();
-        $response->access_token = $auth_token->token;
+        $response->access_token = $access_token->token;
         $response->refresh_token = $refresh_token->token;
-        $response->scope = $auth_token->scope;
-        $response->expires_at = (int) $auth_token->expires_at;
+        $response->scope = $access_token->scope;
+        $response->expires_at = (int) $access_token->expires_at;
         exit(json_encode($response));
     }
 

@@ -7,7 +7,7 @@
 
 namespace Infrz\OAuth\Client\Model;
 
-class AuthToken
+class AccessToken
 {
     public $token;
     public $scope;
@@ -15,7 +15,7 @@ class AuthToken
     public $refresh_token;
 
     /**
-     * Determines whether the AuthToken has the given scope.
+     * Determines whether the AccessToken has the given scope.
      *
      * @param $scopeName
      * @return bool

@@ -24,7 +24,7 @@ session_start();
 $logout = isset($_GET['logout']);
 if ($logout) {
     unset($_SESSION['token']);
-    unset($_SESSION['auth_token']);
+    unset($_SESSION['access_token']);
     header('Location: /Demo');
 }
 
@@ -33,13 +33,13 @@ $client = new Client($client_config_path);
 $loader = new \Twig_Loader_Filesystem('View');
 $twig = new \Twig_Environment($loader, array('/cache' => 'cache'));
 
-// if code is set, exchange auth_code for auth_token
+// if code is set, exchange auth_code for access_token
 $code = isset($_GET['code']) ? $_GET['code'] : false;
 if ($code) {
     try {
-        $auth_token = $client->getAuthToken($code);
+        $access_token = $client->getAccessToken($code);
         $_SESSION['token'] = 'logged_in';
-        $_SESSION['auth_token'] = $auth_token->token;
+        $_SESSION['access_token'] = $access_token->token;
         header('Location: /Demo');
     } catch (Exception $e) {
         exit($twig->render('error.html.twig', array('error' => $e->getMessage())));
@@ -57,9 +57,9 @@ if (!$token) {
 }
 
 // get user information and display it.
-$auth_token = isset($_SESSION['auth_token']) ? $_SESSION['auth_token'] : false;
+$access_token = isset($_SESSION['access_token']) ? $_SESSION['access_token'] : false;
 try {
-    $user = (array)$client->getUser($auth_token);
+    $user = (array)$client->getUser($access_token);
     foreach ($user as $key => $value) {
         if (!$user[$key]) {
             unset($user[$key]);

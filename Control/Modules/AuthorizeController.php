@@ -118,27 +118,27 @@ class AuthorizeController extends AbstractController
                 $this->responseBuilder->buildJsonError('no_permission');
             }
             $user = $this->db->getUserById($auth_code->user_id);
-            $auth_token = $this->db->insertAuthToken($client, $user, $auth_code->scope);
+            $access_token = $this->db->insertAccessToken($client, $user, $auth_code->scope);
             $this->db->deleteAuthCode($auth_code->code);
         } elseif ($grant_type == 'refresh_token') {
             if (!$refresh_token = $this->db->getRefreshTokenByToken($code)) {
                 $this->responseBuilder->buildJsonError('not_found');
             }
-            if (!$auth_token = $this->db->getAuthTokenById($refresh_token->auth_token_id)) {
+            if (!$access_token = $this->db->getAccessTokenById($refresh_token->access_token_id)) {
                 $this->responseBuilder->buildJsonError('not_found');
             }
-            if ($client->id != $auth_token->client_id) {
+            if ($client->id != $access_token->client_id) {
                 $this->responseBuilder->buildJsonError('no_permission');
             }
-            $user = $this->db->getuserbyid($auth_token->user_id);
-            $auth_token_new = $this->db->insertAuthToken($client, $user, $auth_token->scope);
+            $user = $this->db->getuserbyid($access_token->user_id);
+            $access_token_new = $this->db->insertAccessToken($client, $user, $access_token->scope);
             $this->db->deleteRefreshToken($refresh_token->token);
-            $this->db->deleteAuthToken($auth_token->token);
-            $auth_token = $auth_token_new;
+            $this->db->deleteAccessToken($access_token->token);
+            $access_token = $access_token_new;
         } else {
             $this->responseBuilder->buildJsonError('invalid_param');
         }
-        $refresh_token = $this->db->insertRefreshToken($auth_token);
-        $this->responseBuilder->buildAuthToken($auth_token, $refresh_token);
+        $refresh_token = $this->db->insertRefreshToken($access_token);
+        $this->responseBuilder->buildAccessToken($access_token, $refresh_token);
     }
 }

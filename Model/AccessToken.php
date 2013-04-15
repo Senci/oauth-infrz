@@ -7,7 +7,7 @@
 
 namespace Infrz\OAuth\Model;
 
-class AuthToken
+class AccessToken
 {
     public $id;
     public $user_id;
@@ -22,7 +22,7 @@ class AuthToken
     }
 
     /**
-     * Determines whether the AuthToken has the given scope.
+     * Determines whether the AccessToken has the given scope.
      *
      * @param $scopeName
      * @return bool
