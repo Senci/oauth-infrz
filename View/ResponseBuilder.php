@@ -56,6 +56,7 @@ class ResponseBuilder
     public function buildJsonError($error_code, $error_description = null)
     {
         $error = $this->getError($error_code, $error_description);
+        $error = array_merge(array('type' => "Error"), $error);
         http_response_code($error['http_status']);
 
         exit(json_encode($error));
@@ -151,6 +152,7 @@ class ResponseBuilder
     public function buildAccessToken($access_token, $refresh_token)
     {
         $response = new \StdClass();
+        $response->type = 'Access-Token';
         $response->access_token = $access_token->token;
         $response->refresh_token = $refresh_token->token;
         $response->scope = $access_token->scope;

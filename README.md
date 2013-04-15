@@ -77,8 +77,8 @@ Keep in mind that all url-values have to be *urlencoded* when passed. All POST-c
 
 ## REST
 REST calls return their information as a JSON encoded string.
-* **POST "/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token ( *access_token* ) if the call is valid.
- * *grant_type*: The *grant_type* (from Oauth2 specification) which is being used. The value has to be *authorization_code* or *refresh_token*.
+* **POST "/authorize/token?grant_type={gt}&client_id={cid}&client_secret={cs}&code={c}&redirect_uri={ru}"**: Returns a new authorization token ( *access_token* ) if the call is valid.
+ * *grant_type*: The *grant_type* (from OAuth2 specification) which is being used. The value has to be *authorization_code* or *refresh_token*.
  * *client_id*: The *client_id* from the requesting client.
  * *client_secret*: The *client_secret* mathing to the client_id.
  * *code*: Either the *verification code* from the user or a valid *refresh_token*, depending on *grant_type*-setting.
@@ -135,5 +135,5 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * **token**: varchar unique
 * **expires_at**: int
 
-# TODO
+# T1ODO
 * write How-Tos

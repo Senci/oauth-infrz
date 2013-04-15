@@ -106,8 +106,8 @@ class DatabaseWrapper
      */
     public function insertClient($name, User $user, $description, $host, $redirect_uri, $scope)
     {
-        $client_id = $this->getUniqueHash($name, 'client', 'client_id');
-        $client_secret = $this->getUniqueHash($redirect_uri, 'client', 'client_secret');
+        $client_id = $this->getUniqueHash('client', 'client_id');
+        $client_secret = $this->getUniqueHash('client', 'client_secret');
         $insert_query = 'INSERT INTO client
                           (name, user_id, description, host, client_id, client_secret, redirect_uri, scope)
                          VALUES
@@ -158,8 +158,8 @@ class DatabaseWrapper
      */
     public function updateClientCredentials($client)
     {
-        $client_id = $this->getUniqueHash($client->secret, 'client', 'client_id');
-        $client_secret = $this->getUniqueHash($client->key, 'client', 'client_secret');
+        $client_id = $this->getUniqueHash('client', 'client_id');
+        $client_secret = $this->getUniqueHash('client', 'client_secret');
         $update_query = 'UPDATE client SET
                           client_id = :client_id, client_secret = :client_secret
                          WHERE
@@ -367,7 +367,7 @@ class DatabaseWrapper
      */
     public function insertAuthCode(Client $client, User $user, $scope)
     {
-        $auth_code = $this->getUniqueHash($user->kennung, 'auth_code', 'code');
+        $auth_code = $this->getUniqueHash('auth_code', 'code');
         $query = 'INSERT INTO auth_code (user_id, client_id, code, scope, created)
                          VALUES (:user_id, :client_id, :code, :scope, :created);';
         $stmt = $this->db->prepare($query);
@@ -423,7 +423,7 @@ class DatabaseWrapper
      */
     public function insertAccessToken(Client $client, User $user, $scope)
     {
-        $access_token = $this->getUniqueHash($client->name, 'access_token', 'token');
+        $access_token = $this->getUniqueHash('access_token', 'token');
         $insert_token = 'INSERT INTO access_token (user_id, client_id, token, scope, expires_at)
                          VALUES (:user_id, :client_id, :token, :scope, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
@@ -494,7 +494,7 @@ class DatabaseWrapper
      */
     public function insertRefreshToken(AccessToken $access_token)
     {
-        $refresh_token = $this->getUniqueHash($access_token->token, 'refresh_token', 'token');
+        $refresh_token = $this->getUniqueHash('refresh_token', 'token');
         $query = 'INSERT INTO refresh_token (access_token_id, token, created)
                          VALUES (:access_token_id, :token, :created);';
         $stmt = $this->db->prepare($query);
@@ -546,7 +546,7 @@ class DatabaseWrapper
      */
     public function insertWebToken(User $user)
     {
-        $web_token = $this->getUniqueHash($user->kennung, 'web_token', 'token');
+        $web_token = $this->getUniqueHash('web_token', 'token');
         $insert_token = 'INSERT INTO web_token (user_id, token, expires_at)
                          VALUES (:user_id, :token, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
@@ -598,7 +598,7 @@ class DatabaseWrapper
      */
     public function insertPageToken(User $user)
     {
-        $page_token = $this->getUniqueHash($user->kennung, 'page_token', 'token');
+        $page_token = $this->getUniqueHash('page_token', 'token');
         $insert_token = 'INSERT INTO page_token (user_id, token, expires_at)
                          VALUES (:user_id, :token, :expires_at);';
         $stmt = $this->db->prepare($insert_token);
@@ -644,18 +644,16 @@ class DatabaseWrapper
     /**
      * Generates a salted hash which is unique for its table-column.
      *
-     * @param string $data string to be hashed
      * @param string $tableName name of the table in which the string has to be unique
      * @param string $columnName name of the column of the table in which the string has to be unique
      * @return string the unique hash with 128 characters
      * @throws \PDOException thrown when $tableName or $columnName are wrong
      */
-    protected function getUniqueHash($data, $tableName, $columnName)
+    protected function getUniqueHash($tableName, $columnName)
     {
         do {
-            $random = bin2hex(openssl_random_pseudo_bytes(50));
-            $hashMe = sprintf('%s - %s : %s', $random, $data, time());
-            $result = hash('sha512', $hashMe);
+            $result = base64_encode(openssl_random_pseudo_bytes(96));
+            $result = strtr($result, '+/=', '-_.');
             $select = sprintf('SELECT id FROM %s WHERE %s = :hash;', $tableName, $columnName);
             $query = $this->db->prepare($select);
             if (!$query) {
