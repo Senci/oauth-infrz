@@ -38,12 +38,12 @@ class LDAPAuthFactory implements AuthFactoryInterface
      */
     public function signIn($username, $password)
     {
-        $user = $this->db->getUserByKennung('2king');
+        /*$user = $this->db->getUserByKennung('2king');
 
         $web_token = $this->db->insertWebToken($user);
         $_SESSION['web_token'] = $web_token->token;
 
-        return $user;
+        return $user;*/
 
         if (!$username or !$password) {
             return false;
