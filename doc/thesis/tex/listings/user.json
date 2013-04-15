@@ -1,0 +1,8 @@
+{
+  "type":"User",
+  "kennung":"2king",
+  "name":"Joe King",
+  "email":"joe@king.com",
+  "groups":["admin","svs","oauth_client"],
+  "scope":["kennung","name","email","groups"]
+}

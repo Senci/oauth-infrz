@@ -1,0 +1,6 @@
+{
+  "type":"Error",
+  "error":"not_found",
+  "error_description":"The requested URL was not found on this server.",
+  "http_status":404
+}

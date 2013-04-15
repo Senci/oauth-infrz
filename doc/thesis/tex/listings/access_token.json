@@ -1,0 +1,7 @@
+{
+  "type":"AccessToken",
+  "access_token":"yg-vlacBBSPJdAGfB-0NuaS-5Ox0zYlRBZHtLWzeG-ERlH",
+  "refresh_token":"OlYonB-F0aLg9i3HXF7zrdZFVcjL4X5JWMQ4zEtg_h-13y",
+  "scope":["kennung","name","email","groups"],
+  "expires_at":1366031142
+}

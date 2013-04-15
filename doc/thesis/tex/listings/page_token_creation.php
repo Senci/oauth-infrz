@@ -1,4 +1,4 @@
-$p_token = $this->getUniqueHash($user->kennung, 'page_token', 'token');
+$p_token = $this->getUniqueHash('page_token', 'token');
 $insert_token = 'INSERT INTO page_token (user_id, token, expires_at)
                        VALUES (:user_id, :token, :expires_at);';
 $stmt = $this->db->prepare($insert_token);

@@ -60,6 +60,16 @@ basicstyle=\bfseries\footnotesize\ttfamily\color{DarkCyan},
 showstringspaces=false,
 }
 
+\lstdefinelanguage{JSON}{
+    literate=
+      {:}{{{\color{DarkPurple}{:}}}}{1}
+      {,}{{{\color{DarkPurple}{,}}}}{1}
+      {\{}{{{\color{DarkCyan}{\{}}}}{1}
+      {\}}{{{\color{DarkCyan}{\}}}}}{1}
+      {[}{{{\color{DarkCyan}{[}}}}{1}
+      {]}{{{\color{DarkCyan}{]}}}}{1}
+}
+
 % Blank Pages
 \newcommand{\blankpage}{
 \newpage
@@ -930,8 +940,17 @@ Listing \ref{lst:page_token_creation} zeigt eine vereinfachte Form des Codes mit
 	{listings/page_token_validation.php}
 \end{minipage}
 
-%\subsubsection{Wart- \& Erweiterbarkeit}
-%• Ausblick Erweiterbarkeit
+Für Angreifer darf ein Token nicht zu erraten sein, weshalb Token mit einem \emph{guten} Zufalls-Algorithmus erzeugt werden \emph{müssen}.
+Zur Erzeugung der Token benutzt OAuth InfRZ die seit \emph{PHP 5.3} verfügbare Funktion \code{openssl_random_pseudo_bytes(\$length);}.
+In \cite[Section 2.2]{AK12} wird diese Funktion als ,,the only function available in order to obtain cryptographically secure random bytes''\footnote{diese Aussage ist nur im PHP-Kontext gemeint} beschrieben.
+Listing \ref{lst:random} verdeutlicht die Erzeugung eines 128 Zeichen langen Tokens.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=random,label=lst:random,
+	caption={Erzeugung eines Tokens},
+	style=PHP]
+	{listings/random.php}
+\end{minipage}
 
 \subsection{Client-Library}
 \label{sec:oauth-infrz/client}
@@ -939,6 +958,8 @@ Listing \ref{lst:page_token_creation} zeigt eine vereinfachte Form des Codes mit
 Die \textbf{Client-Library} soll\footnote{wie schon in Abschnitt \ref{sec:oauth-infrz/requirements} beschrieben} Entwickler von Client-Anwendungen durch das Bereitstellen einer einfach benutzbaren Schnittstelle unterstützen.
 Sie übernimmt komplexe Abläufe und kapselt diese in gut dokumentierten Funktionen.
 Da die Client-Library primär von weiteren Entwicklern genutzt werden soll, wird an dieser Stelle eine ausführliche Dokumentation zur Benutzung geboten.
+
+\subsubsection{Benutzung}
 
 Die Client-Library muss vor der Benutzung in der im selben Ordner befindlichen \emph{config.ini} (Listing \ref{lst:client_config}) konfiguriert werden.
 In Listing \ref{lst:client} werden die wichtigsten Funktionen der Client-Library exemplarisch ausgeführt.
@@ -965,6 +986,8 @@ Das Access Token wird als ein Objekt des Typs \code{Infrz\\OAuth\\Client\\Model\
 Letztendlich kann man mit der Methode \code{getUser(\$access_token);} (Zeile 11) auf die vom Benutzer freigegebene Information zugreifen.
 Der Benutzer wird als ein Objekt des Typs \code{Infrz\\OAuth\\Client\\Model\\User} zurückgegeben.
 
+\subsubsection{Konfiguration}
+
 Listing \ref{lst:client_config} zeigt eine unveränderte Client Konfiguration.
 Um Unklarheiten zu vermeiden wird an dieser Stelle auf die einzelnen Einstellungsmöglichkeiten eingegangen.
 
@@ -982,6 +1005,60 @@ Aktuell läuft dieser auf \emph{,,\url{https://svs-sso.informatik.uni-hamburg.de
 Die \textbf{Default Redirect URI} (Zeile 14) ist die standardmäßig genutzte URL zu der ein Benutzer nach erfolgreicher Autorisierung weitergeleitet wird.
 Dieser Endpunkt sollte mit dem \emph{Authorization Code} umgehen können und weitere angemessene Schritte durchführen.
 Alle Werte sollten mit den Einstellungen des \emph{Clients} beim OAuth InfRZ übereinstimmen.
+
+\subsubsection{Kommunikation}
+
+Die Kommunikation zwischen Client und Server erfolgt durch HTTP-Requests.
+Die Antworten des Servers enthalten JSON-Codierte Objekte.
+Access-Tokens werden mit einem POST-Request an \code{/authorize/token} ausgeteilt.
+Ein gültiger Request muss im Message-Body die folgenden Variablen definieren:
+
+\begin{description}
+	\item[grant\_type] \hfill \\
+		Der grant\_type bestimmt ob man einen Authorization-Code oder ein Refresh Token benutzt.
+		Akzeptiert werden die Werte \code{\"authorization\_code\"} und \code{\"refresh\_token\"}.
+	\item[client\_id] \hfill \\
+		Die Client-ID des Clients, der das Access-Token anfordert.
+	\item[client\_secret] \hfill \\
+		Das Client-Secret des Clients, der das Access-Token anfordert.
+	\item[code] \hfill \\
+		Der Authorization-Code oder das Refresh-Token, mit dem das neue Access-Token angefordert wird.
+	\item[redirect\_uri] \hfill \\
+		Die Redirect-URI des Clients, wie in der Konfiguration angegeben.
+\end{description}
+
+Bei einem gültigen Request wird ein Access-Token wie in Listing \ref{lst:access_token} als Antwort zurückgegeben.
+Es enthält das Access-Token, sowie ein optionales Refresh-Token, das freigegebene Scope und einen Ablaufzeitpunkt.
+Das Scope wird als Array von Strings, der Ablaufzeitpunkt als UNIX-Timestamp\footnote{vgl. Benjamin Sintay: Unix Timestamp\url{http://www.unixtimestamp.com} (Zugriff am 15.04.2013)} angegeben.
+Das Access-Token in Listing \ref{lst:access_token} enthält ein vollständiges Scope und ist somit eine Zugriffsberechtigung auf alle verfügbaren Ressourcen.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=AccessToken,label=lst:access_token,
+	caption={JSON-Codiertes Access Token},
+	style=PHP, language=JSON, firstnumber=1]
+	{listings/access_token.json}
+\end{minipage}
+
+Der eigentliche Ressourcenzugriff auf die Benutzer-Information erfolgt mit einem GET-Request an \code{/user?access_token=\{access_token\}}.
+Antelle von \code{\"\{access\_token\}\"} muss ein gültiges Access-Token angegeben werden.
+Die Antwort enthält ein Benutzer-Objekt mit der im Scope freigegebenen Benutzer-Information.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=User,label=lst:user,
+	caption={JSON-Codiertes User Objekt},
+	style=PHP, language=JSON, firstnumber=1]
+	{listings/user.json}
+\end{minipage}
+
+Fehlermeldungen enthalten den Fehler-Typ, eine Fehler-Beschreibung und den HTTP-Statuscode.
+Fehler sollen bei der Entwicklung von Client-Anwendungen berücksichtigt werden.
+
+\begin{minipage}{\textwidth}
+	\lstinputlisting[name=error,label=lst:error,
+	caption={JSON-Codierte Fehlermeldung},
+	style=PHP, language=JSON, firstnumber=1]
+	{listings/error.json}
+\end{minipage}
 
 \subsection{Ausblick}
 
@@ -1027,11 +1104,12 @@ Eine Erweiterung auf eine Gruppe von Benutzern ist möglich und sollte in Betrac
 \begin{raggedright}%schaltet Blocksatz ab, erzeugt ein stimmigeres Schriftbild im Literaturverzeichnis
 \begin{thebibliography}{XXXXXXXX}
     \bibitem[AE12]{AE12} Axel Arnbak, Nico Van Eijk: Certificate Authority Collapse: Regulating Systemic Vulnerabilities in the HTTPS Value Chain. 40th Research Conference on Communication, Information and Internet Policy, 2012 TRPC, Arlington (US-VA) September 2012
+    \bibitem[AK12]{AK12} George Argyros, Aggelos Kiayias: I Forgot Your Password: Randomness Attacks Against PHP Applications. USENIX Security '12, Bellevue (US-WA) August 2012.
 	\bibitem[Boy12]{Boy12} Ryan Boyd: Getting Started with OAuth 2.0. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
-	\bibitem[Cro06]{Cro06} Douglas Crockford: JSON: The Fat-Free Alternative to XML. XML 2006, Boston, Dez 2006.
+	\bibitem[Cro06]{Cro06} Douglas Crockford: JSON: The Fat-Free Alternative to XML. XML 2006, Boston (US-MA) Dezember 2006.
 	\bibitem[DR11]{DR11} Thai Duong, Juliano Rizzo: Here Come The $\oplus$ Ninjas. ekoparty Security Conference 9$^\circ$ edition, Buenos Aires, Argentinien, Mai 2011.
 	\bibitem[Fie00]{Fie00} Roy T. Fielding: Architectural Styles and the Design of Network-based Software Architectures. University Of California, Dissertation, Irvine (US-CA) 2000.
-	\bibitem[Hur97]{Hur97} Jani Hursti: Single Sign-On. Seminar on Network Security, Helsinki University of Technology, Helsinki 1997.
+	\bibitem[Hur97]{Hur97} Jani Hursti: Single Sign-On. Seminar on Network Security, Helsinki University of Technology, Helsinki, Finnland 1997.
 	\bibitem[Kay93]{Kay93} Alan C. Kay: The Early History Of Smalltalk. History of programming languages II (511-598). Association for Computing Machinery, New York (US-NY) 1993.
 	\bibitem[KH10]{KH10} Andreas M. Kaplan, Michael Haenlein: Users of the world, unite! The challenges and opportunities of Social Media. Business Horizons 53/1 (2010) 60-68.
 	\bibitem[Leb11]{Leb11} Jonathan LeBlanc: Programming Social Applications. First Edition, O'Reilly, Sebastopol (US-CA) 2011.
@@ -1048,7 +1126,7 @@ Eine Erweiterung auf eine Gruppe von Benutzern ist möglich und sollte in Betrac
 	\bibitem[Sin12]{Sin12} Brijendra Singh: Network Security \& Management. Third Edition, PHI Learning, Delhi, India 2012.
 	\bibitem[Som10]{Som10} Ian Sommerville: Software Engineering. Ninth Edition, Pearson, Boston (US-MA) 2010.
 	\bibitem[SQL1992]{SQL1992} Database Language SQL. Digital Equipment Corporation, Maynard (US-MA) 1992.
-	\bibitem[SS12]{SS12} Christopher Soghoian, Sid Stamm: Certified Lies: Detecting and Defeating Government Interception Attacks Against SSL. 15th International Conference Financial Cryptography and Data Security '11, Gros Islet, St. Lucia, Feb 2011.
+	\bibitem[SS12]{SS12} Christopher Soghoian, Sid Stamm: Certified Lies: Detecting and Defeating Government Interception Attacks Against SSL. 15th International Conference Financial Cryptography and Data Security '11, Gros Islet, St. Lucia, Februar 2011.
 	\bibitem[TW10]{TW10} Andrew S. Tanenbaum, David J. Wetherall: Computer Networks. Fifth Edition, Pearson, Boston (US-MA) 2010.
 	\bibitem[WK06]{WK06} Martin Wind, Detlef Kröger (Hrsg.): Handbuch IT in der Verwaltung. Auflage 2006, Springer-Verlag, Berlin (DE-BE) 2006.
 \end{thebibliography}
