@@ -14,6 +14,8 @@ class AuthorizeController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/authorize")
      */
     public function mainAction()
     {
@@ -43,6 +45,8 @@ class AuthorizeController extends AbstractController
 
     /**
      * Displaying information about the access grant and redirecting to client-site with code.
+     *
+     * @Route("/authorize/grant")
      */
     public function grantAction()
     {
@@ -88,6 +92,9 @@ class AuthorizeController extends AbstractController
         $this->responseBuilder->buildAuthorizeGranted($client, $redirect_uri, $scope);
     }
 
+    /**
+     * @Route("/authorize")
+     */
     public function tokenAction()
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {

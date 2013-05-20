@@ -13,6 +13,8 @@ class UserController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/user")
      */
     public function mainAction()
     {

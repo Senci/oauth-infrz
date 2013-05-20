@@ -14,6 +14,8 @@ class ClientController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/client")
      */
     public function mainAction()
     {
@@ -28,6 +30,8 @@ class ClientController extends AbstractController
 
     /**
      * The object page to the client with the given id.
+     *
+     * @Route("/client/{client_id}/object")
      */
     public function objectAction()
     {
@@ -40,6 +44,8 @@ class ClientController extends AbstractController
 
     /**
      * The form to register a new client.
+     *
+     * @Route("/client/new")
      */
     public function newAction()
     {
@@ -54,6 +60,8 @@ class ClientController extends AbstractController
 
     /**
      * Deletes the client with the given id.
+     *
+     * @Route("/client/{client_id}/delete")
      */
     public function deleteAction()
     {
@@ -76,6 +84,8 @@ class ClientController extends AbstractController
 
     /**
      * Call to register a new client.
+     *
+     * @Route("/client/register")
      */
     public function registerAction()
     {
@@ -111,6 +121,8 @@ class ClientController extends AbstractController
 
     /**
      * Form to edit a client.
+     *
+     * @Route("/client/{client_id}/edit")
      */
     public function editAction()
     {
@@ -123,6 +135,8 @@ class ClientController extends AbstractController
 
     /**
      * Updates a client with the given parameters.
+     *
+     * @Route("/client/{client_id}/update")
      */
     public function updateAction()
     {
@@ -156,6 +170,8 @@ class ClientController extends AbstractController
 
     /**
      * Generates new credentials and updates them.
+     *
+     * @Route("/client/{client_id}/new_credentials")
      */
     public function newCredentialsAction()
     {
@@ -169,6 +185,8 @@ class ClientController extends AbstractController
 
     /**
      * Determines the client by the given id-parameter and returns it.
+     *
+     * @Route("/client/{client_id}/new_credentials")
      */
     protected function getClient()
     {

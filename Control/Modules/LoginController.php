@@ -14,6 +14,8 @@ class LoginController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/login")
      */
     public function mainAction()
     {
@@ -26,6 +28,8 @@ class LoginController extends AbstractController
 
     /**
      * Authorizes the user with given username nad password.
+     *
+     * @Route("/login/autorize")
      */
     public function authorizeAction()
     {

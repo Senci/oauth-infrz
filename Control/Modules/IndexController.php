@@ -13,6 +13,8 @@ class IndexController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/")
      */
     public function mainAction()
     {

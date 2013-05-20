@@ -14,6 +14,8 @@ class LogoutController extends AbstractController
 {
     /**
      * @inheritdoc
+     *
+     * @Route("/logout")
      */
     public function mainAction()
     {
