@@ -14,7 +14,7 @@ Although I have tried to conform to the protocols conventions the details to dif
  * **GET** `https://my-oauth-server.edu/authorize?client_id={cid}&redirect_uri={ru}`
 3. After the user logs in to the OAuth Infrz service, it confirms the users identity by checking his "Informatik Rechenzentrum" (*irz*) credentials against the *ActiveDirectory* (*LDAP*).
 4. *LDAP* confirms the credentials and answers with the user information.
-5. After the user has accepts the authorization on the OAuth Infrz site she is redirected to the client site passing an *auth_code* through a **GET** variable.
+5. After the user accepts the authorization on the OAuth Infrz site she is redirected to the client site passing an *auth_code* through a **GET** variable.
  * **GET** `https://client-site.org/client/redirect/page?code={auth_code}`
 6. Now that the client has a valid *auth_code* it can exchange it for an *access_token*.
  * **POST** `https://my-oauth-server.edu/authorize/token?grant_type={gt}client_id={cid}&client_secret={cs}&code={auth_code}&redirect_uri={ru}`
