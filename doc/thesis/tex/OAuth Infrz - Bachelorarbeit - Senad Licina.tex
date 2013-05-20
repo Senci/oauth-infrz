@@ -110,7 +110,6 @@ showstringspaces=false,
 
 %%%%%%%%%% Deckblatt
 \thispagestyle{empty}
-\addcontentsline{toc}{subsection}{Muster des Deckblatts}
 \begin{center}\Large
 Universität Hamburg \par
 Fachbereich Informatik
@@ -212,11 +211,18 @@ Die Nutzung des SSO-Dienstes soll möglichst über (Standard-)Schnittstellen, et
 %\blankpage
 \section*{Zusammenfassung}
 
+Authentifizierungs- und Autorisierungsdienste gewinnen im World Wide Web zunehmend an Bedeutung.
+Sie erleichtern nicht nur die Entwicklung von Web-Anwendungen sondern bieten Benutzern eine Möglichkeit sich einfach, einheitlich und sicher zu Authentifizieren und Anwendunen mit dem Zugriff auf ihre Ressourcen zu Autorisieren.
+Der Fachbereich Informatik der Universität Hamburg stellt bisher keinen solchen Dienst zur Verfügung.
 
+Diese Bachelorarbeit beschäftigt sich mit der Implementierung von \emph{OAuth InfRZ}, eines im Zuge dieser Arbeit programmierten Single-Sign-On-Dienstes mit Zugriff auf die Benutzer-Accounts des Informatik Rechenzentrums.
+Sie richtet sich primär an Entwickler von Client-Anwendungen\footnote{Anwendung die einen OAuth-Dienst zu Authentifizierung der Benutzer und/oder den Zugriff auf deren Information benutzen} und Entwickler von OAuth InfRZ.
+Diese Arbeit bildet eine technische Dokumentation, begründet Design-Entscheidungen im Prozess der Implementierung und beschäftigt sich mit Kernthemen des Aufgabengebiets.
 
-Für den eiligen Leser sollen auf etwa einer halben, maximal einer Seite die wichtigsten Inhalte, Erkenntnisse, Neuerungen bzw. Ergebnisse der Arbeit beschrieben werden. 
-
-Durch eine solche Zusammenfassung (im engl. auch Abstract genannt) am Anfang der Arbeit wird die Arbeit deutlich aufgewertet. Hier sollte vermittelt werden, warum der Leser die Arbeit lesen sollte.
+OAuth InfRZ basiert auf dem OAuth-Protokoll und greift mit dem Lightweight Directory Access Protocol auf die im Active Directory des Informatik Rechenzentrums verwaltete Benutzer-Information zu.
+Benutzern wird es ermöglicht sich gegenüber dritten Anwendungen zu authentifizeren und diese mit dem Zugriff auf ihre Ressourcen zu autorisieren.
+Entwicklern von Client-Anwendungen wird eine leicht verständliche Client-Library geboten, welche die Benutzung von OAuth InfRZ komfortabel gestaltet.
+Durch den Einsatz von OAuth InfRZ wird sowohl die Benutzung von Fachbereichsinternen Diensten als auch die Entwicklung solcher Dienste vereinheitlicht und vereinfacht.
 
 \newpage
 \tableofcontents
@@ -346,7 +352,7 @@ Das Informatik Rechenzentrum der Universität Hamburg benutzt ein \emph{Active D
 Um Informationen aus einem Verzeichnisdienst abzurufen, wird ein Protokoll benötigt.
 Über das \textbf{Lightweight Directory Access Protocol (LDAP)} können Informationen aus einem Active Directory abgerufen werden.
 LDAP wird im OSI-Modell in der Anwendungsschicht angesiedelt.
-Die aktuellste Version \emph{LDAPv3} erschien im Dezember 1997\footnote{vgl. \cite{2251}} und wurde im Juni 2006 mit \cite{RFC5246} revidiert.
+Die aktuellste Version \emph{LDAPv3} erschien im Dezember 1997\footnote{vgl. \cite{RFC2251}} und wurde im Juni 2006 mit \cite{RFC5246} revidiert.
 
 \newpage
 \section{OAuth}
@@ -389,6 +395,7 @@ Mit dem im Oktober 2012 erschienenen \cite{RFC5849} wurde eine zur ersten Versio
 Dadurch wird vor allem das Erlangen und der Austausch von Zugriffstokens vereinfacht.
 
 \subsection{OAuth 2 Workflow}
+\label{sec:oauth2_workflow}
 
 Der OAuth 2 Workflow wird in \cite{RFC5849} spezifiziert.
 \cite[Chapter 9]{Leb11} bietet eine anschauliche, \cite{Boy12} eine ausführlichere Erklärung.
@@ -457,9 +464,9 @@ Aus diesem Grund sind sie bei einer Authentifizierung statischem \emph{,,Wissen'
 Bearer Token müssen bei \emph{jedem} Request übertragen werden und sind \emph{nicht} signiert, weshalb sämtliche Kommunikation \emph{zwingend} TLS verschlüsselt erfolgen muss.
 Da \emph{OAuth 2} vorrangig auf TLS Verschlüsselung setzt, ist es maximal so sicher wie TLS selbst.
 
-Im Juli 2012, kurz vor Fertigstellung der \emph{OAuth 2} Spezifikation, verkündete der Hauptautor Eran Hammer seinen Rücktritt.
+Kurz vor Fertigstellung der \emph{OAuth 2} Spezifikation, verkündete der Hauptautor Eran Hammer seinen Rücktritt.
 Diesen begründet er vor allem mit einer geringeren Sicherheit gegenüber der Vorgängerversion.\footnote{vgl. Eran Hammer: OAuth 2.0 and the Road to Hell. \url{http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/} (Zugriff am 01.03.2013)}
-Hammer zufolge besteht das Kernproblem in einem unüberbrückbaren Konflikt zwischen der Web- und Konzern-Welten.
+Das Kernproblem besthe in einem unüberbrückbaren Konflikt zwischen der Web- und Konzern-Welten.
 Trotz seiner Kritik räumt er ein, dass \emph{OAuth 2} \emph{,,in den Händen eines Entwicklers mit tiefgründigem Verständnis der Web-Sicherheit''} zu einer sicheren Implementierung führen kann.
 
 % TODO http://homakov.blogspot.de/2013/03/oauth1-oauth2-oauth.html
@@ -558,7 +565,9 @@ Diese Maßnahmen sollen die Verstrauenswürdigkeit fördern.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/home}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/home}
+}
 \caption{Hauptseite}
 \label{pic:oauth_infrz/home}
 \end{figure}
@@ -573,7 +582,9 @@ Außerdem wird der Benutzer nach einer erfolgreichen Authentifizierung zur zum C
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/login_client}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/login_client}
+}
 \caption{Loginseite: Authentifizierungsaufforderung von ,,Demo Application''}
 \label{pic:oauth_infrz/login_client}
 \end{figure}
@@ -592,7 +603,9 @@ Nach einer erfolgreichen Autorisierung wird der Benutzer zu einer vom Client bes
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/authorize}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/authorize}
+}
 \caption{Autorisierungsseite für ,,Demo Application''}
 \label{pic:oauth_infrz/authorize}
 \end{figure}
@@ -608,7 +621,9 @@ Client-Moderatoren sollen im laufenden Betrieb vom Rechenzentrum verwaltet werde
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/clients_overview}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/clients_overview}
+}
 \caption{Client-Übersichtsseite}
 \label{pic:oauth_infrz/clients_overview}
 \end{figure}
@@ -620,7 +635,9 @@ Die Namen in der Tabelle sind Links zur entsprechenden \textbf{Clientseite} (Abb
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/client_new}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/client_new}
+}
 \caption{Client-Registrierungsseite}
 \label{pic:oauth_infrz/client_new}
 \end{figure}
@@ -640,7 +657,9 @@ Sie soll Auskunft darüber geben, weshalb der Dienst Zugriff auf diese Informati
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=15cm]{img/oauth_infrz/client}
+\fbox{
+	\includegraphics[width=15cm]{img/oauth_infrz/client}
+}
 \caption{Clientseite}
 \label{pic:oauth_infrz/client}
 \end{figure}
@@ -920,7 +939,7 @@ Für einen Angreifer ist es schwierig Page-Token auszulesen.
 Da für jede Aktion ein gültiges Page-Token notwendig ist, verhindert deren Benutzung CSRF-Angriffe.
 Bei OAuth InfRZ sind die Page-Tokens als Bearer Tokens realisiert und werden als \emph{Form-Encoded Body Parameter}\footnote{vgl. \cite[Section 2.2]{RFC6750}} übertragen.
 Zur Erzeugung wird eine zufällige und eindeutige Zeichenfolge geschaffen, an den Benutzer gebunden und in die Datenbank eingefügt.
-Listing \ref{lst:page_token_creation} beinhaltet eine vereinfachte Version des zuur Erzeugung eines Page-Token benutzten Codes.
+Listing \ref{lst:page_token_creation} beinhaltet eine vereinfachte Version des zur Erzeugung eines Page-Token benutzten Codes.
 
 \begin{minipage}{\textwidth}
 	\lstinputlisting[name=page_token_creation,label=lst:page_token_creation,
@@ -932,6 +951,7 @@ Listing \ref{lst:page_token_creation} beinhaltet eine vereinfachte Version des z
 Bei der Verifizierung eines Page-Token wird die Benutzerzugehörigkeit und die zeitliche Gültigkeit des Tokens überprüft.
 Ein Page-Token muss zum aktuell angemeldeten Benutzer gehören und darf nicht älter sein als 30 Minuten.
 Listing \ref{lst:page_token_creation} zeigt eine vereinfachte Form des Codes mit dem ein Page-Token Verifiziert wird.
+Die Funktion \code{getUniqueHash(\$tableName, \$columnName);} nutzt den Code aus Listing \ref{lst:random} zur Token-Generierung und sorgt dafür, dass Token für eine Spalte einer Tabelle in der Datenbank eindeutig sind.
 
 \begin{minipage}{\textwidth}
 	\lstinputlisting[name=page_token_validation,label=lst:page_token_validation,
@@ -951,6 +971,63 @@ Listing \ref{lst:random} verdeutlicht die Erzeugung eines 128 Zeichen langen Tok
 	style=PHP]
 	{listings/random.php}
 \end{minipage}
+
+\subsection{Verfügbare Requests}
+% autorisierungs workflow ?
+
+Alle zur autorisierung erforderlichen Schritte im \emph{OAuth 2} Protokoll werden in Abschnitt \ref{sec:oauth2_workflow} erklärt.
+Eine erfolgreiche autorisierung setzt mehrere HTTP-Requests vorraus.
+Im folgenden werden alle Requests für den in Abbildung \ref{pic:oauth2_workflow} skizzierten Workflow für OAuth InfRZ erklärt.
+Requests an die Client-Anwendung werden exemplarisch an der Demo-Anwendung beschrieben.
+Client-Anwendungen steht es frei ihre Endpunkte frei zu gestalten, sie können sich jedoch an der Demo-Anwendung orientieren.
+
+\begin{description}
+	\item[Autorisierung eines Clients] \hfill \\
+		Zur autorisierung von Client-Anwendungen müssen die Clientanwendungen den Benutzer zunächst auf die Autorisierungsseite der Client-Anwendung weiterleiten.
+		Dabei müssen die Parameter \emph{client\_id} und \emph{redirect\_uri} richtig gesetzt sein.\\
+		\code{GET https://my-oauth-server.edu/authorize}\\
+		$\circ$ \textbf{client\_id}: Die Client-ID der Client-Anwendung.\\
+		$\circ$ \textbf{redirect\_uri}: Die Redirect-URI, wie in der Konfiguration angegeben.\\[0.7em]
+		Die eigentliche Authentifizierung erfolgt durch einen POST-Request.
+		Neben eines gültigen Page-Token müssen \emph{client\_id}, \emph{redirect\_uri} und \emph{scope} angegeben werden.\\
+		\code{POST https://my-oauth-server.edu/authorize/grant}\\
+		$\circ$ \textbf{client\_id}: Die Client-ID der Client-Anwendung.\\
+		$\circ$ \textbf{redirect\_uri}: Die Redirect-URI, wie in der Konfiguration angegeben.\\
+		$\circ$ \textbf{scope}: Das vom Benutzer freigegebene Scope.
+	\item[Authentifizierung eines Benutzers] \hfill \\
+		Damit ein Benutzer autorisieren kann, muss ein Benutzer sich vorerst authentifizieren.
+		Die Loginseite bietet das Interface dazu.\\
+		\code{GET https://my-oauth-server.edu/login}\\[0.7em]
+		Eine Authentifizierungsanfrage erfolgt an eine dafür vorgesehene URL.
+		Die Parameter \emph{username} und \emph{password} müssen gültige Werte enthalten, der Parameter \emph{redirect} ist optional.\\
+		\code{POST https://my-oauth-server.edu/login/authorize}\\
+		$\circ$ \textbf{username}: Die Kennung des Benutzers.\\
+		$\circ$ \textbf{password}: Das zum Benutzer-Account gehörige Passwort.\\
+		$\circ$ \textbf{redirect}: Eine URL zu der nach erfolgreichem Login weitergeleitet wird.\\[0.7em]
+		Zur Authentifizierung bei einem Client muss der Benutzer dem Client den Authorization Codes übergeben.
+		Dies geschieht durch den Aufruf an die Redirect-URL des Clients.
+		Der Authorization Code wird als Parameter \emph{code} übergeben.\\
+		\code{GET https://client.org/redirect/page}\\
+		$\circ$ \textbf{code}: Ein gültiger Authorization Code.
+	\newpage
+	\item[Token-Austausch] \hfill \\
+		Client-Anwendungen können Authorization Codes und Refresh Token bei OAuth InfRZ gegen Access Tokens tauschen.
+		Bei dem Aufruf der entprechenden URL, müssen die Parameter \emph{grant\_type, client\_id, client\_secret, redirect\_uri} und \emph{code} mit gültigen Werten belegt sein.
+		Die Antwort ist ein JSON-Codiertes Objekt.
+		Listing \ref{lst:access_token} bietet eine Besipieleantwort für ein Access Token.\\
+		\code{POST https://my-oauth-server.edu/authorize/token}\\
+		$\circ$ \textbf{grant\_type}: Art des benutzten Token: \emph{authorization\_code} oder \emph{refresh\_token}. \\
+		$\circ$ \textbf{client\_id}: Die Client-ID der Client-Anwendung.\\
+		$\circ$ \textbf{client\_secret}: Das Client-Secret der Client-Anwendung.\\
+		$\circ$ \textbf{redirect\_uri}: Die Redirect-URI, wie in der Konfiguration angegeben.\\
+		$\circ$ \textbf{code}: Der Authorization Code oder das Refresh Token.\\
+	\item[Ressourcenzugriff] \hfill \\
+		Der Zugriff auf die Benutzer-Ressourcen erfolgt durch einen Request bei dem ausschließlich ein gültiges \emph{access\_token} übergeben werden muss.
+		Die Antwort ist ein JSON-Codiertes Objekt.
+		Listing \ref{lst:user} bietet eine Beispielantwort für die Benutzerinformation.\\
+		\code{GET https://my-oauth-server.edu/user}\\
+		$\circ$ \textbf{access\_token}: Ein gültiges Access Token.
+\end{description}
 
 \subsection{Client-Library}
 \label{sec:oauth-infrz/client}
@@ -1006,7 +1083,8 @@ Die \textbf{Default Redirect URI} (Zeile 14) ist die standardmäßig genutzte UR
 Dieser Endpunkt sollte mit dem \emph{Authorization Code} umgehen können und weitere angemessene Schritte durchführen.
 Alle Werte sollten mit den Einstellungen des \emph{Clients} beim OAuth InfRZ übereinstimmen.
 
-\subsubsection{Kommunikation}
+\subsubsection{Client-Server Kommunikation}
+\label{sec:client/communication}
 
 Die Kommunikation zwischen Client und Server erfolgt durch HTTP-Requests.
 Die Antworten des Servers enthalten JSON-Codierte Objekte.
@@ -1029,7 +1107,7 @@ Ein gültiger Request muss im Message-Body die folgenden Variablen definieren:
 
 Bei einem gültigen Request wird ein Access-Token wie in Listing \ref{lst:access_token} als Antwort zurückgegeben.
 Es enthält das Access-Token, sowie ein optionales Refresh-Token, das freigegebene Scope und einen Ablaufzeitpunkt.
-Das Scope wird als Array von Strings, der Ablaufzeitpunkt als UNIX-Timestamp\footnote{vgl. Benjamin Sintay: Unix Timestamp\url{http://www.unixtimestamp.com} (Zugriff am 15.04.2013)} angegeben.
+Das Scope wird als Array von Strings, der Ablaufzeitpunkt als UNIX-Timestamp\footnote{vgl. Benjamin Sintay: Unix Timestamp. \url{http://www.unixtimestamp.com} (Zugriff am 15.04.2013)} angegeben.
 Das Access-Token in Listing \ref{lst:access_token} enthält ein vollständiges Scope und ist somit eine Zugriffsberechtigung auf alle verfügbaren Ressourcen.
 
 \begin{minipage}{\textwidth}
