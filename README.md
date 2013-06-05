@@ -26,9 +26,7 @@ Although I have tried to conform to the protocols conventions the details to dif
 10. The client provides its services to the user.
 
 # Installation
-To install this package simply clone this project and set up a web-server. there is a sample nginx-config in the configs folder.
-
-* **TODO: add sample nginx config**
+To install this package simply clone this project and set up a web-server. there is a sample nginx-config in the `doc` folder.
 
 ## Dependencies
 * __twig/twig__: _"1.*"_
@@ -134,6 +132,3 @@ SQLite3 is used as Database. The Database is saved in `oauth-infrz.sqlite3`.
 * **user_id**: int
 * **token**: varchar unique
 * **expires_at**: int
-
-# T1ODO
-* write How-Tos
