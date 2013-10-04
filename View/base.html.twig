@@ -2,8 +2,9 @@
 <html>
     <head>
         {% block head %}
-            <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-            <link href="/css/site.css" rel="stylesheet" media="screen">
+            <base href="/ssologin">
+            <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+            <link href="css/site.css" rel="stylesheet" media="screen">
             <title>{% block title %}{% endblock %} - OAuth Informatik Universität Hamburg</title>
         {% endblock %}
     </head>
@@ -11,20 +12,20 @@
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="brand" href="/">OAuth InfRZ</a>
+                    <a class="brand" href="">OAuth InfRZ</a>
                     <ul class="nav">
                         <li class="divider-vertical"></li>
                         <li><a href="https://github.com/Senci/oauth-infrz#oauth-infrz" target="_blank"><i class="icon-book"></i> Documentation</a></li>
                         {% if is_client_moderator %}
-                        <li><a href="/client"><i class="icon-leaf"></i> Manage clients</a></li>
+                        <li><a href="client"><i class="icon-leaf"></i> Manage clients</a></li>
                         {% endif %}
                     </ul>
                     <ul class="nav pull-right">
                         <li class="divider-vertical"></li>
                         {% if user is defined %}
-                            <li><a href="/logout"><i class="icon-user"></i> logout</a></li>
+                            <li><a href="logout"><i class="icon-user"></i> logout</a></li>
                         {% else %}
-                            <li><a href="/login"><i class="icon-user"></i> login</a></li>
+                            <li><a href="login"><i class="icon-user"></i> login</a></li>
                         {% endif %}
                     </ul>
                     {% if user is defined %}
@@ -37,8 +38,8 @@
         <div id="content" class="container">
             <div class="page-header">
                 <div class="pull-right">
-                    <img src="/img/logo_fbi_55.png">
-                    <img src="/img/logo_uhh_55.png">
+                    <img src="img/logo_fbi_55.png">
+                    <img src="img/logo_uhh_55.png">
                 </div>
                 <h1>{% block header %}{% endblock %}</h1>
             </div>
@@ -46,8 +47,8 @@
         </div>
 
         <!-- load js at the end to have faster build time -->
-        <script src="/js/jquery-1.9.1.min.js"></script>
-        <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
         {% block javascript %}{% endblock %}
     </body>
 </html>

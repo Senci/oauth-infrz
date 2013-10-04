@@ -5,7 +5,7 @@
 {% block header %}Login{% endblock %}
 
 {% block content %}
-    <img class="pull-right" width="130px" src="/img/oauth_logo.png" />
+    <img class="pull-right" width="130px" src="img/oauth_logo.png" />
     <p class="lead">
         <b>OAuth InfRZ</b> is an authorization service for your <i>Informatik Rechenzentrum</i> account.
     </p>
@@ -18,7 +18,7 @@
         <p class="lead">
             Please login to continue.
         </p>
-        <form action="/login/authorize" method="POST" class="form-horizontal">
+        <form action="login/authorize" method="POST" class="form-horizontal">
             {% if error is defined %}
                 <div class="alert alert-error">
                     <b>{{ error.error|replace({'_': ' '})|capitalize }}:</b><br>{{ error.error_description }}

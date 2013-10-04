@@ -8,7 +8,7 @@
     <p class="lead">{{ client.name }} is requesting you to authenticate.</p>
     <p>By clicking on "Agree" you are authorizing {{ client.name }} to access the below selected information.</p>
     <p class="alert alert-info"><b>{{ client.name }}:</b><br/>{{ client.description }}</p>
-    <form class="form-horizontal" action="/authorize/grant" method="POST">
+    <form class="form-horizontal" action="authorize/grant" method="POST">
         <input type="hidden" name="page_token" value="{{ page_token }}" />
         <input type="hidden" name="client_id" value="{{ client.client_id }}" />
         <input type="hidden" id="scope" name="scope" />

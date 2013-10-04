@@ -7,7 +7,7 @@
 {% block header %}{{ client.name }}{% endblock %}
 
 {% block content %}
-    <form action="/client/_{{ client.id }}/save" method="POST" class="form-horizontal">
+    <form action="client/_{{ client.id }}/save" method="POST" class="form-horizontal">
         <input type="hidden" name="id" value="{{ client.id }}">
         <input type="hidden" name="page_token" value="{{ page_token }}">
         <p class="pull-right">
@@ -101,5 +101,5 @@
         $('#ds_hint').tooltip({title:'Please only select the information you really need for your service.'});
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
     </script>
-    <script src="/js/scope.js"></script>
+    <script src="js/scope.js"></script>
 {% endblock %}

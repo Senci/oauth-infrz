@@ -7,7 +7,7 @@
 {% block header %}Register a new client{% endblock %}
 
 {% block content %}
-    <form action="/client/register" method="POST" class="form-horizontal">
+    <form action="client/register" method="POST" class="form-horizontal">
         <input type="hidden" name="page_token" value="{{ page_token }}">
         <dl>
             <dt>Name</dt>
@@ -73,5 +73,5 @@
         $('#si_hint').tooltip({title:'Explain what you use this information for. (transparency improves trust)'});
         $('#cs_hint').tooltip({title:'Treat this as if its your most important password.'});
     </script>
-    <script src="/js/scope.js"></script>
+    <script src="js/scope.js"></script>
 {% endblock %}
