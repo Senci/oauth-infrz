@@ -34,7 +34,7 @@ class FrontController
 
         $authFactoryClassName = sprintf('Infrz\OAuth\Control\Security\%s', $config['auth_factory']);
         $this->authFactory = new $authFactoryClassName($authFactoryConfig);
-        $this->responseBuilder = new ResponseBuilder($this->authFactory);
+        $this->responseBuilder = new ResponseBuilder($this->authFactory, $config);
         $this->request = array_merge($_GET, $_POST);
     }
 
