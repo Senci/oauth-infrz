@@ -27,9 +27,9 @@ class LoginController extends AbstractController
     }
 
     /**
-     * Authorizes the user with given username nad password.
+     * Authorizes the user with given username and password.
      *
-     * @Route("/login/autorize")
+     * @Route("/login/authorize")
      */
     public function authorizeAction()
     {

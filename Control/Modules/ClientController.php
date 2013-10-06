@@ -116,7 +116,7 @@ class ClientController extends AbstractController
 
         $client = $this->db->insertClient($name, $user, $description, $host, $redirect_uri, $scope);
 
-        header(sprintf('Location: /client/_%s', $client->id));
+        header(sprintf('Location: %sclient/_%s', $this->config['baseurl'], $client->id));
     }
 
     /**
@@ -165,7 +165,7 @@ class ClientController extends AbstractController
         $client->scope = json_decode(urldecode($scope));
         $client = $this->db->updateClient($client);
 
-        header(sprintf('Location: /client/_%s', $client->id));
+        header(sprintf('Location: %sclient/_%s', $this->config['baseurl'], $client->id));
     }
 
     /**
@@ -180,7 +180,7 @@ class ClientController extends AbstractController
 
         $client = $this->db->updateClientCredentials($client);
 
-        header(sprintf('Location: /client/_%s', $client->id));
+        header(sprintf('Location: %sclient/_%s', $this->config['baseurl'], $client->id));
     }
 
     /**
