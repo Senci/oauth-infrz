@@ -57,7 +57,7 @@ class LDAPAuthFactory implements AuthFactoryInterface
         }
         $base_dn = 'dc=informatik,dc=uni-hamburg,dc=de';
         $filter = sprintf('uid=%s', $username);
-        $fields = array('uid', 'sn', 'givenname', 'memberof', 'userprincipalname');
+        $fields = array('uid', 'sn', 'givenname', 'memberof', 'userprincipalname', 'description');
 
         $ldap_result = ldap_search($link, $base_dn, $filter, $fields);
         if (!$ldap_result or (ldap_count_entries($link, $ldap_result) != 1)) {
