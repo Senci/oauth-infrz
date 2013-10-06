@@ -23,6 +23,6 @@ class LogoutController extends AbstractController
 
         $this->authFactory->signOut();
 
-        header(sprintf('Location: %s', $this->config['baseurl#']));
+        header(sprintf('Location: %s', $this->config['baseurl']));
     }
 }
