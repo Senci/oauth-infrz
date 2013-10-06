@@ -26,7 +26,7 @@ abstract class AbstractController
     {
         $this->config = $config;
         $this->authFactory = $authFactory;
-        $this->responseBuilder = new ResponseBuilder($this->authFactory);
+        $this->responseBuilder = new ResponseBuilder($this->authFactory, $config);
         $this->db = new DatabaseWrapper();
     }
 

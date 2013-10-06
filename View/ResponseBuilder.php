@@ -23,7 +23,7 @@ class ResponseBuilder
     /* @var AuthFactoryInterface $authFactory */
     protected $authFactory;
 
-    public function __construct(AuthFactoryInterface $authFactory)
+    public function __construct(AuthFactoryInterface $authFactory, $config)
     {
         $this->loader = new \Twig_Loader_Filesystem('View');
         $this->twig = new \Twig_Environment($this->loader, array('/cache' => 'cache'));
@@ -31,6 +31,7 @@ class ResponseBuilder
         if ($authFactory->isAuthenticated()) {
             $this->addTwigGlobals($authFactory);
         }
+        $this->twig->addGlobal('baseurl', $config['baseurl']);
     }
 
     /**
